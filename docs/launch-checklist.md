@@ -30,6 +30,7 @@ This build is a private review. The user will supply product media and approved 
 - HSTS intentionally omits includeSubDomains/preload until the official domain and subdomains are verified HTTPS-ready.
 - Check deployed response headers; keep dependencies patched. Re-run audit and browser checks after substantive dependency or media changes.
 - Verified on the private Sites deployment: all four pages return 200 with owner authentication, but this static host does not apply `_headers`. The document CSP and referrer meta policy remain active; HTTP-only frame restrictions, nosniff, Permissions-Policy, HSTS, and immutable asset caching require configuration on the final hosting/CDN layer. No backend was added solely to emulate those headers.
+- Resolve the host's Cloudflare JavaScript Detections/CSP integration before public launch. It injects a changing inline verification script that the strict static policy blocks. Cloudflare requires response-header nonce integration for this setup; meta nonces are unsupported. Keep the application policy strict and implement the integration at the final CDN/origin layer. Source: https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/
 - Re-measure LCP, CLS, INP and video decode/rendering performance after actual imagery arrives. Current frame-only measurements do not predict final media payloads. Real field p75 Core Web Vitals require production traffic.
 
 ## Sources checked 12 September 2026
