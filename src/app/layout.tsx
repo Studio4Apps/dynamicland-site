@@ -14,6 +14,7 @@ const editorial = localFont({
 });
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  referrer: 'strict-origin-when-cross-origin',
   title: {
     default: 'DynamicLand — Your Mac’s notch, now part of your day',
     template: '%s — DynamicLand',

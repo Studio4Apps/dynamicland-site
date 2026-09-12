@@ -4,7 +4,9 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { contentPolicy } from './security.mjs';
 
-const origin = 'https://dynamicland-official.buzzy-mint-2975.chatgpt.site';
+const origin = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://dynamicland-official.paul-vento2.chatgpt.site'
+).replace(/\/$/, '');
 const routes = ['/', '/support/', '/privacy/', '/terms/'];
 const pages = new Map();
 for (const route of routes) {
@@ -12,6 +14,7 @@ for (const route of routes) {
   assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length, 1, `${route}: one h1`);
   assert.match(html, /<main id="main"/);
   assert.match(html, /<link rel="canonical" href="https:\/\//);
+  assert(html.includes(`rel="canonical" href="${origin}${route}"`), `${route}: canonical origin`);
   assert.match(html, /property="og:image"/);
   assert.match(html, /name="description"/);
   const policy = html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];

@@ -63,8 +63,8 @@ Measurements are local, unthrottled, empty-media samples, not Lighthouse scores 
 | Desktop observed long tasks                   | 0                                           |
 | Mobile sample LCP / CLS                       | 84 ms / 0                                   |
 | Mobile maximum observed interaction duration  | 24 ms                                       |
-| Homepage HTML, raw / estimated gzip           | 47,734 / 8,114 bytes                        |
-| Initial JavaScript, raw / estimated gzip      | 586,496 / 181,102 bytes across 7 files      |
+| Homepage HTML, raw / estimated gzip           | 47,831 / 8,161 bytes                        |
+| Initial JavaScript, raw / estimated gzip      | 586,492 / 181,096 bytes across 7 files      |
 | Initial CSS, raw / estimated gzip             | 24,229 / 6,565 bytes across 2 files         |
 | Locally hosted font                           | 132,000 bytes                               |
 
@@ -76,7 +76,7 @@ Unique titles/descriptions, canonical URLs, Open Graph/Twitter card, sitemap, ro
 
 Search crawlers are allowed; selected training-only crawlers are separately opted out. `llms.txt` is omitted because factual semantic content and conventional indexing are the foundation. Domain verification, search-engine submission, WAF crawler checks, and real field CWV require the final domain and production access; they have not been performed. Private Sites access prevents external indexing.
 
-Hash-based CSP covers exact inline scripts/JSON-LD, with no arbitrary inline-script or eval permission. Inline styles are allowed for Next/font and media dimensions. Headers include nosniff, frame denial, strict referrer policy, restricted device permissions, and HSTS without unverified subdomain/preload scope. `_headers` applies these where supported; meta CSP is the document fallback. No forms, API endpoints, secrets, or cookie/analytics scripts exist in the site code. Hosting may supply its own access controls.
+Hash-based CSP covers exact inline scripts/JSON-LD, with no arbitrary inline-script or eval permission. Inline styles are allowed for Next/font and media dimensions. Generated header configuration includes nosniff, frame denial, strict referrer policy, restricted device permissions, and HSTS without unverified subdomain/preload scope. **Deployment check:** this private static Sites host does not apply `_headers`. Meta CSP and an explicit referrer meta policy protect the document; HTTP-only frame restrictions, nosniff, Permissions-Policy, HSTS, and cache headers must be applied at the final hosting/CDN layer. No backend was added solely for those headers. All four authenticated deployed routes returned 200. No forms, API endpoints, secrets, or cookie/analytics scripts exist in the site code. Sites supplies owner-only sign-in; the final browser view requires the owner's ChatGPT session.
 
 ## Asset and launch handoff
 

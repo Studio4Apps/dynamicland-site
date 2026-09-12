@@ -12,8 +12,7 @@ export const site: {
   name: 'DynamicLand',
   description:
     'DynamicLand is a macOS app that brings music, widgets, Mini Lands, live activities, and everyday tools to the space around your MacBook’s notch.',
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://dynamicland-official.buzzy-mint-2975.chatgpt.site',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://dynamicland-official.paul-vento2.chatgpt.site',
   download: {
     url: null,
     label: 'Download for Mac',
