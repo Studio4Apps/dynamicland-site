@@ -147,18 +147,10 @@ export function LiquidGlassLens() {
       const heroRect = landscape.getBoundingClientRect();
       const width = landscape.clientWidth;
       const height = landscape.clientHeight;
-      let localX = viewportX - heroRect.left;
-      let localY = viewportY - heroRect.top;
-
-      const transform = getComputedStyle(image).transform;
-      if (transform && transform !== 'none' && typeof DOMMatrixReadOnly !== 'undefined') {
-        const inverse = new DOMMatrixReadOnly(transform).inverse();
-        const transformed = new DOMPoint(localX - width / 2, localY - height / 2).matrixTransform(
-          inverse,
-        );
-        localX = transformed.x + width / 2;
-        localY = transformed.y + height / 2;
-      }
+      const heroDocumentLeft = heroRect.left + window.scrollX;
+      const heroDocumentTop = heroRect.top + window.scrollY;
+      const localX = viewportX - heroDocumentLeft;
+      const localY = viewportY - heroDocumentTop;
 
       const naturalWidth = image.naturalWidth || 1536;
       const naturalHeight = image.naturalHeight || 1024;
@@ -228,7 +220,6 @@ export function LiquidGlassLens() {
     const observer = new ResizeObserver(scheduleDraw);
     observer.observe(surface);
     window.addEventListener('resize', scheduleDraw, { passive: true });
-    window.addEventListener('scroll', scheduleDraw, { passive: true });
     surface.addEventListener('pointermove', move, { passive: true });
     surface.addEventListener('pointerdown', press, { passive: true });
     surface.addEventListener('pointerleave', leave, { passive: true });
@@ -243,7 +234,6 @@ export function LiquidGlassLens() {
       observer.disconnect();
       image.removeEventListener('load', uploadTexture);
       window.removeEventListener('resize', scheduleDraw);
-      window.removeEventListener('scroll', scheduleDraw);
       surface.removeEventListener('pointermove', move);
       surface.removeEventListener('pointerdown', press);
       surface.removeEventListener('pointerleave', leave);

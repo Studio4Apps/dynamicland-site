@@ -143,50 +143,44 @@ body:has(.hero) {
   height: 14px;
   border-radius: 4px 4px 7px 7px;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) {
+body:has(.hero) .product-nav:not(.menu-open) {
   --glass-shadow: rgb(16 5 28 / 55%);
   background: rgb(41 17 68 / 8%);
   box-shadow: 0 14px 36px -24px var(--glass-shadow);
   color: white;
 }
-body:has(.hero)
-  .header-wrap:not([data-scrolled])
-  .product-nav[data-lens-ready='true']:not(.menu-open)
-  .nav-glass-lens {
+body:has(.hero) .product-nav[data-lens-ready='true']:not(.menu-open) .nav-glass-lens {
   opacity: 1;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open)::before {
+body:has(.hero) .product-nav:not(.menu-open)::before {
   background: linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(87 25 128 / 7%));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .desktop-links a {
+body:has(.hero) .product-nav:not(.menu-open) .desktop-links a {
   color: #fff;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .brand-point {
+body:has(.hero) .product-nav:not(.menu-open) .brand-point {
   background: #fff;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .compact {
+body:has(.hero) .product-nav:not(.menu-open) .compact {
   color: white;
   background: transparent;
   border: 0;
   box-shadow: none;
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .liquid-button-track,
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .liquid-button-blob {
+body:has(.hero) .product-nav:not(.menu-open) .liquid-button-track,
+body:has(.hero) .product-nav:not(.menu-open) .liquid-button-blob {
   background: rgb(255 255 255 / 22%);
 }
-body:has(.hero)
-  .header-wrap:not([data-scrolled])
-  .product-nav:not(.menu-open)
-  .download-button.compact:active {
+body:has(.hero) .product-nav:not(.menu-open) .download-button.compact:active {
   box-shadow:
     inset 1px -1px 2px rgb(255 255 255 / 72%),
     inset -1px 1px 4px rgb(30 6 51 / 38%),
     inset -8px 4px 12px -8px rgb(20 5 38 / 55%),
     0 9px 20px -12px rgb(12 2 24 / 65%);
 }
-body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .menu-toggle span {
+body:has(.hero) .product-nav:not(.menu-open) .menu-toggle span {
   background: white;
 }
 .hero {
@@ -870,7 +864,7 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
   .product-nav {
     background: #f8f6fb;
   }
-  body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) {
+  body:has(.hero) .product-nav:not(.menu-open) {
     background: #432772;
   }
 }
@@ -882,7 +876,7 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) {
+  body:has(.hero) .product-nav:not(.menu-open) {
     background: #432772;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
