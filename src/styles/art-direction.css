@@ -8,22 +8,17 @@ body:has(.hero) {
   background: var(--paper);
 }
 .product-nav {
-  --glass-x: 18%;
-  --glass-y: 0%;
-  --glass-tint: rgb(250 249 252 / 45%);
-  --glass-shadow: rgb(35 23 48 / 20%);
-  --glass-blur: 0.75px;
-  --glass-saturation: 158%;
-  background: transparent;
-  border: 1px solid transparent;
+  --glass-shadow: rgb(35 23 48 / 24%);
+  background: rgb(250 249 252 / 62%);
+  border: 0;
   border-radius: 30px;
-  box-shadow: 0 12px 34px -22px var(--glass-shadow);
+  box-shadow: 0 14px 36px -24px var(--glass-shadow);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   isolation: isolate;
-  transform-origin: var(--glass-x) var(--glass-y);
   transition:
     background 300ms,
     color 300ms,
-    border-color 300ms,
     box-shadow 300ms,
     transform 460ms cubic-bezier(0.16, 1.45, 0.3, 1);
 }
@@ -31,93 +26,53 @@ body:has(.hero) {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
   border-radius: inherit;
   pointer-events: none;
-  background:
-    radial-gradient(
-      190px 105px at var(--glass-x) var(--glass-y),
-      rgb(255 255 255 / 72%),
-      rgb(255 255 255 / 20%) 36%,
-      transparent 70%
-    ),
-    radial-gradient(
-      230px 150px at calc(100% - var(--glass-x)) calc(100% - var(--glass-y)),
-      rgb(217 134 255 / 30%),
-      transparent 72%
-    ),
-    linear-gradient(112deg, rgb(255 255 255 / 12%), transparent 42%, rgb(255 255 255 / 8%)),
-    var(--glass-tint);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation))
-    brightness(1.055) contrast(1.025);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)) brightness(1.055)
-    contrast(1.025);
-  transition:
-    background 180ms linear,
-    filter 360ms;
+  background: linear-gradient(180deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 8%));
+  -webkit-backdrop-filter: saturate(145%) brightness(1.04);
+  backdrop-filter: saturate(145%) brightness(1.04);
 }
 .product-nav::after {
   content: '';
   position: absolute;
-  inset: -1px;
-  z-index: -1;
-  padding: 1.5px;
+  inset: 0;
+  z-index: 2;
   border-radius: inherit;
   pointer-events: none;
-  background:
-    radial-gradient(
-      210px 105px at var(--glass-x) var(--glass-y),
-      #fff 0%,
-      rgb(255 255 255 / 78%) 28%,
-      transparent 72%
-    ),
-    radial-gradient(
-      260px 140px at calc(100% - var(--glass-x)) calc(100% - var(--glass-y)),
-      rgb(217 134 255 / 92%),
-      transparent 72%
-    ),
-    conic-gradient(
-      from 148deg,
-      rgb(217 134 255 / 50%),
-      rgb(255 255 255 / 92%) 16%,
-      rgb(255 255 255 / 24%) 34%,
-      rgb(136 16 248 / 42%) 51%,
-      rgb(217 134 255 / 68%) 68%,
-      rgb(255 255 255 / 94%) 86%,
-      rgb(217 134 255 / 50%)
-    );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  -webkit-backdrop-filter: saturate(265%) brightness(1.32) contrast(1.18);
-  backdrop-filter: saturate(265%) brightness(1.32) contrast(1.18);
-  opacity: 0.92;
-  transition:
-    opacity 220ms,
-    filter 360ms;
-}
-.product-nav:hover::after,
-.product-nav:focus-within::after {
-  opacity: 1;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 78%),
+    inset -1px -1px 0 rgb(92 34 134 / 42%),
+    inset 0 0 9px rgb(255 255 255 / 14%);
 }
 .product-nav[data-glass-active='true'] {
-  transform: scale(1.004, 0.985);
+  transform: scale(1.006, 0.978);
   box-shadow: 0 18px 40px -24px var(--glass-shadow);
 }
-.product-nav[data-glass-active='true']::before {
-  filter: saturate(1.12) brightness(1.06);
-}
 .product-nav[data-glass-active='true']::after {
-  opacity: 1;
-  filter: saturate(1.2) brightness(1.12);
+  box-shadow:
+    inset 2px 2px 2px rgb(255 255 255 / 86%),
+    inset -2px -2px 3px rgb(75 18 118 / 58%),
+    inset 0 0 14px rgb(255 255 255 / 20%);
+}
+.nav-glass-lens {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
 }
 .product-nav .compact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border-radius: 22px;
+  background: transparent;
+  border: 0;
   transform-origin: center;
   transition:
     filter var(--quick),
@@ -125,13 +80,56 @@ body:has(.hero) {
     box-shadow 300ms;
 }
 .product-nav .download-button.compact:active {
-  transform: scale(1.045, 0.92);
+  transform: scale(1.06, 0.9);
   border-radius: 25px;
   box-shadow:
-    inset 1px -1px 2px rgb(255 255 255 / 58%),
-    inset -1px 1px 3px rgb(42 12 72 / 28%),
-    inset -7px 3px 10px -7px rgb(35 15 55 / 42%),
-    0 8px 18px -10px rgb(35 15 55 / 52%);
+    inset 1px -1px 2px rgb(255 255 255 / 66%),
+    inset -2px 2px 5px rgb(42 12 72 / 34%),
+    0 9px 20px -11px rgb(35 15 55 / 62%);
+}
+.liquid-button-material {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  filter: url('#dynamicland-goo');
+}
+.liquid-button-track,
+.liquid-button-blob {
+  position: absolute;
+  display: block;
+  background: linear-gradient(110deg, #8810f8 0%, #8810f8 62%, #d986ff 100%);
+}
+.liquid-button-track {
+  inset: 0;
+  border-radius: inherit;
+  transition: transform 460ms cubic-bezier(0.16, 1.65, 0.3, 1);
+}
+.liquid-button-blob {
+  top: 50%;
+  right: 6%;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.6;
+  transform: translate(45%, -50%) scale(0.48);
+  transition:
+    transform 520ms cubic-bezier(0.16, 1.7, 0.3, 1),
+    opacity 240ms;
+}
+.download-button.compact:active .liquid-button-track {
+  transform: scale(0.98, 0.88);
+}
+.download-button.compact:active .liquid-button-blob {
+  opacity: 1;
+  transform: translate(-36%, -50%) scale(1.72, 1.25);
+}
+.liquid-filter-defs {
+  position: fixed;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 .download-button {
   border-radius: 7px;
@@ -146,12 +144,21 @@ body:has(.hero) {
   border-radius: 4px 4px 7px 7px;
 }
 body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) {
-  --glass-tint: rgb(42 21 72 / 16%);
   --glass-shadow: rgb(16 5 28 / 55%);
-  --glass-blur: 0.35px;
-  --glass-saturation: 168%;
+  background: rgb(41 17 68 / 8%);
   box-shadow: 0 14px 36px -24px var(--glass-shadow);
   color: white;
+}
+body:has(.hero)
+  .header-wrap:not([data-scrolled])
+  .product-nav[data-lens-ready='true']:not(.menu-open)
+  .nav-glass-lens {
+  opacity: 1;
+}
+body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open)::before {
+  background: linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(87 25 128 / 7%));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .desktop-links a {
   color: #fff;
@@ -161,9 +168,13 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
 }
 body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .compact {
   color: white;
-  background: #ffffff12;
-  border: 1px solid #ffffff59;
+  background: transparent;
+  border: 0;
   box-shadow: none;
+}
+body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .liquid-button-track,
+body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .liquid-button-blob {
+  background: rgb(255 255 255 / 22%);
 }
 body:has(.hero)
   .header-wrap:not([data-scrolled])
@@ -863,14 +874,6 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
     background: #432772;
   }
 }
-@supports not (mask-composite: exclude) {
-  .product-nav {
-    border-color: rgb(255 255 255 / 56%);
-  }
-  .product-nav::after {
-    display: none;
-  }
-}
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   .product-nav,
   .product-nav.menu-open,
@@ -885,7 +888,11 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
     backdrop-filter: none;
   }
   .product-nav::before,
-  .product-nav::after {
+  .product-nav::after,
+  .nav-glass-lens {
     display: none;
+  }
+  .liquid-button-material {
+    filter: none;
   }
 }

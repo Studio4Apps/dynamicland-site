@@ -13,11 +13,22 @@ export function DownloadButton({
   const dialog = useRef<HTMLDialogElement>(null);
   const label = compact ? downloadCopy.compactLabel : site.download.label;
   const className = `download-button ${compact ? 'compact' : ''} ${light ? 'light' : ''}`;
+  const content = (
+    <>
+      {compact && (
+        <span className="liquid-button-material" aria-hidden="true">
+          <span className="liquid-button-track" />
+          <span className="liquid-button-blob" />
+        </span>
+      )}
+      <span className="download-label">{label}</span>
+      <Arrow down />
+    </>
+  );
   if (site.download.url)
     return (
       <a className={className} href={site.download.url} rel="noopener noreferrer">
-        <span>{label}</span>
-        <Arrow down />
+        {content}
       </a>
     );
   return (
@@ -28,8 +39,7 @@ export function DownloadButton({
         onClick={() => dialog.current?.showModal()}
         aria-haspopup="dialog"
       >
-        <span>{label}</span>
-        <Arrow down />
+        {content}
       </button>
       <dialog
         ref={dialog}
