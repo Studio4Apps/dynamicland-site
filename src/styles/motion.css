@@ -21,9 +21,9 @@
     body:has(.hero) .product-nav::after {
       content: '';
       position: absolute;
-      bottom: 0;
-      left: 14px;
-      right: 14px;
+      bottom: 3px;
+      left: 26px;
+      right: 26px;
       height: 2px;
       background: var(--brand-gradient);
       transform-origin: left;

@@ -1,5 +1,11 @@
 # DynamicLand visual redesign — 18 September 2026
 
+## Follow-up: Frosted Panel navigation
+
+The navigation now uses a 30px-radius frosted panel inspired by the [LiquidGlass Frosted Panel demo](https://liquid-glass.ybouane.com/), with 24px native backdrop blur, restrained saturation, translucent tint, and illuminated inset edges. The mobile menu uses a matching separate frosted surface. Contrast adapts between the purple hero and light chapters. Reduced-transparency/high-contrast preferences receive opaque surfaces; unsupported backdrop filtering has a readable fallback.
+
+Implementation is original CSS, not the reference's `@ybouane/liquidglass` WebGL library, and does not reproduce its physical refraction. This choice avoids rasterizing the long product page for a sticky navigation surface, adding a continuous WebGL rendering pipeline, or altering the existing CSP. No dependency or external runtime request was added. The existing navigation, links, download dialog, Escape dismissal, and reading progress remain intact.
+
 ## Follow-up: purple hero palette
 
 At the owner's request, the hero landscape now uses violet, amethyst, and lavender instead of blue. Its fallback background and contrast overlays use matching plum tones. The landscape, framing, and layout are retained; image generation introduced subtle sunset cloud texture near the horizon. Saved website asset: `/Users/amro/Desktop/DynamicLand Project/public/images/dynamicland-coast.webp` (1536 × 1024). Original edited output: `/Users/amro/.codex/generated_images/01a0b505-64e9-77b2-a32b-ffe6c8c1ec95/exec-4a896475-1c11-42ea-8bb2-fa55a46605eb.png`. Mode: built-in `image_gen`, one image edit using the previous landscape as its reference. The notes and measurements below describe the preceding design pass.
