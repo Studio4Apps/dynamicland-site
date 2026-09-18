@@ -10,7 +10,7 @@ body:has(.hero) {
 .product-nav {
   --glass-tint: rgb(250 249 252 / 54%);
   --glass-shadow: rgb(35 23 48 / 20%);
-  --glass-blur: 4px;
+  --glass-blur: 2px;
   --glass-saturation: 148%;
   background: transparent;
   border: 1px solid transparent;
@@ -31,9 +31,9 @@ body:has(.hero) {
   border-radius: inherit;
   pointer-events: none;
   background:
-    radial-gradient(95% 150% at 12% -58%, rgb(255 255 255 / 44%), transparent 52%),
-    radial-gradient(72% 120% at 92% 155%, rgb(217 134 255 / 16%), transparent 62%),
-    linear-gradient(112deg, rgb(255 255 255 / 11%), transparent 42%, rgb(255 255 255 / 7%)),
+    radial-gradient(95% 150% at 12% -58%, rgb(255 255 255 / 64%), transparent 48%),
+    radial-gradient(72% 120% at 92% 155%, rgb(217 134 255 / 30%), transparent 58%),
+    linear-gradient(112deg, rgb(255 255 255 / 18%), transparent 40%, rgb(255 255 255 / 12%)),
     var(--glass-tint);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation))
     brightness(1.04);
@@ -45,18 +45,18 @@ body:has(.hero) {
   position: absolute;
   inset: -1px;
   z-index: -1;
-  padding: 1px;
+  padding: 1.5px;
   border-radius: inherit;
   pointer-events: none;
   background: conic-gradient(
     from 148deg at 50% 50%,
-    rgb(217 134 255 / 24%),
-    rgb(255 255 255 / 78%) 12%,
-    rgb(255 255 255 / 18%) 31%,
-    rgb(136 16 248 / 18%) 48%,
-    rgb(217 134 255 / 38%) 65%,
-    rgb(255 255 255 / 76%) 84%,
-    rgb(217 134 255 / 24%)
+    rgb(217 134 255 / 48%),
+    rgb(255 255 255 / 96%) 12%,
+    rgb(255 255 255 / 30%) 31%,
+    rgb(136 16 248 / 36%) 48%,
+    rgb(217 134 255 / 62%) 65%,
+    rgb(255 255 255 / 94%) 84%,
+    rgb(217 134 255 / 48%)
   );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -66,9 +66,9 @@ body:has(.hero) {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  -webkit-backdrop-filter: saturate(180%) brightness(1.12) contrast(1.06);
-  backdrop-filter: saturate(180%) brightness(1.12) contrast(1.06);
-  opacity: 0.82;
+  -webkit-backdrop-filter: saturate(230%) brightness(1.24) contrast(1.15);
+  backdrop-filter: saturate(230%) brightness(1.24) contrast(1.15);
+  opacity: 0.98;
   transition: opacity 280ms;
 }
 .product-nav:hover::after,
@@ -93,7 +93,7 @@ body:has(.hero) {
 body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) {
   --glass-tint: rgb(42 21 72 / 22%);
   --glass-shadow: rgb(16 5 28 / 55%);
-  --glass-blur: 3px;
+  --glass-blur: 1.5px;
   --glass-saturation: 140%;
   box-shadow: 0 14px 36px -24px var(--glass-shadow);
   color: white;
@@ -560,8 +560,8 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
     border-radius: 24px;
     border: 1px solid #ffffffb8;
     background: rgb(250 248 252 / 82%);
-    -webkit-backdrop-filter: blur(6px) saturate(142%) brightness(1.03);
-    backdrop-filter: blur(6px) saturate(142%) brightness(1.03);
+    -webkit-backdrop-filter: blur(3px) saturate(142%) brightness(1.03);
+    backdrop-filter: blur(3px) saturate(142%) brightness(1.03);
     box-shadow: 0 12px 30px -15px #24123540;
   }
   .header-wrap {
