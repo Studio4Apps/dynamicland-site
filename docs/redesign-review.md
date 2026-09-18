@@ -1,10 +1,14 @@
 # DynamicLand visual redesign — 18 September 2026
 
-## Follow-up: Frosted Panel navigation
+## Follow-up: original LiquidGlass renderer and single navigation edge
 
-The navigation now uses a 30px-radius frosted panel inspired by the [LiquidGlass Frosted Panel demo](https://liquid-glass.ybouane.com/), with 24px native backdrop blur, restrained saturation, translucent tint, and illuminated inset edges. The mobile menu uses a matching separate frosted surface. Contrast adapts between the purple hero and light chapters. Reduced-transparency/high-contrast preferences receive opaque surfaces; unsupported backdrop filtering has a readable fallback.
+The navigation now lazy-loads `@ybouane/liquidglass` 1.0.3 (MIT) from the original [LiquidGlass project](https://github.com/ybouane/liquidglass). Its public WebGL renderer supplies refraction, chromatic separation, Gaussian blur and one rounded optical edge. The Frosted Panel is adapted with stronger blur (0.9) for navigation readability, 30px desktop / 26px mobile corners, and restrained highlights. The former CSS inset highlights, decorative pseudo-element and inset reading-progress line were removed; they made the corners look like overlapping bars.
 
-Implementation is original CSS, not the reference's `@ybouane/liquidglass` WebGL library, and does not reproduce its physical refraction. This choice avoids rasterizing the long product page for a sticky navigation surface, adding a continuous WebGL rendering pipeline, or altering the existing CSP. No dependency or external runtime request was added. The existing navigation, links, download dialog, Escape dismissal, and reading progress remain intact.
+The live HTML navigation remains accessible and interactive above an aria-hidden, pointer-inert canvas. Rendering happens on scroll/resize/content changes, not in an idle animation loop. Only a padded header-sized region is sent to WebGL, at maximum 1.5 DPR. At most three section snapshots are cached at 1 DPR; visible sections refresh after scrolling stops. Native backdrop blur remains the fallback during capture, on unusually tall sticky scenes, while the mobile menu is expanded, and when WebGL is unavailable. Reduced transparency/high contrast uses the existing opaque fallback. This is progressive enhancement, not a claim that DOM rasterization captures every animated element perfectly.
+
+The production bundle is self-hosted; CSP remains unchanged. The dependency's unneeded `patch-package` postinstall was explicitly disabled because the published renderer is already built. No commercial copy, media placeholders, or download behavior changed.
+
+Validation: production build/type checking, ESLint and static export checks passed. Desktop and 390px mobile previews confirmed the WebGL canvas activates, pseudo-element edges are absent, and menu open/close/Escape work. Axe reported zero violations (43 passes; canvas-backed color contrast requires visual review). The earlier CSS-only implementation is superseded by this pass.
 
 ## Follow-up: purple hero palette
 

@@ -16,30 +16,6 @@
     filter: none;
   }
 }
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    body:has(.hero) .product-nav::after {
-      content: '';
-      position: absolute;
-      bottom: 3px;
-      left: 26px;
-      right: 26px;
-      height: 2px;
-      background: var(--brand-gradient);
-      transform-origin: left;
-      animation: reading-progress linear both;
-      animation-timeline: scroll(root);
-    }
-  }
-}
-@keyframes reading-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
 @supports (animation-timeline: view()) {
   @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
     .hero-landscape {

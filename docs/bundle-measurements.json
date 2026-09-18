@@ -1,10 +1,10 @@
 {
   "homepage_html_bytes": 55161,
-  "homepage_gzip_bytes": 9170,
-  "initial_js_raw": 586766,
-  "initial_js_gzip": 181223,
-  "initial_css_raw": 35306,
-  "initial_css_gzip": 8777,
+  "homepage_gzip_bytes": 9168,
+  "initial_js_raw": 590917,
+  "initial_js_gzip": 182772,
+  "initial_css_raw": 36784,
+  "initial_css_gzip": 8974,
   "js_files": 7,
   "css_files": 2,
   "font_bytes": 132000
