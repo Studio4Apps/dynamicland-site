@@ -6,6 +6,62 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
+  const nav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const surface = nav.current;
+    if (!surface) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let x = 18;
+    let y = 0;
+
+    const paint = () => {
+      frame = 0;
+      surface.style.setProperty('--glass-x', `${x}%`);
+      surface.style.setProperty('--glass-y', `${y}%`);
+    };
+    const schedulePaint = () => {
+      if (!frame) frame = window.requestAnimationFrame(paint);
+    };
+    const move = (event: PointerEvent) => {
+      if (reducedMotion.matches) return;
+      const bounds = surface.getBoundingClientRect();
+      x = Math.min(100, Math.max(0, ((event.clientX - bounds.left) / bounds.width) * 100));
+      y = Math.min(100, Math.max(0, ((event.clientY - bounds.top) / bounds.height) * 100));
+      schedulePaint();
+    };
+    const press = (event: PointerEvent) => {
+      if (event.button !== 0) return;
+      surface.dataset.glassActive = 'true';
+      move(event);
+    };
+    const release = () => {
+      delete surface.dataset.glassActive;
+      schedulePaint();
+    };
+    const leave = () => {
+      release();
+      x = 18;
+      y = 0;
+      schedulePaint();
+    };
+
+    surface.addEventListener('pointermove', move, { passive: true });
+    surface.addEventListener('pointerdown', press, { passive: true });
+    surface.addEventListener('pointerleave', leave, { passive: true });
+    window.addEventListener('pointerup', release, { passive: true });
+    window.addEventListener('pointercancel', release, { passive: true });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      surface.removeEventListener('pointermove', move);
+      surface.removeEventListener('pointerdown', press);
+      surface.removeEventListener('pointerleave', leave);
+      window.removeEventListener('pointerup', release);
+      window.removeEventListener('pointercancel', release);
+    };
+  }, []);
   useEffect(() => {
     const landscape = document.querySelector('.hero-landscape');
     if (!landscape || !header.current) return;
@@ -43,7 +99,11 @@ export function Header() {
   }, [open]);
   return (
     <header className="header-wrap" ref={header}>
-      <nav className={`product-nav ${open ? 'menu-open' : ''}`} aria-label="Main navigation">
+      <nav
+        ref={nav}
+        className={`product-nav ${open ? 'menu-open' : ''}`}
+        aria-label="Main navigation"
+      >
         <a href="/" className="wordmark" aria-label="DynamicLand home">
           <span className="brand-point" aria-hidden="true" />
           DynamicLand
