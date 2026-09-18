@@ -48,6 +48,11 @@ export const everydayChapterCopy = {
 };
 
 export const heroCopy = {
+  introduction: 'A new place for your everyday.',
+  moreToYourMac: 'There’s more to your Mac.',
+  rightAtTheTop: 'Right at the top.',
+  productIntroduction: 'Music, widgets, and the things you reach for.',
+  productLocation: ' Together around your notch.',
   yourMacsNotch: 'Your Mac’s notch.',
   nowPartOfYourDay: 'Now part of your day.',
   dynamiclandBringsYourMusicWidgets: 'DynamicLand brings your music, widgets, and live activities',

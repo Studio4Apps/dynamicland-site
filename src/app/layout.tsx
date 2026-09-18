@@ -4,6 +4,7 @@ import { site } from '@/content/site';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import '@/styles/globals.css';
+import '@/styles/art-direction.css';
 const editorial = localFont({
   src: '../assets/fonts/newsreader-latin.woff2',
   variable: '--font-editorial',

@@ -7,6 +7,18 @@ export function Header() {
   const trigger = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
   useEffect(() => {
+    const landscape = document.querySelector('.hero-landscape');
+    if (!landscape || !header.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.current?.toggleAttribute('data-scrolled', !entry.isIntersecting);
+      },
+      { rootMargin: '-90px 0px 0px 0px' },
+    );
+    observer.observe(landscape);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
     if (!open) return;
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {

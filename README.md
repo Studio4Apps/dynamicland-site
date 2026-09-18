@@ -2,6 +2,8 @@
 
 Fresh Next.js website with four static routes, eleven intentionally empty media frames, and a small progressive motion layer. The current Sites publication is private. Real screenshots, videos, download information, commercial terms, and approved legal copy will be supplied later.
 
+The [18 September visual redesign review](docs/redesign-review.md) documents the current landscape opening, references, image provenance, motion, and validation. The original rebuild report records the earlier baseline.
+
 ## Run
 
 Tested with Node 24.11.0 and pnpm 11.19.0.
@@ -26,6 +28,7 @@ The production preview runs at `http://127.0.0.1:3001`. It binds only to loopbac
 - `src/content/copy.ts`: chapter copy, support narrative, highlights, utility descriptions, and CTA labels. Property names are descriptive editing keys; layout and intentional line breaks stay in the section components.
 - `src/content/media.ts`: all eleven typed media entries. Nothing is fabricated when `src` is null.
 - `src/styles/globals.css`: typography, color, spacing, material, and responsive tokens.
+- `src/styles/art-direction.css`: the current landscape, navigation, and coordinated chapter treatment.
 - `src/styles/motion.css` and `src/components/motion/SceneMotion.tsx`: progressive movement and reduced-motion presentation.
 
 Update `NEXT_PUBLIC_SITE_URL` before switching to the verified official domain and rebuild. This value is public, not a secret. No server runtime environment is needed.

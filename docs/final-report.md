@@ -1,5 +1,7 @@
 # DynamicLand rebuild report
 
+Historical baseline. See the [18 September redesign review](redesign-review.md) for the current visual direction, generated landscape, measurements, and checks.
+
 12 September 2026. Four routes completed: `/`, `/support`, `/privacy`, `/terms`. Eleven empty product-media frames. Commercial and legal fields remain unset as requested; no product UI, pricing, reviews, or download link has been invented.
 
 ## Stack and architecture

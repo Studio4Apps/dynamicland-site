@@ -1,5 +1,6 @@
 import { utilities } from '@/content/copy';
 import { everydayChapterCopy } from '@/content/copy';
+import { FeatureIcon } from '@/components/ui/FeatureIcon';
 
 export function EverydayChapter() {
   return (
@@ -17,9 +18,12 @@ export function EverydayChapter() {
         </p>
       </div>
       <dl className="utility-list">
-        {utilities.map((item) => (
+        {utilities.map((item, index) => (
           <div key={item.name}>
-            <dt>{item.name}</dt>
+            <dt>
+              <FeatureIcon name={(['files', 'timer', 'calendar'] as const)[index]} />
+              {item.name}
+            </dt>
             <dd>{item.description}</dd>
           </div>
         ))}

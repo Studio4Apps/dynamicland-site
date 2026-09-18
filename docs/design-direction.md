@@ -1,5 +1,7 @@
 # DynamicLand design direction
 
+The current [18 September visual direction](redesign-review.md) extends this original brief with a photographic landscape opening and revised chapter composition.
+
 An open, warm-neutral product story with a typographic opening, changing media proportions, one near-black music world, and purple used as a meaningful brand signal. The site should still feel intentional while approved media is absent. No simulated product interfaces.
 
 ## Reference conclusions (12 September 2026)

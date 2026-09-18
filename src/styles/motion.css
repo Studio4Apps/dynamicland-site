@@ -1,4 +1,65 @@
 /* One source of motion timing: variables in globals.css. Native scroll is retained. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy h1 {
+    animation: hero-arrival 1000ms var(--cinematic) both;
+  }
+}
+@keyframes hero-arrival {
+  from {
+    opacity: 0.3;
+    transform: translateY(18px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    body:has(.hero) .product-nav::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 14px;
+      right: 14px;
+      height: 2px;
+      background: var(--brand-gradient);
+      transform-origin: left;
+      animation: reading-progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes reading-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .hero-landscape {
+      view-timeline-name: --landscape;
+    }
+    .hero-landscape-image {
+      animation: landscape-depth linear both;
+      animation-timeline: --landscape;
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+@keyframes landscape-depth {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: translateY(10%) scale(1.12);
+  }
+}
 .music-stage::before {
   content: '';
   position: absolute;
