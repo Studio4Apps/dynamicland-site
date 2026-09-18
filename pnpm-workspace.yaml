@@ -1,5 +1,4 @@
 allowBuilds:
-  '@ybouane/liquidglass': false
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@next/env@16.3.5'

@@ -2,12 +2,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { navigation } from '@/content/site';
 import { DownloadButton } from '@/components/ui/DownloadButton';
-import { useLiquidNavigation } from './useLiquidNavigation';
 export function Header() {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
-  useLiquidNavigation(header);
   useEffect(() => {
     const landscape = document.querySelector('.hero-landscape');
     if (!landscape || !header.current) return;
