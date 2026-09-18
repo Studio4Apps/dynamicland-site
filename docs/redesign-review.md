@@ -8,6 +8,8 @@ The lens renders only after the texture is ready and then redraws on pointer and
 
 The landing-page navbar no longer switches to a light material after the hero. Its opening-frame texture coordinates, purple tint, white controls, refraction, chromatic edge, and rim lighting remain fixed while the page moves beneath it. This keeps one recognizable material over both the landscape and the white chapters instead of changing identity at the section boundary.
 
+The fixed environment texture is supplemented by shader-native reflections so the unified material does not collapse into a flat purple fill over white chapters. A broad diagonal reflection, a narrow specular streak, a returning secondary reflection, a top highlight, and a trailing caustic shadow move together with the pointer and a slow resting sweep. The rounded edge keeps a brighter directional highlight and stronger chromatic split. The sweep is capped near 30 frames per second on the small navbar canvas and is disabled by reduced-motion preferences.
+
 The compact download control adapts the second supplied reference's actual construction instead of approximating it with a gradient. Separate track and blob layers pass through an SVG Gaussian-blur and alpha-threshold goo filter; pressing the control merges and stretches them while the outer control compresses with an elastic curve. No GSAP, Tweakpane, remote image, or external runtime is shipped.
 
 Reduced-motion keeps a static lens and removes compression. Reduced-transparency and increased-contrast hide the shader and use the existing opaque surface. The canvas is decorative and excluded from the accessibility tree.

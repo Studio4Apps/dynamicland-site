@@ -153,7 +153,9 @@ body:has(.hero) .product-nav[data-lens-ready='true']:not(.menu-open) .nav-glass-
   opacity: 1;
 }
 body:has(.hero) .product-nav:not(.menu-open)::before {
-  background: linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(87 25 128 / 7%));
+  background:
+    radial-gradient(74% 190% at 5% -85%, rgb(255 255 255 / 38%), transparent 58%),
+    linear-gradient(180deg, rgb(255 255 255 / 9%), rgb(87 25 128 / 6%));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }

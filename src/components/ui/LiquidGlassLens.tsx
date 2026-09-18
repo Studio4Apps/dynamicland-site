@@ -18,6 +18,7 @@ const fragmentShader = `
   uniform vec2 uvY;
   uniform vec2 pointer;
   uniform float pressed;
+  uniform float time;
   uniform sampler2D scene;
 
   float roundedBoxSdf(vec2 point, vec2 halfSize, float radius) {
@@ -54,10 +55,23 @@ const fragmentShader = `
 
     float pointerLight = exp(-distance(local, pointer) * 7.0);
     float directional = pow(max(dot(direction, normalize(vec2(-0.72, -0.7))), 0.0), 5.0);
-    float highlight = rim * (0.08 + directional * 0.34 + pointerLight * 0.2);
+    float highlight = rim * (0.18 + directional * 0.5 + pointerLight * 0.34);
     float lowerShade = rim * pow(max(dot(direction, normalize(vec2(0.65, 0.76))), 0.0), 4.0);
     color += vec3(1.0, 0.95, 1.0) * highlight;
-    color += vec3(0.22, 0.04, 0.34) * lowerShade * 0.16;
+    color += vec3(0.22, 0.04, 0.34) * lowerShade * 0.22;
+
+    float reflectionCenter = 0.18 + pointer.x * 0.55 + sin(time * 0.55) * 0.1;
+    float reflectionAxis = local.x + local.y * 0.24;
+    float broadReflection = exp(-pow((reflectionAxis - reflectionCenter) * 4.8, 2.0)) * body;
+    float sharpReflection = exp(-pow((reflectionAxis - reflectionCenter + 0.055) * 15.0, 2.0)) * body;
+    float returnReflection = exp(-pow((local.x - local.y * 0.18 - (1.08 - reflectionCenter)) * 8.0, 2.0)) * body;
+    float topReflection = exp(-pow((local.y - (0.08 + pointer.y * 0.08)) * 11.0, 2.0)) * body;
+    float reflection = broadReflection * 0.34 + sharpReflection * 0.28 + returnReflection * 0.16 + topReflection * 0.15;
+    reflection *= 1.0 + pressed * 0.35;
+    color = mix(color, vec3(1.0, 0.93, 1.0), clamp(reflection, 0.0, 0.66));
+
+    float causticShade = exp(-pow((reflectionAxis - reflectionCenter - 0.12) * 9.0, 2.0)) * body;
+    color *= 1.0 - causticShade * 0.17;
     color = mix(color, color * vec3(1.04, 0.98, 1.08), 0.18 + rim * 0.22);
 
     gl_FragColor = vec4(color, 1.0);
@@ -118,6 +132,7 @@ export function LiquidGlassLens() {
       uvY: gl.getUniformLocation(program, 'uvY'),
       pointer: gl.getUniformLocation(program, 'pointer'),
       pressed: gl.getUniformLocation(program, 'pressed'),
+      time: gl.getUniformLocation(program, 'time'),
       scene: gl.getUniformLocation(program, 'scene'),
     };
     const texture = gl.createTexture();
@@ -131,7 +146,10 @@ export function LiquidGlassLens() {
     let pointerY = 0.1;
     let isPressed = 0;
     let frame = 0;
+    let motionFrame = 0;
+    let lastMotionDraw = 0;
     let textureReady = false;
+    const startTime = performance.now();
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const uploadTexture = () => {
@@ -141,6 +159,8 @@ export function LiquidGlassLens() {
       textureReady = true;
       surface.dataset.lensReady = 'true';
       scheduleDraw();
+      if (!reducedMotion.matches && !motionFrame)
+        motionFrame = window.requestAnimationFrame(animate);
     };
 
     const imageUv = (viewportX: number, viewportY: number) => {
@@ -162,7 +182,7 @@ export function LiquidGlassLens() {
       return [(localX - offsetX) / renderedWidth, (localY - offsetY) / renderedHeight] as const;
     };
 
-    const draw = () => {
+    const draw = (now = performance.now()) => {
       frame = 0;
       if (!textureReady) return;
       const rect = canvas.getBoundingClientRect();
@@ -185,6 +205,7 @@ export function LiquidGlassLens() {
       gl.uniform2f(uniforms.uvY, bottom[0] - origin[0], bottom[1] - origin[1]);
       gl.uniform2f(uniforms.pointer, pointerX, pointerY);
       gl.uniform1f(uniforms.pressed, isPressed);
+      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(uniforms.scene, 0);
@@ -192,6 +213,12 @@ export function LiquidGlassLens() {
     };
     const scheduleDraw = () => {
       if (!frame) frame = window.requestAnimationFrame(draw);
+    };
+    const animate = (now: number) => {
+      motionFrame = window.requestAnimationFrame(animate);
+      if (now - lastMotionDraw < 33) return;
+      lastMotionDraw = now;
+      draw(now);
     };
     const move = (event: PointerEvent) => {
       if (reducedMotion.matches) return;
@@ -231,6 +258,7 @@ export function LiquidGlassLens() {
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
+      if (motionFrame) window.cancelAnimationFrame(motionFrame);
       observer.disconnect();
       image.removeEventListener('load', uploadTexture);
       window.removeEventListener('resize', scheduleDraw);
