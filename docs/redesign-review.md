@@ -1,5 +1,15 @@
 # DynamicLand visual redesign — 18 September 2026
 
+## Follow-up: purple hero palette
+
+At the owner's request, the hero landscape now uses violet, amethyst, and lavender instead of blue. Its fallback background and contrast overlays use matching plum tones. The landscape, framing, and layout are retained; image generation introduced subtle sunset cloud texture near the horizon. Saved website asset: `/Users/amro/Desktop/DynamicLand Project/public/images/dynamicland-coast.webp` (1536 × 1024). Original edited output: `/Users/amro/.codex/generated_images/01a0b505-64e9-77b2-a32b-ffe6c8c1ec95/exec-4a896475-1c11-42ea-8bb2-fa55a46605eb.png`. Mode: built-in `image_gen`, one image edit using the previous landscape as its reference. The notes and measurements below describe the preceding design pass.
+
+Exact edit prompt:
+
+> Use case: lighting-weather. Asset type: DynamicLand website hero photograph. Input image: the referenced dynamicland-coast.webp is the sole edit target. Primary request: Edit ONLY the color grading and lighting palette of this existing photograph into refined, natural photographic purple dusk. Replace ALL dominant blue sky and ocean tones with rich violet, amethyst, and plum, with lavender haze at the existing horizon, aligned with DynamicLand's #8810F8 to #D986FF brand palette. Keep the upper and central sky moderately deep violet so white website text will remain readable. Preserve subtle tonal gradients, realistic illumination, photographic detail, sea texture, and nuanced natural highlights and shadows; do not use neon colors or a flat solid overlay. Strict invariants: Preserve EXACTLY the original coast, cliffs, sea, every rock's position and shape, horizon position, crop, framing, camera perspective, photographic textures, and entire composition. Apply color and lighting changes only; do not reconstruct, reinterpret, move, add, or delete anything. Preserve the empty sky and existing landscape geometry exactly. No text, UI, logos, or watermarks. Output: one edited image, 1536x1024 pixels, landscape 3:2, with precisely the same framing as the input. One edit only; no variants.
+
+## Previous design pass
+
 The second design pass responds to the supplied Sarj screenshot and the request for a more memorable, ordered website. The opening now uses one original coastal landscape, a quiet white navigation, mixed sans/Newsreader typography, and one primary action. A separate product stage retains the real screenshot slot. Product imagery has not been fabricated.
 
 The rest of the page has a coordinated material palette: warm white, pale mineral green for Home, charcoal for Music, and a restrained lilac customization chapter. Music now spans the page and uses a larger asymmetric type composition. Seven original outline symbols give the feature navigation and everyday tools a consistent visual language. The protected #8810F8 → #D986FF brand gradient remains on calls to action and small details.

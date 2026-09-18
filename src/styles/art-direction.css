@@ -59,7 +59,7 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
   min-height: 660px;
   overflow: hidden;
   color: white;
-  background: #20428a;
+  background: #48216e;
 }
 .hero-landscape-image {
   object-fit: cover;
@@ -70,7 +70,7 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: linear-gradient(180deg, #0c255729 0%, #1423436b 65%, #10111a80 100%);
+  background: linear-gradient(180deg, #260e4129 0%, #27113f6b 65%, #170d2080 100%);
 }
 .hero-landscape::after {
   content: '';
@@ -500,7 +500,7 @@ body:has(.hero) .header-wrap:not([data-scrolled]) .product-nav:not(.menu-open) .
     object-position: 60% center;
   }
   .hero-shade {
-    background: linear-gradient(#0c25573d, #1423436b 65%, #10111a70);
+    background: linear-gradient(#260e413d, #27113f6b 65%, #170d2070);
   }
   .hero-copy {
     padding: 167px 20px 100px;
