@@ -41,19 +41,21 @@ body:has(.hero) {
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    inset 1px 1px 0 rgb(255 255 255 / 78%),
-    inset -1px -1px 0 rgb(92 34 134 / 42%),
-    inset 0 0 9px rgb(255 255 255 / 14%);
+    1px -1px 2px rgb(255 255 255 / 50%) inset,
+    0 -1px 2px rgb(255 255 255 / 50%) inset,
+    -1px -1px 2px rgb(255 255 255 / 50%) inset,
+    1px 1px 2px rgb(77 77 77 / 50%) inset,
+    -8px 4px 10px -6px rgb(77 77 77 / 25%) inset,
+    -1px 1px 6px rgb(77 77 77 / 25%) inset,
+    -1px -1px 8px rgb(153 153 153 / 15%),
+    1px 1px 2px rgb(77 77 77 / 15%),
+    2px 2px 6px rgb(77 77 77 / 15%),
+    -2px -1px 2px rgb(255 255 255 / 25%) inset,
+    3px 6px 16px -6px rgb(77 77 77 / 50%);
 }
 .product-nav[data-glass-active='true'] {
   transform: scale(1.006, 0.978);
   box-shadow: 0 18px 40px -24px var(--glass-shadow);
-}
-.product-nav[data-glass-active='true']::after {
-  box-shadow:
-    inset 2px 2px 2px rgb(255 255 255 / 86%),
-    inset -2px -2px 3px rgb(75 18 118 / 58%),
-    inset 0 0 14px rgb(255 255 255 / 20%);
 }
 .nav-glass-lens {
   position: absolute;
@@ -145,7 +147,7 @@ body:has(.hero) {
 }
 body:has(.hero) .product-nav:not(.menu-open) {
   --glass-shadow: rgb(16 5 28 / 55%);
-  background: rgb(41 17 68 / 8%);
+  background: rgb(62 22 94 / 18%);
   box-shadow: 0 14px 36px -24px var(--glass-shadow);
   color: white;
 }
@@ -153,9 +155,7 @@ body:has(.hero) .product-nav[data-lens-ready='true']:not(.menu-open) .nav-glass-
   opacity: 1;
 }
 body:has(.hero) .product-nav:not(.menu-open)::before {
-  background:
-    radial-gradient(74% 190% at 5% -85%, rgb(255 255 255 / 38%), transparent 58%),
-    linear-gradient(180deg, rgb(255 255 255 / 9%), rgb(87 25 128 / 6%));
+  background: rgb(72 25 110 / 8%);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }

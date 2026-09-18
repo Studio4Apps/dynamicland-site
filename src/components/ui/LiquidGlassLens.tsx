@@ -18,13 +18,7 @@ const fragmentShader = `
   uniform vec2 uvY;
   uniform vec2 pointer;
   uniform float pressed;
-  uniform float time;
   uniform sampler2D scene;
-
-  float roundedBoxSdf(vec2 point, vec2 halfSize, float radius) {
-    vec2 q = abs(point) - halfSize + radius;
-    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
-  }
 
   vec2 sceneCoordinate(vec2 local) {
     return uvOrigin + (uvX * local.x) + (uvY * local.y);
@@ -32,49 +26,39 @@ const fragmentShader = `
 
   void main() {
     vec2 local = vec2(gl_FragCoord.x / resolution.x, 1.0 - gl_FragCoord.y / resolution.y);
-    vec2 pixel = (local - 0.5) * resolution;
-    float radius = (resolution.y * 0.5) - 1.0;
-    float distanceToEdge = roundedBoxSdf(pixel, (resolution * 0.5) - 1.0, radius);
-    float inside = clamp(-distanceToEdge, 0.0, radius);
-    float rim = 1.0 - smoothstep(0.0, 13.0, inside);
-    float body = smoothstep(0.0, min(38.0, radius), inside);
+    vec2 centered = (local - 0.5) / vec2(0.5);
+    float roundedBox = pow(abs(centered.x), 6.0) + pow(abs(centered.y), 6.0);
+    float body = 1.0 - smoothstep(0.68, 1.0, roundedBox);
+    float innerRim = smoothstep(0.42, 0.88, roundedBox) *
+      (1.0 - smoothstep(0.88, 1.0, roundedBox));
+    float outerRim = smoothstep(0.78, 0.98, roundedBox) *
+      (1.0 - smoothstep(0.98, 1.02, roundedBox));
 
-    vec2 axis = local - 0.5;
-    vec2 direction = normalize(vec2(axis.x * (resolution.x / resolution.y), axis.y) + vec2(0.0001));
-    vec2 localShift = axis * (0.026 + pressed * 0.012) * body;
-    localShift += direction * (0.010 + pressed * 0.006) * rim;
+    float lensStrength = 0.065 + pressed * 0.025;
+    vec2 lensLocal = 0.5 + (local - 0.5) * (1.0 - lensStrength * body);
+    vec2 lens = sceneCoordinate(lensLocal);
 
-    vec2 refracted = sceneCoordinate(local - localShift);
-    vec2 chromatic = sceneCoordinate(local + direction * 0.0026) - sceneCoordinate(local);
-    chromatic *= rim * (1.0 + pressed * 0.7);
+    vec4 sampled = vec4(0.0);
+    float total = 0.0;
+    for (float x = -4.0; x <= 4.0; x++) {
+      for (float y = -4.0; y <= 4.0; y++) {
+        vec2 offset = (uvX * (x * 0.5 / resolution.x)) +
+          (uvY * (y * 0.5 / resolution.y));
+        sampled += texture2D(scene, lens + offset);
+        total += 1.0;
+      }
+    }
+    sampled /= total;
 
-    vec4 center = texture2D(scene, refracted);
-    float red = texture2D(scene, refracted + chromatic).r;
-    float blue = texture2D(scene, refracted - chromatic).b;
-    vec3 color = vec3(red, center.g, blue);
+    float pointerLight = exp(-distance(local, pointer) * 8.0);
+    float verticalLight = clamp((0.38 - centered.y) * 0.17, 0.0, 0.18);
+    vec3 lighting = sampled.rgb;
+    lighting += vec3(1.0, 0.97, 1.0) * body * verticalLight;
+    lighting += vec3(1.0, 0.94, 1.0) * innerRim * (0.1 + pointerLight * 0.12);
+    lighting += vec3(0.72, 0.4, 1.0) * outerRim * 0.13;
+    lighting -= vec3(0.13, 0.05, 0.2) * outerRim * 0.16;
 
-    float pointerLight = exp(-distance(local, pointer) * 7.0);
-    float directional = pow(max(dot(direction, normalize(vec2(-0.72, -0.7))), 0.0), 5.0);
-    float highlight = rim * (0.18 + directional * 0.5 + pointerLight * 0.34);
-    float lowerShade = rim * pow(max(dot(direction, normalize(vec2(0.65, 0.76))), 0.0), 4.0);
-    color += vec3(1.0, 0.95, 1.0) * highlight;
-    color += vec3(0.22, 0.04, 0.34) * lowerShade * 0.22;
-
-    float reflectionCenter = 0.18 + pointer.x * 0.55 + sin(time * 0.55) * 0.1;
-    float reflectionAxis = local.x + local.y * 0.24;
-    float broadReflection = exp(-pow((reflectionAxis - reflectionCenter) * 4.8, 2.0)) * body;
-    float sharpReflection = exp(-pow((reflectionAxis - reflectionCenter + 0.055) * 15.0, 2.0)) * body;
-    float returnReflection = exp(-pow((local.x - local.y * 0.18 - (1.08 - reflectionCenter)) * 8.0, 2.0)) * body;
-    float topReflection = exp(-pow((local.y - (0.08 + pointer.y * 0.08)) * 11.0, 2.0)) * body;
-    float reflection = broadReflection * 0.34 + sharpReflection * 0.28 + returnReflection * 0.16 + topReflection * 0.15;
-    reflection *= 1.0 + pressed * 0.35;
-    color = mix(color, vec3(1.0, 0.93, 1.0), clamp(reflection, 0.0, 0.66));
-
-    float causticShade = exp(-pow((reflectionAxis - reflectionCenter - 0.12) * 9.0, 2.0)) * body;
-    color *= 1.0 - causticShade * 0.17;
-    color = mix(color, color * vec3(1.04, 0.98, 1.08), 0.18 + rim * 0.22);
-
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(clamp(lighting, 0.0, 1.0), 0.74);
   }
 `;
 
@@ -132,7 +116,6 @@ export function LiquidGlassLens() {
       uvY: gl.getUniformLocation(program, 'uvY'),
       pointer: gl.getUniformLocation(program, 'pointer'),
       pressed: gl.getUniformLocation(program, 'pressed'),
-      time: gl.getUniformLocation(program, 'time'),
       scene: gl.getUniformLocation(program, 'scene'),
     };
     const texture = gl.createTexture();
@@ -146,10 +129,7 @@ export function LiquidGlassLens() {
     let pointerY = 0.1;
     let isPressed = 0;
     let frame = 0;
-    let motionFrame = 0;
-    let lastMotionDraw = 0;
     let textureReady = false;
-    const startTime = performance.now();
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const uploadTexture = () => {
@@ -159,8 +139,6 @@ export function LiquidGlassLens() {
       textureReady = true;
       surface.dataset.lensReady = 'true';
       scheduleDraw();
-      if (!reducedMotion.matches && !motionFrame)
-        motionFrame = window.requestAnimationFrame(animate);
     };
 
     const imageUv = (viewportX: number, viewportY: number) => {
@@ -182,7 +160,7 @@ export function LiquidGlassLens() {
       return [(localX - offsetX) / renderedWidth, (localY - offsetY) / renderedHeight] as const;
     };
 
-    const draw = (now = performance.now()) => {
+    const draw = () => {
       frame = 0;
       if (!textureReady) return;
       const rect = canvas.getBoundingClientRect();
@@ -195,9 +173,13 @@ export function LiquidGlassLens() {
         canvas.height = height;
       }
 
-      const origin = imageUv(rect.left, rect.top);
-      const right = imageUv(rect.right, rect.top);
-      const bottom = imageUv(rect.left, rect.bottom);
+      const heroRect = landscape.getBoundingClientRect();
+      const heroDocumentTop = heroRect.top + window.scrollY;
+      const reflectionTop = heroDocumentTop + landscape.clientHeight * 0.22;
+      const reflectionBottom = heroDocumentTop + landscape.clientHeight * 0.44;
+      const origin = imageUv(rect.left, reflectionTop);
+      const right = imageUv(rect.right, reflectionTop);
+      const bottom = imageUv(rect.left, reflectionBottom);
       gl.viewport(0, 0, width, height);
       gl.uniform2f(uniforms.resolution, width, height);
       gl.uniform2f(uniforms.uvOrigin, origin[0], origin[1]);
@@ -205,7 +187,6 @@ export function LiquidGlassLens() {
       gl.uniform2f(uniforms.uvY, bottom[0] - origin[0], bottom[1] - origin[1]);
       gl.uniform2f(uniforms.pointer, pointerX, pointerY);
       gl.uniform1f(uniforms.pressed, isPressed);
-      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(uniforms.scene, 0);
@@ -213,12 +194,6 @@ export function LiquidGlassLens() {
     };
     const scheduleDraw = () => {
       if (!frame) frame = window.requestAnimationFrame(draw);
-    };
-    const animate = (now: number) => {
-      motionFrame = window.requestAnimationFrame(animate);
-      if (now - lastMotionDraw < 33) return;
-      lastMotionDraw = now;
-      draw(now);
     };
     const move = (event: PointerEvent) => {
       if (reducedMotion.matches) return;
@@ -258,7 +233,6 @@ export function LiquidGlassLens() {
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
-      if (motionFrame) window.cancelAnimationFrame(motionFrame);
       observer.disconnect();
       image.removeEventListener('load', uploadTexture);
       window.removeEventListener('resize', scheduleDraw);
