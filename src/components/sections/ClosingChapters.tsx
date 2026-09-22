@@ -1,97 +1,115 @@
-import { closingChaptersCopy } from '@/content/copy';
-import { site, faqs } from '@/content/site';
-import { DownloadButton } from '@/components/ui/DownloadButton';
-import { Arrow } from '@/components/ui/Arrow';
-export function NativeChapter() {
-  return (
-    <section className="native-chapter content-width" aria-labelledby="native-heading">
-      <p className="chapter-label">{closingChaptersCopy.atHomeOnMacOS}</p>
-      <h2 id="native-heading" className="serif">
-        {closingChaptersCopy.madeForTheMac}
-        <br />
-        {closingChaptersCopy.youAlreadyLove}
-      </h2>
-      <div>
-        <p>{closingChaptersCopy.dynamiclandIsBuiltAroundThe}</p>
-        <a className="text-link" href="/privacy/">
-          {closingChaptersCopy.privacyInformation}
-          <Arrow />
-        </a>
-      </div>
-    </section>
-  );
-}
+import Image from 'next/image';
+import { DownloadButton } from '@/components/DownloadButton';
+import { ProBadge } from '@/components/ProBadge';
+import { Arrow, Check } from '@/components/Icon';
+import { faqs, product } from '@/content/product';
+import styles from './Sections.module.css';
 export function Pricing() {
   return (
-    <section className="pricing content-width" id="pricing" aria-labelledby="pricing-heading">
-      <div>
-        <p className="chapter-label">{closingChaptersCopy.pricingAndAvailability}</p>
-        <h2 id="pricing-heading">
-          {closingChaptersCopy.makeRoom}
-          <br />
-          <span className="serif">{closingChaptersCopy.forDynamicLand}</span>
-        </h2>
-      </div>
-      <div className="pricing-detail">
-        <h3>{closingChaptersCopy.dynamiclandForMac}</h3>
-        {site.pricing ? (
-          <>
-            <p className="price">{site.pricing.amount}</p>
-            <p>{site.pricing.detail}</p>
-          </>
-        ) : (
-          <p>
-            {closingChaptersCopy.pricingAndReleaseDetailsWill}
-            <br className="desktop-break" />
-            {closingChaptersCopy.checkBackForTheOfficial}
-          </p>
-        )}
-        <DownloadButton />
-        {site.minimumOS && <p className="small-copy">{site.minimumOS}</p>}
+    <section id="pricing" className={`section ${styles.pricing}`} aria-labelledby="pricing-title">
+      <div className="container">
+        <div className={`${styles.centerHeading} ${styles.pricingHeading}`}>
+          <h2 id="pricing-title">
+            Start free. <span className={styles.accent}>Go further.</span>
+          </h2>
+          <p>Make room for DynamicLand. Add Pro when you’re ready.</p>
+        </div>
+        <div className={styles.priceGrid}>
+          <article className={styles.priceCard} aria-labelledby="free-plan-title">
+            <span className={styles.planBrand}>DynamicLand</span>
+            <h3 id="free-plan-title">Free</h3>
+            <p className={styles.planTerms}>A little more connected. Free to download.</p>
+            <ul className={styles.checkList}>
+              {[
+                'Music controls at a glance',
+                'Clipboard history & File Tray',
+                'A notch that feels like yours',
+              ].map((item) => (
+                <li key={item}>
+                  <Check />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className={styles.planAction}>
+              <DownloadButton />
+              <p>macOS 26.0 or later</p>
+            </div>
+          </article>
+          <article
+            className={`${styles.priceCard} ${styles.proCard}`}
+            aria-labelledby="pro-plan-title"
+          >
+            <span className={styles.planBrand}>DynamicLand</span>
+            <h3 id="pro-plan-title">
+              <ProBadge large />
+            </h3>
+            <p className={styles.planTerms}>Monthly or yearly subscription.</p>
+            <ul className={styles.checkList}>
+              {[
+                'Full Home widgets & MiniLand',
+                'Synced lyrics & clipboard search',
+                'More tools, styles & displays',
+              ].map((item) => (
+                <li key={item}>
+                  <Check />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className={styles.planAction}>
+              <a className="button" href={product.downloadUrl}>
+                Explore Pro <Arrow direction="external" size={18} />
+              </a>
+              <p>Upgrade in the app</p>
+            </div>
+          </article>
+        </div>
+        <p className={styles.priceNote}>
+          Pro features require a subscription. See the app or App Store for current pricing.
+        </p>
       </div>
     </section>
   );
 }
 export function FAQ() {
   return (
-    <section className="faq content-width" aria-labelledby="faq-heading">
-      <div>
-        <h2 id="faq-heading">
-          {closingChaptersCopy.aFewThings}
-          <br />
-          <span className="serif">{closingChaptersCopy.youMightBeWondering}</span>
-        </h2>
-        <a className="text-link" href="/support/">
-          {closingChaptersCopy.visitSupport}
-          <Arrow />
-        </a>
-      </div>
-      <div className="faq-list">
-        {faqs.map((item) => (
-          <details key={item.question} name="faq">
-            <summary>
-              {item.question}
-              <span className="faq-plus" aria-hidden="true" />
-            </summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
+    <section id="faq" className={`section ${styles.faqSection}`} aria-labelledby="faq-title">
+      <div className={`container ${styles.faq}`}>
+        <div className={styles.faqIntro}>
+          <span className="eyebrow">A few useful answers</span>
+          <h2 id="faq-title">Good to know.</h2>
+          <p>A little help getting started.</p>
+          <a href="/support" className="textLink">
+            Visit Support <Arrow size={16} />
+          </a>
+        </div>
+        <div className={styles.faqList}>
+          {faqs.map((item) => (
+            <details key={item.question}>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-export function FinalCTA() {
+export function Closing() {
   return (
-    <section className="final-cta stage-width" aria-labelledby="final-heading">
-      <h2 id="final-heading" data-motion="optical">
-        {closingChaptersCopy.makeYourself}
-        <br />
-        <span className="serif">{closingChaptersCopy.atHome}</span>
-      </h2>
-      <DownloadButton light />
-      <p className="final-wordmark" aria-hidden="true">
-        {closingChaptersCopy.dynamicland}
-      </p>
+    <section className={styles.closing} aria-labelledby="closing-title">
+      <div className={`container ${styles.closingInner}`}>
+        <Image src={product.logo} width={72} height={72} alt="" unoptimized />
+        <h2 id="closing-title">
+          Make a little room
+          <br />
+          for a better everyday.
+        </h2>
+        <p>Your Mac. Your island. Your DynamicLand.</p>
+        <DownloadButton />
+        <p className="fineprint">Free download · macOS 26.0 or later</p>
+      </div>
     </section>
   );
 }

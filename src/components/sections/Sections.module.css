@@ -1,0 +1,550 @@
+.hero {
+  padding-top: clamp(3.75rem, 6.6vw, 6rem);
+}
+.heroCopy {
+  text-align: center;
+  max-width: 57rem;
+  margin-inline: auto;
+}
+.accent {
+  color: var(--purple);
+}
+.heroCopy h1 {
+  line-height: 1.09;
+  letter-spacing: -0.05em;
+}
+.heroCopy > p:not(:global(.fineprint)) {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  margin: 1.625rem auto 0;
+  max-width: 38rem;
+}
+.heroActions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.875rem;
+  margin-bottom: 1rem;
+}
+.heroCopy :global(.fineprint) {
+  font-size: 0.75rem;
+}
+.heroCopy :global(.fineprint) span {
+  margin-inline: 0.4rem;
+  color: #9d9da3;
+}
+.heroMedia {
+  margin-top: 3.75rem;
+}
+.heroMedia > div {
+  border-radius: 1.5rem;
+  background: #f4f4f6;
+}
+.heroCaption {
+  padding-block: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.captionLink {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: #49464c;
+}
+.captionLink:hover {
+  color: var(--purple);
+}
+.split {
+  display: grid;
+  grid-template-columns: 0.9fr 1.3fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: center;
+}
+.home {
+  padding-top: 0;
+}
+.highlights {
+  padding-block: var(--space-chapter-independent);
+}
+.everyday {
+  padding-bottom: var(--space-chapter-independent);
+}
+.chapterCopy p {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: 37rem;
+  margin-top: 1.375rem;
+}
+.chapterCopy p + p {
+  margin-top: 0.75rem;
+}
+.chapterCopy :global(.textLink) {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+}
+.homeDetails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem;
+  margin-top: 3.5rem;
+}
+.homeDetails h3 {
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+  margin: 0.625rem 0;
+}
+.homeDetails p {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  max-width: 34ch;
+}
+.number {
+  color: #8255ad;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: var(--space-content);
+}
+.sectionHeading p {
+  max-width: 32rem;
+  margin-top: var(--space-group);
+  font-size: 1.0625rem;
+}
+.centerHeading {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+  margin-bottom: 3rem;
+}
+.centerHeading p {
+  margin-top: var(--space-group);
+  font-size: 1.0625rem;
+}
+.music {
+  color: #f7f7f9;
+  background: #171719;
+}
+.music :global(.eyebrow) {
+  color: #c294ed;
+}
+.music .sectionHeading p,
+.music p {
+  color: #aeacb7;
+}
+.musicHeading {
+  max-width: 39rem;
+}
+.musicPartners {
+  display: flex;
+  gap: 0.65rem;
+  padding-bottom: 0.2rem;
+  flex-wrap: wrap;
+}
+.musicPartners span {
+  border: 1px solid #3c3c42;
+  border-radius: 2rem;
+  padding: 0.35rem 0.875rem;
+  font-size: 0.75rem;
+  color: #e6e3ec;
+  white-space: nowrap;
+}
+.musicDetails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+.musicDetails h3 {
+  font-size: 1.0625rem;
+  margin-bottom: 0.75rem;
+}
+.musicDetails p {
+  font-size: 0.9375rem;
+}
+.activity {
+  background: #fafafa;
+}
+.activity .split {
+  grid-template-columns: 1.3fr 0.9fr;
+}
+.activity .chapterCopy {
+  order: 2;
+}
+.utilityGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--gap);
+}
+.utilityCard {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+}
+.utilityCopy {
+  padding: 1.75rem 1.75rem 1.5rem;
+  flex: 1;
+}
+.utilityCopy h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.875rem;
+}
+.utilityCopy p {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+.utilityCard > div[data-media-slot] {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  min-height: 15rem;
+  aspect-ratio: auto;
+}
+.utilityCard:first-child > div[data-media-slot] {
+  min-height: 15rem;
+}
+.utilityCard :global(.pro) {
+  margin-top: 1rem;
+}
+.customization {
+  padding-top: 0;
+}
+.compatibility {
+  border-top: 1px solid var(--line);
+  padding-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem;
+  margin-top: var(--space-subsection);
+}
+.compatibility h3 {
+  font-size: 1rem;
+  margin-bottom: 0.65rem;
+}
+.compatibility p {
+  font-size: 0.875rem;
+}
+.pricing {
+  background: #f7f7f9;
+  padding-bottom: var(--space-related-edge);
+}
+.faqSection {
+  padding-top: var(--space-related-edge);
+}
+.priceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap);
+  max-width: 56rem;
+  margin-inline: auto;
+}
+.pricingHeading h2 {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+}
+.priceCard {
+  background: white;
+  border: 1px solid #eae8ee;
+  border-radius: 1.75rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  box-shadow: 0 4px 16px #21143203;
+}
+.planBrand {
+  font-size: 0.8125rem;
+  font-weight: 550;
+  color: var(--muted);
+}
+.priceCard h3 {
+  font-size: 3rem;
+  letter-spacing: -0.045em;
+  margin-top: 0.75rem;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+.planTerms {
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
+.planAction {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+.planAction :global(.button) {
+  width: 100%;
+  border-radius: 0.875rem;
+}
+.planAction p {
+  text-align: center;
+  font-size: 0.75rem;
+  margin-top: 0.875rem;
+}
+.proCard {
+  color: #fff;
+  background: radial-gradient(ellipse at 100% 0%, #573178 0%, #271536 65%);
+  border-color: #553468;
+  box-shadow: 0 8px 24px #27153612;
+}
+.proCard .planBrand,
+.proCard p {
+  color: #ded0e9;
+}
+.proCard .planAction :global(.button) {
+  color: #351745;
+  background: #fff;
+}
+.proCard .planAction :global(.button):hover {
+  background: #f0e5f9;
+}
+.proCard :global(.button):focus-visible {
+  outline-color: #e1b2ff;
+}
+.checkList {
+  list-style: none;
+  padding: 1.5rem 0 0;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.875rem;
+  font-size: 0.875rem;
+}
+.checkList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+.checkList svg {
+  color: var(--purple);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+.proCard .checkList {
+  border-color: #ffffff24;
+}
+.proCard .checkList svg {
+  color: #dca1ff;
+}
+.priceNote {
+  text-align: center;
+  max-width: 48rem;
+  margin: 1.75rem auto 0;
+  font-size: 0.8125rem;
+}
+.faq {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 5rem;
+}
+.faqIntro p {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+}
+.faqIntro :global(.textLink) {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+.faqList {
+  border-top: 1px solid var(--line);
+}
+.faqList details {
+  border-bottom: 1px solid var(--line);
+}
+.faqList summary {
+  font-size: 1rem;
+  font-weight: 550;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.35rem 2.5rem 1.35rem 0;
+  position: relative;
+}
+.faqList summary::-webkit-details-marker {
+  display: none;
+}
+.faqList summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 1.3rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+.faqList details[open] summary::after {
+  content: '−';
+}
+.faqList details p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  padding: 0 2rem 1.5rem 0;
+}
+.closing {
+  text-align: center;
+  padding-block: 1rem 6rem;
+}
+.closingInner {
+  border-top: 1px solid var(--line);
+  padding-top: 4.5rem;
+}
+.closing img {
+  margin: 0 auto 1.5rem;
+}
+.closing h2 {
+  max-width: 43rem;
+  margin-inline: auto;
+}
+.closing p {
+  margin: 1.125rem 0 1.75rem;
+}
+.closing :global(.fineprint) {
+  margin-top: 1rem;
+}
+@media (max-width: 1024px) {
+  .utilityGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .utilityCard:first-child {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .utilityCard:first-child > div[data-media-slot] {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+  .faq {
+    gap: 3rem;
+  }
+  .priceCard {
+    padding: 2rem;
+  }
+}
+@media (max-width: 760px) {
+  .split,
+  .activity .split {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+  .chapterCopy {
+    max-width: 35rem;
+  }
+  .activity .chapterCopy {
+    order: 0;
+  }
+  .homeDetails {
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .sectionHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .musicDetails {
+    gap: 1.5rem;
+  }
+  .priceGrid {
+    grid-template-columns: 1fr;
+    max-width: 35rem;
+  }
+  .faq {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .heroCaption {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+  }
+  .compatibility {
+    gap: 1.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 3rem;
+  }
+  .heroCopy h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.045em;
+  }
+  .heroCopy > p:not(:global(.fineprint)) {
+    font-size: 1.0625rem;
+    margin-top: 1.25rem;
+  }
+  .heroActions {
+    margin-top: 1.5rem;
+  }
+  .heroActions :global(.button) {
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+  }
+  .heroMedia {
+    margin-top: 2.5rem;
+  }
+  .heroMedia > div {
+    aspect-ratio: 4 / 3;
+  }
+  .desktopBreak {
+    display: none;
+  }
+  .homeDetails,
+  .musicDetails,
+  .compatibility {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .homeDetails > div,
+  .musicDetails > div {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .homeDetails p {
+    max-width: none;
+  }
+  .musicDetails > div {
+    border-color: #333338;
+  }
+  .music [data-media-slot] {
+    aspect-ratio: 4 / 3;
+  }
+  .utilityGrid {
+    grid-template-columns: 1fr;
+  }
+  .utilityCard:first-child {
+    grid-column: auto;
+    display: flex;
+  }
+  .utilityCard:first-child > div[data-media-slot] {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+  .utilityCopy {
+    padding: 1.5rem;
+  }
+  .utilityCard > div[data-media-slot],
+  .utilityCard:first-child > div[data-media-slot] {
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+  }
+  .priceCard {
+    padding: 1.75rem;
+  }
+  .closing {
+    padding-bottom: 4rem;
+  }
+}

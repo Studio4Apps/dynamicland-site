@@ -1,0 +1,77 @@
+.page {
+  min-height: 65vh;
+  padding-block: 4rem 6rem;
+}
+.heading {
+  max-width: 45rem;
+  margin-bottom: 3rem;
+}
+.back {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.back:hover {
+  color: var(--purple);
+}
+.heading h1 {
+  font-size: clamp(2.5rem, 4.5vw, 3.5rem);
+}
+.heading > p {
+  margin-top: 1.5rem;
+  font-size: 1.125rem;
+  max-width: 58ch;
+}
+.content {
+  max-width: 50rem;
+}
+.content section {
+  margin-block: 2.5rem;
+}
+.content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.content h3 {
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.content p {
+  margin-block: 0.875rem;
+}
+.content a:not(:global(.button)) {
+  color: var(--purple);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+.content ul,
+.content ol {
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+.content li {
+  margin-block: 0.625rem;
+}
+.contact {
+  padding: 2rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.notice {
+  border-left: 2px solid #caa3ed;
+  padding-left: 1.25rem;
+}
+@media (max-width: 600px) {
+  .page {
+    padding-block: 2rem 4rem;
+  }
+  .contact {
+    padding: 1.5rem;
+  }
+}

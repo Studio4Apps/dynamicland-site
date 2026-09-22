@@ -1,0 +1,44 @@
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--media-ratio, 16 / 10);
+  background: #f2f2f4;
+  border: 1px solid #eaeaec;
+  border-radius: var(--radius);
+  overflow: clip;
+  min-width: 0;
+}
+.label {
+  position: absolute;
+  bottom: 1rem;
+  left: 1.25rem;
+  color: #6e6e77;
+  font-size: 0.625rem;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  user-select: none;
+}
+.frame img,
+.frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--media-fit, contain);
+  object-position: var(--media-position, center);
+}
+.dark {
+  background: #232327;
+  border-color: #2b2b30;
+}
+.dark .label {
+  color: #8f8f99;
+}
+.asset {
+  position: absolute;
+  inset: 0;
+}
+@media (max-width: 600px) {
+  .label {
+    left: 1rem;
+    bottom: 0.9rem;
+  }
+}

@@ -1,37 +1,42 @@
-import { SceneMotion } from '@/components/motion/SceneMotion';
-import '@/styles/motion.css';
+import { headers } from 'next/headers';
 import { Hero } from '@/components/sections/Hero';
-import { Highlights } from '@/components/sections/Highlights';
 import { HomeChapter } from '@/components/sections/HomeChapter';
-import { MiniLandsChapter } from '@/components/sections/MiniLandsChapter';
-import { MusicChapter } from '@/components/sections/MusicChapter';
-import { EverydayChapter } from '@/components/sections/EverydayChapter';
-import { ContextualChapter } from '@/components/sections/ContextualChapter';
-import { CustomizationChapter } from '@/components/sections/CustomizationChapter';
-import { NativeChapter, Pricing, FAQ, FinalCTA } from '@/components/sections/ClosingChapters';
-import { productStructuredData } from '@/lib/seo';
-export default function Home() {
+import { Highlights } from '@/components/sections/Highlights';
+import {
+  MusicChapter,
+  ActivityChapter,
+  EverydayChapter,
+  CustomizationChapter,
+} from '@/components/sections/ProductChapters';
+import { Pricing, FAQ, Closing } from '@/components/sections/ClosingChapters';
+import { Motion } from '@/components/interactive/Motion';
+import { pageMetadata, serializeJsonLd, structuredData } from '@/lib/seo';
+import { product } from '@/content/product';
+
+export const metadata = pageMetadata(
+  'DynamicLand — Your Mac, a little more connected',
+  product.description,
+);
+export default async function Page() {
+  const nonce = (await headers()).get('x-nonce') || undefined;
   return (
     <main id="main">
-      <SceneMotion />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productStructuredData).replace(/</g, '\\u003c'),
-        }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData()) }}
       />
       <Hero />
       <Highlights />
       <HomeChapter />
-      <MiniLandsChapter />
       <MusicChapter />
+      <ActivityChapter />
       <EverydayChapter />
-      <ContextualChapter />
       <CustomizationChapter />
-      <NativeChapter />
       <Pricing />
       <FAQ />
-      <FinalCTA />
+      <Closing />
+      <Motion />
     </main>
   );
 }

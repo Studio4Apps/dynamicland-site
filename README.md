@@ -1,63 +1,74 @@
 # DynamicLand website
 
-Fresh Next.js website with four static routes, eleven intentionally empty media frames, and a small progressive motion layer. The current Sites publication is private. Real screenshots, videos, download information, commercial terms, and approved legal copy will be supplied later.
+A complete four-route product site: `/`, `/support`, `/privacy`, `/terms`. Original light visual system, timed highlights gallery, coordinated style selector, native FAQ, responsive menu and a limited dark music chapter. All 15 product media slots are intentionally empty.
 
-The [18 September visual redesign review](docs/redesign-review.md) documents the current landscape opening, references, image provenance, motion, and validation. The original rebuild report records the earlier baseline.
+## Run locally
 
-## Run
-
-Tested with Node 24.11.0 and pnpm 11.19.0.
+Use Node **24.21.0** (see `.nvmrc` / `.node-version`) and pnpm **11.25.0**. Dependencies and the lockfile are pinned. With that Node version selected:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Development runs at `http://127.0.0.1:3000`. To check the production export:
+Development runs at `http://127.0.0.1:3000`. Production-mode review:
 
 ```sh
 pnpm build
 pnpm start
 ```
 
-The production preview runs at `http://127.0.0.1:3001`. It binds only to loopback and is not a production application server. Production is the static `out/` directory. Sites registration is preserved in `.openai/hosting.json`.
+The production server binds to loopback at `http://127.0.0.1:3001`. Both modes are local/non-indexable by default. This task used a separately verified Node 24.21.0 binary because the machine's default Node was older; the system installation was left unchanged. Select the declared runtime before reproducing checks.
 
-## Edit content
-
-- `src/content/site.ts`: product identity, canonical origin, navigation, download URL, price, compatibility, support contact, approved legal sections, and FAQ.
-- `src/content/copy.ts`: chapter copy, support narrative, highlights, utility descriptions, and CTA labels. Property names are descriptive editing keys; layout and intentional line breaks stay in the section components.
-- `src/content/media.ts`: all eleven typed media entries. Nothing is fabricated when `src` is null.
-- `src/styles/globals.css`: typography, color, spacing, material, and responsive tokens.
-- `src/styles/art-direction.css`: the current landscape, navigation, and coordinated chapter treatment.
-- `src/styles/motion.css` and `src/components/motion/SceneMotion.tsx`: progressive movement and reduced-motion presentation.
-
-Update `NEXT_PUBLIC_SITE_URL` before switching to the verified official domain and rebuild. This value is public, not a secret. No server runtime environment is needed.
-
-## Supply real media
-
-Place optimized approved assets inside `public/media/`, then update the corresponding manifest entry with `/media/filename.avif` or `/media/filename.mp4`. Set accurate alt text, intrinsic width and height, and an appropriate ratio. `contain` is the default so changing source proportions never forces a redesign. Use `cover` only after reviewing the crop. Supply a poster and WebVTT captions for meaningful video audio.
-
-Only the hero image is preloaded. Other images are lazy; videos use native controls, `playsInline`, `preload="none"`, and no autoplay. Static export has no on-demand image optimizer: prepare suitable compressed assets before adding them. If the eventual images need responsive source variants, add them deliberately at that point and measure the final delivery sizes.
-
-## Architecture
-
-App Router pages and chapter components render on the server at build time. The mobile navigation, download dialog, and optical arrivals are the small client islands. There is no CMS, database, form endpoint, analytics, WebGL, third-party runtime script, or motion library. Anchors intentionally use native full-document navigation; each page has its own hash-based content policy.
-
-Each product chapter owns its composition. Home layers two captures; Mini Lands has one bounded desktop sticky scene; Music is a dark cinematic chapter; utilities are an open description list; AI has a side composition; customization becomes a horizontal snap gallery on mobile.
-
-## Verify
+## Check
 
 ```sh
 pnpm typecheck
 pnpm lint
+pnpm test:unit
 pnpm build
-node scripts/verify-export.mjs
+pnpm security:scan
 pnpm audit
-pnpm peers check
+pnpm exec playwright install chromium firefox webkit
+pnpm test
+node scripts/capture-qa.mjs
+node scripts/capture-carousel.mjs
+node scripts/performance.mjs
+pnpm release:check
 ```
 
-The local preview supports `?audit=perf` for a read-only performance observer and `?audit=a11y` for axe. Results are written into `document.documentElement.dataset.auditMetrics` and `.auditA11y`. These scripts are not included in `out/`. Never combine axe timings with performance results. The optional `&motion=reduce` route rewrites the local test response to exercise reduced-motion CSS/JS without changing OS settings; it is an emulation, not an OS preference test.
+Browser tests start/reuse the local production server. Capture and performance scripts require it to be running. Use `pnpm test --project=chromium --project=webkit` to reproduce the locally available engines; Firefox failed to start on this machine (details in the verification report). Optional `BASE_URL` points browser QA at another authorized running build. `RELEASE_BASE_URL=http://127.0.0.1:3001 pnpm release:check` also compares served canonicals, indexing headers, robots and sitemap with current configuration. The release check **intentionally exits 1** until the public origin and website legal requirements are resolved.
 
-Security headers are generated by `scripts/finalize-export.mjs`. `_headers` support depends on the host; equivalent HTTP configuration is required where this file is not honored. Meta CSP provides a document fallback. The local HTTP preview omits HTTPS upgrading; production retains it.
+## Architecture
 
-See [the build report](docs/final-report.md), [research notes](docs/design-direction.md), and [launch checklist](docs/launch-checklist.md).
+Next.js **16.3.5**, React **19.3.0**, TypeScript **6.0.3**, CSS Modules and a system sans-serif stack. Server components render factual content in initial HTML; small client components enhance native interactions. No CMS, analytics, external fonts, contact API, account system or motion dependency.
+
+- `src/content/`: shared product facts, editorial copy, typed media manifest.
+- `src/components/sections/`: homepage chapters.
+- `src/components/interactive/`: gallery and detail selector; native scrolling/radios remain usable without enhancements.
+- `src/components/media/`: blank state and future local image/video rendering.
+- `src/components/interactive/Motion.tsx`: finite progressive animation, live reduced-motion cleanup.
+- `src/lib/`: configuration, media validation, metadata and safe JSON-LD serialization.
+- `src/proxy.ts`: fresh per-response nonce and enforced CSP.
+
+Rendering uses the standard **Next Node server**, not static export. Reading request headers makes HTML dynamic. HTML is `private, no-store`; route links use full-document navigation to keep nonce boundaries explicit. The CDN must preserve this behavior. Hashed static assets may be cached. Do not use the removed legacy export scripts or share-cache nonce-bearing HTML.
+
+## Configuration and launch dependencies
+
+`.env.example` documents `SITE_ENV=local|preview|production`, the optional owner-approved HTTPS `SITE_ORIGIN`, `LEGAL_APPROVED`, and independent `TRAINING_CRAWLERS=block|allow`. Never put credentials in public variables.
+
+There is no assumed domain. Without an origin, canonicals and absolute social URLs are omitted rather than set to localhost. Local/preview pages have noindex, an empty sitemap and no robots sitemap directive. Production is deliberately blocked until approved website-specific policy text replaces both pending legal notices, `legalContentReady` is updated in `src/lib/config.ts`, the owner sets the real origin, and `LEGAL_APPROVED=true`. Existing app legal documents are linked from the legal routes; they do not establish website-hosting practices.
+
+No deployment, push, DNS modification, account verification or external submission was performed. Missing product captures are intentional and do not fail the release check. They can be added later using the manifest guide.
+
+## Handoff documents
+
+- [Verified product facts and asset provenance](docs/product-facts.md)
+- [Design and motion contract](docs/design-and-motion.md)
+- [Timed carousel correction and verification](docs/carousel-correction.md)
+- [Homepage vertical rhythm correction](docs/spacing-correction.md)
+- [Media slots and replacement procedure](docs/media-guide.md)
+- [Security, discovery and launch responsibilities](docs/security-and-discovery.md)
+- [Implemented / verified / not verified report](docs/verification.md)
+
+Local screenshots, recordings, traces and raw measurements are in ignored `artifacts/`; Playwright reports are in ignored `playwright-report/` and `test-results/`. These files, the private evidence docs and reference archives are never public assets. Existing staged deletions from the discarded site were preserved; this implementation does not stage or commit on the owner's behalf.

@@ -6,3 +6,8 @@ dist/
 !.env.example
 *.tsbuildinfo
 .DS_Store
+artifacts/
+test-results/
+playwright-report/
+reference-inputs/
+.serena/

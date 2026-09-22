@@ -1,54 +1,46 @@
 export type MediaSlot = {
   id: string;
-  type: 'photo' | 'video';
-  src: string | null;
   label: string;
+  role: string;
+  type: 'image' | 'video';
+  src: string | null;
+  alt?: string;
+  width?: number;
+  height?: number;
   ratio: string;
-  alt: string;
-  width: number;
-  height: number;
   fit: 'contain' | 'cover';
+  position: string;
+  responsive?: { srcSet: string; sizes: string; media?: string }[];
   poster?: string;
-  captions?: string;
+  priority?: boolean;
 };
-const photo = (
+const slot = (
   id: string,
   label: string,
-  ratio: string,
-  width: number,
-  height: number,
-): MediaSlot => ({
-  id,
-  type: 'photo',
-  src: null,
-  label,
-  ratio,
-  alt: '',
-  width,
-  height,
-  fit: 'contain',
-});
-export const mediaSlots = {
-  heroPrimary: photo('hero-primary', 'PHOTO 01', '2.75 / 1', 1650, 600),
-  homeMain: photo('home-main', 'PHOTO 02', '1.6 / 1', 1440, 900),
-  homeDetail: photo('home-detail', 'PHOTO 03', '1.2 / 1', 720, 600),
-  miniMain: photo('mini-main', 'PHOTO 04', '1.75 / 1', 1400, 800),
-  miniDetail: photo('mini-detail', 'PHOTO 05', '1.4 / 1', 840, 600),
-  widgets: photo('widgets', 'PHOTO 06', '2.3 / 1', 1380, 600),
-  music: {
-    id: 'music',
-    type: 'video',
-    src: null,
-    label: 'VIDEO 01',
-    ratio: '2.1 / 1',
-    alt: '',
-    width: 1680,
-    height: 800,
-    fit: 'contain',
-  } as MediaSlot,
-  customizationA: photo('customization-a', 'PHOTO 07', '1.25 / 1', 1000, 800),
-  customizationB: photo('customization-b', 'PHOTO 08', '1.25 / 1', 1000, 800),
-  customizationC: photo('customization-c', 'PHOTO 09', '1.25 / 1', 1000, 800),
-  contextual: photo('contextual', 'PHOTO 10', '1.35 / 1', 1080, 800),
-};
-export type MediaKey = keyof typeof mediaSlots;
+  role: string,
+  ratio = '16 / 10',
+  type: MediaSlot['type'] = 'image',
+): MediaSlot => ({ id, label, role, ratio, type, src: null, fit: 'contain', position: 'center' });
+export const media = {
+  hero: { ...slot('hero', 'Photo 01', 'Overview hero', '2 / 1'), priority: true },
+  'highlight-home': slot('highlight-home', 'Photo 02', 'Home highlight', '16 / 9'),
+  'highlight-music': slot('highlight-music', 'Photo 03', 'Music highlight', '16 / 9'),
+  'highlight-activities': slot('highlight-activities', 'Photo 04', 'MiniLand highlight', '16 / 9'),
+  'highlight-clipboard': slot('highlight-clipboard', 'Photo 05', 'Clipboard highlight', '16 / 9'),
+  'highlight-customization': slot(
+    'highlight-customization',
+    'Photo 06',
+    'Customization highlight',
+    '16 / 9',
+  ),
+  home: slot('home', 'Photo 07', 'Home widget chapter', '6 / 5'),
+  music: slot('music', 'Video 01', 'Now Playing chapter', '2 / 1', 'video'),
+  activities: slot('activities', 'Photo 08', 'MiniLand activities', '16 / 9'),
+  clipboard: slot('clipboard', 'Photo 09', 'Clipboard feature', '16 / 10'),
+  tray: slot('tray', 'Photo 10', 'File Tray feature', '1 / 1'),
+  tools: slot('tools', 'Photo 11', 'Timer and Voice Memos', '1 / 1'),
+  'custom-notch': slot('custom-notch', 'Photo 12', 'Dynamic Notch preview', '4 / 3'),
+  'custom-pill': slot('custom-pill', 'Photo 13', 'Dynamic Pill preview', '4 / 3'),
+  'custom-glass': slot('custom-glass', 'Photo 14', 'Liquid Glass preview', '4 / 3'),
+} satisfies Record<string, MediaSlot>;
+export type SlotId = keyof typeof media;

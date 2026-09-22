@@ -1,14 +1,21 @@
 import type { MetadataRoute } from 'next';
-import { site } from '@/content/site';
-export const dynamic = 'force-static';
-// Search access and foundation-model training are independent policies.
-// This initial policy permits discovery while declining training use.
+import { getSiteConfig } from '@/lib/config';
+export const dynamic = 'force-dynamic';
 export default function robots(): MetadataRoute.Robots {
+  const { origin, indexable, training } = getSiteConfig();
+  // Previews stay crawlable so crawlers can see the noindex response; access protection is a host responsibility.
   return {
     rules: [
       { userAgent: '*', allow: '/' },
-      { userAgent: ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended'], disallow: '/' },
+      ...(training === 'block'
+        ? [
+            {
+              userAgent: ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended', 'CCBot'],
+              disallow: '/',
+            },
+          ]
+        : []),
     ],
-    sitemap: `${site.url}/sitemap.xml`,
+    ...(indexable && origin ? { sitemap: `${origin}/sitemap.xml` } : {}),
   };
 }

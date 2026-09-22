@@ -1,0 +1,374 @@
+.gallery {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--wide);
+  margin-inline: auto;
+}
+.track {
+  --card-size: min(51.5rem, 80vw);
+  --track-gutter: max(var(--gutter), calc((100% - var(--content)) / 2));
+  display: flex;
+  position: relative;
+  gap: 1.5rem;
+  padding: 0.25rem var(--track-gutter) 0.875rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--track-gutter);
+  scrollbar-width: none;
+  cursor: grab;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+.track[data-moving='true'] {
+  scroll-snap-type: none;
+  user-select: none;
+}
+.track:active {
+  cursor: grabbing;
+}
+.track:focus-visible {
+  outline-offset: -4px;
+}
+.slide {
+  flex: 0 0 var(--card-size);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.trailer {
+  flex: 0 0 max(0px, calc(100% - var(--card-size) - 1.5rem));
+}
+/* The whole capsule + playback surface is centered independently of the arrows. */
+.galleryControls {
+  order: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: 1.25rem;
+  gap: 1rem;
+  visibility: hidden;
+}
+.gallery[data-enhanced='true'] .galleryControls {
+  visibility: visible;
+}
+.playbackGroup {
+  --active-extra: 2.5rem;
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.galleryCount {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.galleryCount span {
+  color: #727279;
+}
+.dots,
+.playback {
+  background: rgba(232, 232, 237, 0.72);
+  border: 0;
+  border-radius: 999px;
+  height: 3.5rem;
+}
+.dots {
+  order: -1;
+  display: flex;
+  align-items: center;
+  padding-inline: 1rem;
+}
+.dots button {
+  --expansion: 0;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: calc(1.5rem + var(--active-extra) * var(--expansion));
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+}
+.indicator {
+  display: block;
+  position: relative;
+  width: calc(0.5rem + var(--active-extra) * var(--expansion));
+  height: 0.5rem;
+  background: rgba(0, 0, 0, 0.42);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: #29292a;
+}
+.playback {
+  display: grid;
+  place-items: center;
+  flex: 0 0 3.5rem;
+  width: 3.5rem;
+  padding: 0;
+  color: #29292a;
+}
+.playback svg {
+  fill: currentColor;
+}
+.playback:hover {
+  background: rgba(222, 222, 228, 0.85);
+}
+.playback:active {
+  background: rgba(212, 212, 219, 0.9);
+}
+.arrows {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: flex;
+  gap: 0.5rem;
+}
+.arrows button {
+  display: grid;
+  place-items: center;
+  height: 2.75rem;
+  width: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid #e3e3e7;
+  background: white;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+.arrows button:hover:not(:disabled) {
+  background: #f1e7fa;
+}
+.arrows button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+.arrows button:disabled {
+  color: #b7b7bd;
+  background: #f7f7f9;
+  border-color: #f0f0f3;
+}
+.highlightCopy {
+  padding: 1.625rem 0.125rem 0.25rem;
+  max-width: 42rem;
+}
+.highlightCopy > span {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 0.625rem;
+}
+.highlightCopy h3 {
+  font-size: 1.5rem;
+}
+.highlightCopy p {
+  font-size: 0.9375rem;
+  margin-top: 0.65rem;
+}
+.selector {
+  display: grid;
+  grid-template-columns: 0.85fr 1.4fr;
+  gap: 4.5rem;
+  align-items: center;
+}
+.options {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.option {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  padding: 1.5rem 0 1.5rem 1.5rem;
+  cursor: pointer;
+}
+.option:first-of-type {
+  border-top: 1px solid var(--line);
+}
+.option::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.4rem;
+  bottom: 1.4rem;
+  width: 2px;
+  border-radius: 1px;
+  background: transparent;
+  transition: background 200ms ease;
+}
+.option:has(input:checked)::before {
+  background: var(--purple);
+}
+.option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.option:has(input:focus-visible) {
+  outline: 3px solid var(--purple);
+  outline-offset: 5px;
+  border-radius: 0.25rem;
+}
+.optionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #68666c;
+}
+.option:has(input:checked) .optionTitle {
+  color: var(--ink);
+}
+.optionArrow {
+  margin-left: auto;
+  padding-inline: 0.75rem;
+  font-size: 1.25rem;
+  color: #828087;
+}
+.option:has(input:checked) .optionArrow {
+  color: var(--purple);
+}
+.optionDescription {
+  display: block;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  margin-top: 0.75rem;
+  color: var(--muted);
+}
+.option:not(:has(input:checked)) .optionDescription {
+  display: none;
+}
+.previewStage {
+  display: grid;
+  min-width: 0;
+}
+.preview {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.selector:has(input[value='notch']:checked) [data-preview='notch'],
+.selector:has(input[value='pill']:checked) [data-preview='pill'],
+.selector:has(input[value='glass']:checked) [data-preview='glass'] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+@supports not selector(:has(*)) {
+  .preview:first-child {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+@media (max-width: 760px) {
+  .selector {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
+  }
+  .options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .option,
+  .option:first-of-type {
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 1rem 0.875rem;
+  }
+  .option::before {
+    display: none;
+  }
+  .option:has(input:checked) {
+    border-color: #cfacf0;
+    background: #fbf7ff;
+  }
+  .optionTitle {
+    font-size: 0.875rem;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .optionArrow {
+    display: none;
+  }
+  .optionDescription {
+    font-size: 0.8125rem;
+  }
+}
+@media (max-width: 600px) {
+  .track {
+    --card-size: calc(100vw - 3.75rem);
+    gap: 1rem;
+  }
+  .track [data-media-slot] {
+    aspect-ratio: 4 / 3;
+  }
+  .highlightCopy h3 {
+    font-size: 1.25rem;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+  }
+  .option,
+  .option:first-of-type {
+    padding: 1rem 1.25rem;
+  }
+  .optionTitle {
+    font-size: 1rem;
+  }
+  .optionDescription {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  .option:not(:has(input:checked)) .optionDescription {
+    display: none;
+  }
+}
+@media (max-width: 734px) {
+  .playbackGroup {
+    --active-extra: 1.5rem;
+  }
+  .galleryControls {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+  .playbackGroup {
+    grid-column: 1;
+    justify-self: center;
+  }
+  .galleryCount {
+    display: none;
+  }
+  .arrows {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+  }
+}
+@media (max-width: 374px) {
+  .dots {
+    padding-inline: 0.5rem;
+  }
+}

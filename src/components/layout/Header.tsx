@@ -1,81 +1,118 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
-import { navigation } from '@/content/site';
-import { DownloadButton } from '@/components/ui/DownloadButton';
-import { LiquidGlassLens, LiquidGooFilter } from '@/components/ui/LiquidGlassLens';
+import Image from 'next/image';
+import { useEffect, useRef } from 'react';
+import { product } from '@/content/product';
+import { DownloadButton } from '@/components/DownloadButton';
+import styles from './Layout.module.css';
+
+const links = [
+  { href: '/#overview', label: 'Overview' },
+  { href: '/#features', label: 'Features' },
+  { href: '/#pricing', label: 'Pricing' },
+  { href: '/support', label: 'Support' },
+];
 export function Header() {
-  const [open, setOpen] = useState(false);
-  const trigger = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
-  const nav = useRef<HTMLElement>(null);
+  const menu = useRef<HTMLDetailsElement>(null);
+  const trigger = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (!open) return;
-    const key = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        trigger.current?.focus();
+    const disclosure = menu.current;
+    const nav = header.current;
+    if (!disclosure || !nav) return;
+    const close = (restore = false) => {
+      disclosure.open = false;
+      if (restore) trigger.current?.focus();
+    };
+    const toggle = () => {
+      trigger.current?.setAttribute(
+        'aria-label',
+        disclosure.open ? 'Close navigation menu' : 'Open navigation menu',
+      );
+      // Safari does not necessarily focus a clicked summary. Establish a
+      // predictable starting point without moving focus out of an open menu.
+      if (disclosure.open && !disclosure.contains(document.activeElement))
+        trigger.current?.focus({ preventScroll: true });
+    };
+    const key = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && disclosure.open) {
+        close(true);
+        event.preventDefault();
       }
     };
-    const pointer = (e: PointerEvent) => {
-      if (!header.current?.contains(e.target as Node)) setOpen(false);
+    const pointer = (event: PointerEvent) => {
+      if (disclosure.open && !nav.contains(event.target as Node)) close();
     };
+    const focus = (event: FocusEvent) => {
+      if (disclosure.open && !nav.contains(event.target as Node)) close();
+    };
+    const size = matchMedia('(min-width: 761px)');
     const resize = () => {
-      if (window.innerWidth >= 768) setOpen(false);
+      if (size.matches && disclosure.open) {
+        const restore = disclosure.contains(document.activeElement);
+        close();
+        if (restore) nav.querySelector<HTMLAnchorElement>('a')?.focus();
+      }
     };
+    const scroll = () => {
+      nav.dataset.scrolled = String(window.scrollY > 12);
+    };
+    scroll();
+    disclosure.addEventListener('toggle', toggle);
     document.addEventListener('keydown', key);
     document.addEventListener('pointerdown', pointer);
-    window.addEventListener('resize', resize);
+    document.addEventListener('focusin', focus);
+    size.addEventListener('change', resize);
+    window.addEventListener('scroll', scroll, { passive: true });
     return () => {
+      disclosure.removeEventListener('toggle', toggle);
       document.removeEventListener('keydown', key);
       document.removeEventListener('pointerdown', pointer);
-      window.removeEventListener('resize', resize);
+      document.removeEventListener('focusin', focus);
+      size.removeEventListener('change', resize);
+      window.removeEventListener('scroll', scroll);
     };
-  }, [open]);
+  }, []);
   return (
-    <header className="header-wrap" ref={header}>
-      <nav
-        ref={nav}
-        className={`product-nav ${open ? 'menu-open' : ''}`}
-        aria-label="Main navigation"
-      >
-        <LiquidGlassLens />
-        <a href="/" className="wordmark" aria-label="DynamicLand home">
-          <span className="brand-point" aria-hidden="true" />
-          DynamicLand
+    <header ref={header} className={styles.header}>
+      <div className={`container ${styles.headerInner}`}>
+        <a href="/" className={styles.brand} aria-label="DynamicLand home">
+          <Image src={product.logo} alt="" width={34} height={34} priority unoptimized />
+          <span>DynamicLand</span>
         </a>
-        <div className="desktop-links">
-          {navigation.map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
+        <nav aria-label="Main navigation" className={styles.desktopNav}>
+          {links.map((link) => (
+            <a key={link.href} href={link.href}>
+              {link.label}
             </a>
           ))}
-        </div>
-        <div className="nav-actions">
+        </nav>
+        <div className={styles.headerActions}>
           <DownloadButton compact />
-          <button
-            ref={trigger}
-            className="menu-toggle"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen(!open)}
-          >
-            <span />
-            <span />
-          </button>
+          <details ref={menu} className={styles.mobileMenu}>
+            <summary
+              ref={trigger}
+              aria-label="Open navigation menu"
+              aria-controls="mobile-navigation"
+            >
+              <span className={styles.menuLines} aria-hidden="true" />
+            </summary>
+            <nav
+              id="mobile-navigation"
+              aria-label="Mobile navigation"
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest('a') && menu.current)
+                  menu.current.open = false;
+              }}
+            >
+              {links.map((link) => (
+                <a key={link.href} href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </details>
         </div>
-        <div className="mobile-menu" id="mobile-menu" inert={!open}>
-          <div>
-            {navigation.map((item) => (
-              <a href={item.href} key={item.href} onClick={() => setOpen(false)}>
-                {item.label}
-                <span aria-hidden="true">↗</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </nav>
-      <LiquidGooFilter />
+      </div>
     </header>
   );
 }

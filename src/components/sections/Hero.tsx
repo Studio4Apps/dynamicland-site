@@ -1,58 +1,40 @@
-import { heroCopy } from '@/content/copy';
+import { DownloadButton } from '@/components/DownloadButton';
+import { Arrow } from '@/components/Icon';
 import { MediaFrame } from '@/components/media/MediaFrame';
-import { DownloadButton } from '@/components/ui/DownloadButton';
-import { Arrow } from '@/components/ui/Arrow';
-import Image from 'next/image';
+import styles from './Sections.module.css';
 export function Hero() {
   return (
-    <section className="hero" aria-labelledby="hero-heading">
-      <div className="hero-landscape">
-        <Image
-          src="/images/dynamicland-coast.webp"
-          alt=""
-          fill
-          preload
-          sizes="100vw"
-          className="hero-landscape-image"
-        />
-        <div className="hero-shade" aria-hidden="true" />
-        <div className="hero-copy">
-          <p className="hero-kicker">{heroCopy.introduction}</p>
-          <h1 id="hero-heading">
-            {heroCopy.yourMacsNotch}
+    <section id="overview" className={styles.hero} aria-labelledby="hero-title">
+      <div className="container">
+        <div className={styles.heroCopy}>
+          <h1 id="hero-title">
+            Your Mac.
             <br />
-            <span className="serif">{heroCopy.nowPartOfYourDay}</span>
+            <span className={styles.accent}>A little more connected.</span>
           </h1>
           <p>
-            {heroCopy.dynamiclandBringsYourMusicWidgets}
-            <br className="desktop-break" />
-            {heroCopy.intoTheSpaceAroundYour}
+            Music, widgets, and everyday essentials.
+            <br className={styles.desktopBreak} /> Right where you look. Right at your notch.
           </p>
-          <DownloadButton light />
+          <div className={styles.heroActions}>
+            <DownloadButton />
+            <a className="button buttonSecondary" href="#features">
+              Explore the features <Arrow direction="down" size={16} />
+            </a>
+          </div>
+          <p className="fineprint">
+            Free download <span aria-hidden="true">·</span> macOS 26.0 or later{' '}
+            <span aria-hidden="true">·</span> Pro available
+          </p>
         </div>
-        <div className="hero-caption content-width">
-          <span>{heroCopy.dynamiclandForMacOS}</span>
-          <a href="#explore">
-            {heroCopy.takeACloserLook}
-            <Arrow down />
+        <div className={styles.heroMedia}>
+          <MediaFrame id="hero" />
+        </div>
+        <div className={styles.heroCaption}>
+          <span>One place for the little things that make your day.</span>
+          <a href="#home" className={styles.captionLink}>
+            Get to know DynamicLand <Arrow size={15} />
           </a>
-        </div>
-      </div>
-      <div className="hero-product content-width">
-        <div className="hero-product-copy">
-          <p className="serif">
-            {heroCopy.moreToYourMac}
-            <br />
-            {heroCopy.rightAtTheTop}
-          </p>
-          <p>
-            {heroCopy.productIntroduction}
-            <br className="desktop-break" />
-            {heroCopy.productLocation}
-          </p>
-        </div>
-        <div className="hero-stage">
-          <MediaFrame slot="heroPrimary" />
         </div>
       </div>
     </section>

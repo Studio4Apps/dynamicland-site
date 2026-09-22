@@ -1,54 +1,39 @@
-import Image from 'next/image';
 import type { CSSProperties } from 'react';
-import { mediaSlots, type MediaKey } from '@/content/media';
+import { media, type SlotId, type MediaSlot } from '@/content/media';
+import { MediaAsset } from './MediaAsset';
+import styles from './MediaFrame.module.css';
 export function MediaFrame({
-  slot,
+  id,
+  dark = false,
   className = '',
-  priority = false,
+  configuration,
 }: {
-  slot: MediaKey;
+  id: SlotId;
+  dark?: boolean;
   className?: string;
-  priority?: boolean;
+  configuration?: MediaSlot;
 }) {
-  const media = mediaSlots[slot];
+  const slot = configuration || media[id];
   return (
     <div
-      className={`media-frame ${className}`}
-      data-media-slot={media.id}
-      style={{ '--media-ratio': media.ratio } as CSSProperties}
-      aria-hidden={!media.src || undefined}
+      data-media-slot={slot.id}
+      data-empty={!slot.src}
+      aria-hidden={!slot.src ? true : undefined}
+      className={`${styles.frame} ${dark ? styles.dark : ''} ${className}`}
+      style={
+        {
+          '--media-ratio': slot.ratio,
+          '--media-fit': slot.fit,
+          '--media-position': slot.position,
+        } as CSSProperties
+      }
     >
-      {media.src ? (
-        media.type === 'photo' ? (
-          <Image
-            src={media.src}
-            alt={media.alt}
-            width={media.width}
-            height={media.height}
-            sizes="(max-width: 767px) 92vw, (max-width: 1200px) 85vw, 1200px"
-            loading={priority ? undefined : 'lazy'}
-            preload={priority}
-            style={{ objectFit: media.fit }}
-          />
-        ) : (
-          <video
-            controls
-            playsInline
-            preload="none"
-            poster={media.poster}
-            width={media.width}
-            height={media.height}
-            aria-label={media.alt}
-            style={{ objectFit: media.fit }}
-          >
-            <source src={media.src} />
-            {media.captions && (
-              <track kind="captions" src={media.captions} srcLang="en" label="English" default />
-            )}
-          </video>
-        )
+      {slot.src ? (
+        <MediaAsset slot={slot} />
       ) : (
-        <span className="media-label">{media.label}</span>
+        <span className={styles.label} data-nosnippet>
+          {slot.label}
+        </span>
       )}
     </div>
   );

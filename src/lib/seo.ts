@@ -1,74 +1,72 @@
 import type { Metadata } from 'next';
-import { site } from '@/content/site';
-export function pageMetadata(
-  title: string,
-  description: string,
-  path: string,
-  noindex = false,
-): Metadata {
+import { product } from '@/content/product';
+import { getSiteConfig } from './config';
+
+export { serializeJsonLd } from './serialize';
+export function pageMetadata(title: string, description: string, path = '/'): Metadata {
+  const { origin, indexable } = getSiteConfig();
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: origin ? { canonical: new URL(path, origin).href } : undefined,
+    robots: { index: indexable, follow: true },
     openGraph: {
-      title: `${title} — DynamicLand`,
+      title,
       description,
-      url: path,
+      siteName: product.name,
       type: 'website',
-      siteName: site.name,
-      images: [
-        {
-          url: '/og.png',
-          width: 1536,
-          height: 1024,
-          alt: 'DynamicLand — A new home for your Mac’s notch.',
-        },
-      ],
+      locale: 'en_US',
+      ...(origin
+        ? {
+            url: new URL(path, origin).href,
+            images: [
+              {
+                url: `${origin}/brand/social.png`,
+                width: 1200,
+                height: 630,
+                alt: 'DynamicLand. Your Mac, a little more connected.',
+              },
+            ],
+          }
+        : {}),
     },
     twitter: {
       card: 'summary_large_image',
-      images: ['/og.png'],
-      title: `${title} — DynamicLand`,
+      title,
       description,
+      ...(origin ? { images: [`${origin}/brand/social.png`] } : {}),
     },
-    ...(noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
-export const productStructuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebSite',
-      '@id': `${site.url}/#website`,
-      url: site.url,
-      name: site.name,
-      description: site.description,
-      inLanguage: 'en',
-    },
-    {
-      '@type': 'SoftwareApplication',
-      '@id': `${site.url}/#software`,
-      name: site.name,
-      url: site.url,
-      description: site.description,
-      operatingSystem: 'macOS',
-      applicationCategory: 'UtilitiesApplication',
-      featureList: [
-        'Home and widgets',
-        'Mini Lands and simultaneous live activities',
-        'Apple Music and Spotify integration',
-        'Lyrics',
-        'Clipboard and File Tray',
-        'File sharing',
-        'Timer',
-        'Voice Memos',
-        'Calendar',
-        'Weather',
-        'Battery',
-        'AI activities',
-        'Customization',
-      ],
-      ...(site.download.url ? { downloadUrl: site.download.url } : {}),
-    },
-  ],
-};
+export function structuredData() {
+  const { origin } = getSiteConfig();
+  const root = origin || product.downloadUrl;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Person', '@id': `${root}#publisher`, name: product.publisher },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${root}#app`,
+        name: product.name,
+        description: product.description,
+        operatingSystem: product.platform,
+        applicationCategory: 'UtilitiesApplication',
+        downloadUrl: product.downloadUrl,
+        publisher: { '@id': `${root}#publisher` },
+        ...(origin ? { url: origin, image: `${origin}${product.logo}` } : {}),
+      },
+      ...(origin
+        ? [
+            {
+              '@type': 'WebSite',
+              '@id': `${origin}#website`,
+              url: origin,
+              name: product.name,
+              publisher: { '@id': `${root}#publisher` },
+            },
+          ]
+        : []),
+    ],
+  };
+}

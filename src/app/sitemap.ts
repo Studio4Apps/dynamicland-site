@@ -1,15 +1,9 @@
 import type { MetadataRoute } from 'next';
-import { site } from '@/content/site';
-export const dynamic = 'force-static';
+import { getSiteConfig } from '@/lib/config';
+export const dynamic = 'force-dynamic';
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    '',
-    '/support/',
-    ...(site.legal.privacy ? ['/privacy/'] : []),
-    ...(site.legal.terms ? ['/terms/'] : []),
-  ].map((path) => ({
-    url: `${site.url}${path}`,
-    changeFrequency: 'monthly' as const,
-    priority: path ? 0.5 : 1,
-  }));
+  const { origin, indexable } = getSiteConfig();
+  return indexable && origin
+    ? ['/', '/support', '/privacy', '/terms'].map((path) => ({ url: new URL(path, origin).href }))
+    : [];
 }
