@@ -1,53 +1,265 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DynamicLand privacy policy: Google Calendar data access, use, sharing, security, retention, deletion, optional AI processing and other app features.">
+  <meta name="referrer" content="no-referrer">
+  <link rel="canonical" href="https://hypercubicapp.online/privacy.html">
   <title>DynamicLand Privacy Policy</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202133;
+      --muted: #565b70;
+      --accent: #5b32b4;
+      --border: #dedee9;
+      --soft: #f5f2fd;
+      --paper: #ffffff;
+      --canvas: #f6f7fb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--canvas);
+      color: var(--ink);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-size: 17px; line-height: 1.72; }
+    a { color: var(--accent); text-underline-offset: .2em; overflow-wrap: anywhere; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .skip { position: absolute; top: -100px; left: 16px; padding: 10px 16px; background: var(--paper); z-index: 2; }
+    .skip:focus { top: 12px; }
+    .sitebar { max-width: 1016px; margin: 0 auto; padding: 24px 28px 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: .9rem; }
+    .wordmark { font-weight: 750; text-decoration: none; color: var(--ink); }
+    main { max-width: 960px; margin: 0 auto 48px; padding: 48px 52px; border: 1px solid var(--border); border-radius: 18px; background: var(--paper); }
+    .eyebrow { margin: 0 0 10px; color: var(--accent); font-size: .8rem; letter-spacing: .1em; font-weight: 750; text-transform: uppercase; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.13; letter-spacing: -.035em; margin: 0 0 18px; }
+    h2 { font-size: 1.5rem; line-height: 1.35; letter-spacing: -.015em; margin: 0 0 18px; }
+    h3 { font-size: 1.12rem; line-height: 1.45; margin: 26px 0 8px; }
+    p { margin: 0 0 16px; }
+    li { margin-bottom: 10px; }
+    ul, ol { padding-left: 24px; }
+    .meta { color: var(--muted); font-size: .9rem; }
+    .summary { border-left: 4px solid var(--accent); background: var(--soft); padding: 18px 22px; margin: 24px 0; border-radius: 0 10px 10px 0; }
+    .summary p:last-child { margin-bottom: 0; }
+    .contents { margin: 30px 0 8px; padding: 22px 24px; background: var(--canvas); border-radius: 12px; }
+    .contents h2 { font-size: 1rem; margin-bottom: 12px; }
+    .contents ol { margin: 0; columns: 2; column-gap: 36px; font-size: .95rem; }
+    .contents li { break-inside: avoid; }
+    section { border-top: 1px solid var(--border); margin-top: 36px; padding-top: 32px; scroll-margin-top: 20px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .87em; overflow-wrap: anywhere; }
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+    caption { text-align: left; font-weight: 700; margin-bottom: 12px; }
+    th, td { border: 1px solid var(--border); padding: 14px 16px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    th { background: var(--canvas); }
+    th:first-child, td:first-child { width: 28%; }
+    .notice { padding: 18px 22px; border: 1px solid var(--border); border-radius: 10px; background: var(--canvas); }
+    footer { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 22px; color: var(--muted); font-size: .9rem; }
+    footer p:last-child { margin-bottom: 0; }
+    @media (max-width: 680px) {
+      body { font-size: 16px; }
+      .sitebar { padding: 18px 20px; }
+      main { border-radius: 0; border-left: 0; border-right: 0; padding: 30px 20px; margin-bottom: 0; }
+      .contents ol { columns: 1; }
+      th, td { padding: 10px; }
+      th:first-child, td:first-child { width: 36%; }
+    }
+    @media print {
+      :root, body { background: white; color: black; }
+      body { font-size: 11pt; }
+      .sitebar, .contents, .skip { display: none; }
+      main { max-width: none; margin: 0; padding: 0; border: 0; }
+      h2, h3 { break-after: avoid; }
+      tr { break-inside: avoid; }
+    }
+  </style>
 </head>
 <body>
-  <h1>DynamicLand Privacy Policy</h1>
+  <a class="skip" href="#policy">Skip to privacy policy</a>
+  <div class="sitebar">
+    <a class="wordmark" href="/">DynamicLand</a>
+    <a href="mailto:amroalgg10@icloud.com">Privacy contact</a>
+  </div>
+  <main id="policy">
+    <header>
+      <p class="eyebrow">DynamicLand for macOS</p>
+      <h1>Privacy Policy</h1>
+      <p class="meta">Last updated: <time datetime="2026-09-22">September 22, 2026</time></p>
+      <p>This policy explains how DynamicLand handles information through its Google Calendar integration and the other app features described below. References to the DynamicLand developer mean the developer providing the application, reachable at <a href="mailto:amroalgg10@icloud.com">amroalgg10@icloud.com</a>.</p>
+      <p>Connecting Google Calendar is optional. You authorize the connection through Google, and you can disconnect it in DynamicLand. Other features have their own permissions, settings and data stores.</p>
+      <div class="summary">
+        <p><strong>The essential distinction:</strong> Calendar records are cached on your Mac, but calendar synchronization communicates with Google. Actions such as opening a meeting, requesting directions, sharing information or using a cloud-enabled Assistant can involve other recipients. Disconnecting Calendar does not erase every independent copy of information you have saved or shared.</p>
+      </div>
+    </header>
 
-  <p>Last updated: September 2026</p>
+    <nav class="contents" aria-label="Privacy policy contents">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#access">Google data accessed</a></li>
+        <li><a href="#use">How Google data is used</a></li>
+        <li><a href="#sharing">Sharing and transfers</a></li>
+        <li><a href="#security">Protection mechanisms</a></li>
+        <li><a href="#retention">Retention and deletion</a></li>
+        <li><a href="#ai">AI and Google Limited Use</a></li>
+        <li><a href="#other-features">Other app features</a></li>
+        <li><a href="#website-support">Website and support</a></li>
+        <li><a href="#contact">Contact and policy changes</a></li>
+      </ol>
+    </nav>
 
-  <p>
-    DynamicLand respects your privacy.
-  </p>
+    <section id="access">
+      <h2>1. Google user data DynamicLand accesses</h2>
+      <p>After you authorize Google Calendar, DynamicLand receives authorization tokens and the following categories of information, where available and permitted by your Google account:</p>
+      <ul>
+        <li><strong>Account identity:</strong> your Google account's stable identifier and email address. The app also records the connection date to manage the account locally.</li>
+        <li><strong>Calendar metadata:</strong> calendar identifiers, names and display-name overrides, colors, time zones, access roles, primary-calendar status, and selection or deletion flags.</li>
+        <li><strong>Event content and metadata:</strong> event identifiers, titles, descriptions or notes, locations, start and end dates and times, time zones, all-day status, recurrence rules and occurrence references, reminders, event-page links, availability, status, visibility, event type, colors or labels, and update or version information.</li>
+        <li><strong>Event participants:</strong> organizer and creator names and email addresses, and attendee names, email addresses, responses and role information, such as optional-attendee or organizer status.</li>
+      </ul>
+      <p>For supported changes to this and future occurrences of a recurring event, the app can retrieve additional series information, including guest permissions, additional guests or resources, custom event properties, attachment metadata, conference information and incomplete-attendee, locked or private-copy flags. This information helps preserve supported settings or identify an operation the app cannot safely perform. Retrieving attachment metadata does not download the attachment files.</p>
+      <p>Decoded account, calendar and ordinary event records are stored locally. Additional series information is processed for the operation; the app does not separately archive the full raw series response. Some nested response data is received temporarily without being retained in the decoded records. Not every retained metadata field is displayed separately in the interface.</p>
 
-  <h2>Google Calendar</h2>
+      <h3>Google permissions</h3>
+      <ul>
+        <li><code>https://www.googleapis.com/auth/calendar.events</code> allows the app to read, create, edit and delete events where your account permits those actions.</li>
+        <li><code>https://www.googleapis.com/auth/calendar.calendarlist.readonly</code> allows the app to read your calendar list and its metadata.</li>
+        <li><code>openid</code> and <code>email</code> identify the connected account and its email address.</li>
+      </ul>
+      <p>The connection requests offline authorization so access can be renewed without a new browser sign-in for every synchronization. These permissions do not request access to read Gmail messages, download Google Drive files, change calendar-sharing permissions or manage calendar subscriptions.</p>
+    </section>
 
-  <p>
-    When you connect Google Calendar, DynamicLand accesses calendar
-    information required to display and manage your calendar events.
-  </p>
+    <section id="use">
+      <h2>2. How DynamicLand uses Google user data</h2>
+      <p>Account and calendar information identifies your connection, labels calendars, populates calendar selectors and determines which operations your account is allowed to perform. Event information supports the following user-facing features:</p>
+      <ul>
+        <li>Calendar widgets, month and agenda views, event details, date filtering and local event counts or color indicators.</li>
+        <li>Creating, editing or deleting events and supported recurring occurrences in response to your actions.</li>
+        <li>Synchronizing changes with Google and displaying cached events while offline.</li>
+        <li>Upcoming-event alerts when enabled, including snooze and dismissal state.</li>
+        <li>Handling time zones, all-day dates, recurring events and declined-invitation filtering.</li>
+        <li>Opening an event or meeting link, or requesting directions, when you choose those actions.</li>
+      </ul>
+      <p>Synchronization can run automatically while an account is connected, including when a relevant Calendar view is visible, the app becomes active, your Mac wakes, connectivity returns or you change an event. A manual refresh can also request synchronization. Hiding a calendar or pausing synchronization does not itself delete its cached records.</p>
+      <p>Google reminder settings may be retained and preserved during supported series operations. DynamicLand's own upcoming-event alerts use the alert lead time configured in DynamicLand. Daily calendar counts and color summaries are calculated locally; they are not AI-generated summaries.</p>
+    </section>
 
-  <p>
-    Depending on the features you use, DynamicLand may read, create,
-    edit, and delete calendar events on your behalf.
-  </p>
+    <section id="sharing">
+      <h2>3. Sharing, transfers and recipients of Google user data</h2>
+      <p>The Calendar integration communicates directly with Google rather than sending Calendar API traffic through a developer-operated Calendar server or proxy. Data can be transferred in the following feature-specific situations:</p>
+      <ul>
+        <li><strong>Google:</strong> Google's identity, authorization and Calendar services receive the requests needed for sign-in, token renewal, calendar reads and event changes.</li>
+        <li><strong>Meeting participants and people with calendar access:</strong> changes or cancellations to events with guests can cause Google to send updates. Supported recurring-series operations can preserve attendees and notify them. Your Google sharing settings determine who can see an event; participants' email or calendar providers may also receive notifications and keep copies.</li>
+        <li><strong>Meeting, browser and Maps services:</strong> selecting Join opens a meeting URL in the associated app or browser. Selecting Directions passes the location to the Maps handler. The destination service then handles that request.</li>
+        <li><strong>Apple AI services, when applicable:</strong> Calendar text you independently paste into the Assistant, or ask it to retrieve from copied Clipboard history, can be processed by Apple Private Cloud Compute when that model is active. This is distinct from automatic Calendar synchronization. See section 6.</li>
+        <li><strong>Recipients you choose:</strong> copying, saving, exporting or sharing information creates separate copies. Selected material can be sent to another app, a system-sharing destination or a LocalSend peer through your actions.</li>
+        <li><strong>Support correspondence you initiate:</strong> information you include in an email or other support message goes to the developer and the service used to deliver the message. Do not include calendar content that is unnecessary for the request.</li>
+      </ul>
+      <p>The Google Calendar integration has no automatic route that uploads event records to Gemini, RevenueCat, an advertising service, a developer analytics or crash-upload service, or a developer-hosted Calendar backup. This does not mean every DynamicLand feature is offline; other feature-specific services are described below.</p>
+      <p>Information retained by Google, meeting participants or destinations you choose is also subject to their practices. Removing a local Calendar connection does not recall information already delivered to them. The Limited Use commitments in section 6 apply to the app's use and transfer of Google API data.</p>
+    </section>
 
-  <p>
-    Google Calendar authentication credentials are stored securely
-    on your device. DynamicLand does not sell your Google Calendar
-    data.
-  </p>
+    <section id="security">
+      <h2>4. Protection mechanisms for sensitive data</h2>
+      <p><strong>Authorization:</strong> Google sign-in takes place in your browser. DynamicLand does not ask you to give the app your Google password. The OAuth flow uses a per-attempt state check and PKCE to protect the authorization exchange.</p>
+      <p><strong>Remote communication:</strong> requests to Google's remote identity, token and Calendar services use HTTPS/TLS through macOS networking. The browser-to-app callback is a temporary HTTP connection on the local loopback address on your Mac, not an externally hosted callback server.</p>
+      <p><strong>Tokens:</strong> refresh tokens are stored in macOS Keychain with a device-specific accessibility setting. Access tokens and any received ID token are held in the live account session rather than explicitly written to the Calendar JSON cache. Browser, framework and operating-system storage are separate from that app-managed cache.</p>
+      <p><strong>Local records:</strong> account labels and identifiers are kept in local preferences; Calendar records and synchronization state are saved in the app's Application Support area using atomic file replacement. The application is configured to use App Sandbox. Local access protection also depends on your Mac's account, file-permission and device-security settings.</p>
+      <p><strong>The Calendar JSON cache has no separate application-level encryption.</strong> Keychain protection for tokens does not encrypt event-cache files. This policy does not claim end-to-end encryption, a security certification or guaranteed elimination of every risk.</p>
+      <p><strong>Development diagnostics:</strong> development builds record operational information such as request type, timing, counts, HTTP status and a hashed account tag. Error logs can contain server-supplied text without comprehensive content filtering. Diagnostics are not a reason to send calendar contents or credentials to support; review any log before sharing it. Operating-system logs have retention separate from the Calendar cache.</p>
+    </section>
 
-  <h2>Disconnecting Google Calendar</h2>
+    <section id="retention">
+      <h2>5. Retention, deletion and your controls</h2>
+      <p><strong>There is no fixed age-based expiry for connected Google account records or the Calendar cache.</strong> They persist for synchronization and offline display across app restarts, subject to cache replacement and the cleanup operations below. Event-fetch windows and refresh intervals determine what the app requests; they are not automatic deletion deadlines.</p>
 
-  <p>
-    You can disconnect your Google Calendar account from DynamicLand
-    at any time through the application's Calendar settings.
-  </p>
+      <div class="table-wrap" role="region" aria-label="Google data retention table" tabindex="0">
+        <table>
+          <caption>Retention by data category</caption>
+          <thead><tr><th scope="col">Category</th><th scope="col">Retention and removal</th></tr></thead>
+          <tbody>
+            <tr><td>Account record</td><td>Identifier, email and connection information remain in local account records without an age-based expiry. Disconnect and Revoke remove the account from the active registry as part of local cleanup. Inactivity, hiding a calendar or loss of Pro access does not itself erase it.</td></tr>
+            <tr><td>Refresh token</td><td>Kept in Keychain until replaced or local removal is attempted. Revocation at Google prevents further permitted use but does not by itself erase token bytes stored on your Mac.</td></tr>
+            <tr><td>Access and ID tokens</td><td>Held in app-managed session memory and replaced or cleared through refresh, session invalidation or process exit. This does not describe every browser or operating-system trace.</td></tr>
+            <tr><td>Calendar metadata, events and sync state</td><td>Retained across restarts. Incremental synchronization updates records and removes applicable deletions; a successful fresh baseline replaces the relevant cached event set. No fixed maximum age applies. Unselecting a calendar does not clear its cache.</td></tr>
+            <tr><td>Additional date-range events</td><td>Far-range browsing can persist up to three additional coverage ranges per calendar. Data is replaced or evicted as the retained ranges change, rather than by a fixed age deadline. These records are not memory-only despite sometimes being called a transient cache.</td></tr>
+            <tr><td>Widget and alert state</td><td>Calendar selections, defaults, event identifiers, dismissal state and snooze times have separate storage. Alert pruning depends on occurrence and snooze times, and is not always immediately saved. Disconnect does not purge every such record.</td></tr>
+            <tr><td>Diagnostics</td><td>The Calendar development diagnostic ring keeps its latest 256 records in memory. Other diagnostic logs are managed by macOS. Disconnect does not purge those logs.</td></tr>
+            <tr><td>Independent Clipboard and Assistant copies</td><td>Clipboard expiry is configurable and defaults to 168 hours; pinned items are exempt. Assistant conversations default to expiry after seven days since activity, with configurable periods including no automatic expiry. Cleanup runs while the app is running, and active responses are excluded. These copies are not removed by Calendar disconnection.</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-  <h2>Contact</h2>
+      <h3>Disconnect Google Calendar in DynamicLand</h3>
+      <p>Open a Calendar widget's settings, find the Google Calendar connection and choose <strong>Disconnect</strong> for the account shown. This stops that connection and attempts to remove its refresh token, account registry entry and account-specific Calendar-cache records. It does <strong>not</strong> delete your events from Google Calendar or revoke Google's authorization grant.</p>
+      <p>Disconnect is not complete erasure of every related copy. Widget-selection identifiers, alert bookkeeping and some in-memory details can remain. Independently saved Clipboard items, Assistant conversations, logs, exports and backups are not cleared. Keychain or disk failures can prevent full local cleanup, and not every such failure is reported by the current app.</p>
 
-  <p>
-    For privacy questions, contact the developer using the support
-    information provided by DynamicLand.
-  </p>
+      <h3>Revoke access at Google</h3>
+      <p>The in-app <strong>Revoke</strong> action, where available, performs the local cleanup and requests withdrawal of Google's authorization. A failed remote revocation produces a notice directing you to Google Account connections. You can also remove access directly in <a href="https://myaccount.google.com/connections">Google Account connections</a>.</p>
+      <p>External revocation does not remotely delete already-cached data on your Mac. The app detects rejected authorization on a later request and asks you to reconnect. Use Disconnect inside DynamicLand as well to request local cleanup.</p>
 
-  <p>
-    <a href="index.html">Back to DynamicLand</a>
-  </p>
+      <h3>Delete an event</h3>
+      <p>Using an event's Delete action requests deletion from Google, subject to your permissions. Supported recurring-event actions affect the selected occurrence or future portion of the series. After a successful operation, DynamicLand updates the relevant cached records. Deletions made elsewhere are applied when synchronization detects them.</p>
+      <p>Local cache updates do not guarantee immediate erasure of Google's own retained data, meeting notifications, participants' copies or independent copies you made.</p>
+
+      <h3>Other copies and uninstalling</h3>
+      <p>Use the separate Clipboard and Assistant controls to delete saved clips or conversations. Turning off cloud AI, hiding a calendar or disconnecting Google does not remove those independent copies. Remove exported files and user-managed backups through the tools used to create them.</p>
+      <p>Deleting the DynamicLand app alone may leave Application Support files, preferences, Keychain entries or other copies. Disconnect before uninstalling, remove Google's authorization when appropriate, and contact the privacy address for help with residual data. The Calendar cache is located under <code>Application Support/DynamicLand/GoogleCalendar/cache-v1.json</code> within the app's user or container storage area. Do not delete shared stores indiscriminately, because they can contain other accounts' data.</p>
+      <p>The app does not guarantee secure overwrite of deleted files, removal of crash-left temporary files, or erasure of third-party copies and user-managed backups. Support can explain local cleanup, but does not have remote access to erase files on your Mac.</p>
+    </section>
+
+    <section id="ai">
+      <h2>6. Optional AI processing and Google Limited Use</h2>
+      <h3>AI processing is separate from Calendar synchronization</h3>
+      <p>Automatic Google Calendar synchronization does not feed API event records directly into the Assistant. Calendar counts and color summaries are ordinary local calculations.</p>
+      <p>The Assistant uses Apple's on-device models and, on supported systems where available, Apple Private Cloud Compute. <strong>The cloud-model preference is enabled by default when supported and can be turned off.</strong> The selected model can process your messages, relevant conversation context and requested app-tool results.</p>
+      <p>If you paste event text into a conversation, or ask the Assistant to retrieve Calendar text you previously copied into Clipboard history, that material can enter the Assistant's context. When cloud processing is active, the content can be sent to Apple's cloud inference service. Check the active model and settings before submitting personal information.</p>
+      <p>Assistant messages and generated conversation recaps are stored locally and can be reused as context, including after a model change. Turning off cloud processing does not delete saved conversations or undo earlier transfers. File-summary and translation actions use the on-device transformation model; generated text may also be saved in Clipboard.</p>
+      <p>These features perform inference using existing models. DynamicLand does not include a Calendar-data model-training or fine-tuning feature. This policy makes no promise about an external provider's zero retention, human access or training practices beyond the terms applicable to that provider's service.</p>
+
+      <h3>Limited Use commitments</h3>
+      <p><strong>DynamicLand's use and transfer of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements.</strong> The <a href="https://developers.google.com/workspace/workspace-api-user-data-developer-policy">Google Workspace user-data policy</a> also applies to Google Calendar data and its derivatives.</p>
+      <p>Under this policy, Google API data may be used only for the disclosed user-facing features. It must not be sold, used for advertising or unrelated profiling, or used to develop, train or improve generalized AI or machine-learning models. These commitments cover derived information as well as original data.</p>
+      <p>Human access must be limited to specific information you explicitly authorize for assistance, necessary security investigations, or legal obligations. Transfers must have a permitted purpose and any required user consent. Anyone handling Google API data on the developer's behalf must follow these restrictions. These commitments do not make independent meeting participants or user-chosen destinations part of DynamicLand.</p>
+    </section>
+
+    <section id="other-features">
+      <h2>7. Other DynamicLand features</h2>
+      <p>The following features use separate information and storage. Availability depends on your version, system, permissions and settings. A Google Calendar disconnection does not clear their independent data. This section describes their feature-level data flows; the detailed Google cache rules above should not be assumed to be the retention rules of every other feature or provider.</p>
+      <ul>
+        <li><strong>Apple Calendar and Reminders:</strong> permission-based EventKit access supports displaying and managing events or reminders through macOS. Any account synchronization configured in Apple services is separate from DynamicLand's direct Google connection.</li>
+        <li><strong>Outlook Calendar:</strong> a separate Microsoft OAuth connection uses profile and Calendar access through Microsoft Graph. It identifies the account, displays calendars and manages supported events, with a separate local Microsoft cache. Manage that connection separately; Google Disconnect does not remove Outlook data.</li>
+        <li><strong>Clipboard and files:</strong> enabled Clipboard capture saves copied content and associated metadata locally. File-tray, browsing, preview, conversion and AI actions access files you select or authorize. LocalSend or system sharing can transfer selected material to destinations you choose. Exported and received files are separate copies.</li>
+        <li><strong>Subscriptions:</strong> Apple purchase services and RevenueCat support subscription offerings, purchase and restore operations, and Pro-entitlement checks. Subscription and customer information is handled for those purposes. The Google Calendar integration does not supply Google event records or Google account email to RevenueCat.</li>
+        <li><strong>Weather:</strong> coordinates for a selected city, or current location when you grant permission, are sent to Apple WeatherKit for weather results. Weather and location state is cached locally. This feature is why the app cannot be described as never using location.</li>
+        <li><strong>Media and lyrics:</strong> playback information supports media displays and controls. Lyrics requests can send track and artist information, and sometimes album or duration, to LRCLIB and BetterLyrics; AMLL lyric resources are retrieved from GitHub hosting. Enabled browser integration exchanges browser-media information locally with the app. Remote artwork requests contact the associated image service.</li>
+        <li><strong>Photos and videos:</strong> photo widgets keep local copies of selected images. Video features can use selected files or download content from a URL you provide; that host receives the download request.</li>
+        <li><strong>Microphone, camera and screen:</strong> Voice Memos creates local audio recordings. Teleprompter stores scripts and drafts and uses Apple's speech framework for voice-follow features. Mirror uses a camera preview. Color Picker samples screen content locally and can incidentally capture pixels from another app. This policy does not claim that every Apple speech-processing mode is necessarily on-device.</li>
+        <li><strong>Local activity and system features:</strong> authorized local AI-agent activity, recent app or file information, print-job titles or status, and accessory or system information support their corresponding displays and controls. Reading local Gemini or other agent-activity records is not a Google Calendar-to-Gemini inference connection.</li>
+      </ul>
+      <p>Use each feature's available controls to manage its content and permissions. Saved scripts, recordings, images, selected-file copies, exports and other local content have separate lifetimes; no single Calendar-disconnect action erases them all. Contact the developer for assistance with the specific data category you want to remove.</p>
+      <p>Service-provider processing and retention are separate from the local Calendar cache. Relevant provider notices include <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>, <a href="https://www.apple.com/legal/privacy/">Apple's privacy information</a>, <a href="https://privacy.microsoft.com/privacystatement">Microsoft's Privacy Statement</a> and <a href="https://www.revenuecat.com/privacy/">RevenueCat's Privacy Policy</a>. Linking these notices does not replace the disclosures in this policy or override the developer's Google Limited Use commitments.</p>
+    </section>
+
+    <section id="website-support">
+      <h2>8. Website and support communications</h2>
+      <p>This website is hosted on GitHub Pages, with the domain's DNS managed through Cloudflare. Website hosting necessarily receives web-request information, such as an IP address and requested page, and can process technical logs under the host's policies. DNS service is separate from the application's Calendar API traffic. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's Privacy Statement</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's Privacy Policy</a>.</p>
+      <p>This privacy page contains no analytics scripts, advertising embeds, remote fonts or application code that sets cookies. Following an external link loads another service, whose practices may differ. The page does not promise an absence of hosting-provider logs or browser-managed records.</p>
+      <p>When you contact the developer by email or another support channel you choose, your address, message and any attachments are disclosed to the developer and that communication service. Include only what is necessary for your request. <strong>Do not send account passwords, authorization codes, access tokens or refresh tokens.</strong></p>
+      <p>Support correspondence is separate from the Calendar cache: disconnecting an account or deleting an event does not delete a support message. The app does not enforce an expiry schedule on an email or support platform. You can ask the developer about the correspondence held for your request and request deletion of the developer-held copy. Provider-controlled logs, backup copies and recipient copies follow their own retention arrangements; no universal deletion deadline is represented here.</p>
+    </section>
+
+    <section id="contact">
+      <h2>9. Privacy contact and policy changes</h2>
+      <p>For questions about this policy, the data associated with your use of DynamicLand, or help deleting information, contact:</p>
+      <p><strong>DynamicLand developer</strong><br><a href="mailto:amroalgg10@icloud.com">amroalgg10@icloud.com</a></p>
+      <p>Identify the feature and the data category concerned without including credentials or unnecessary private event details. The developer cannot inspect or erase data held only on your Mac without your involvement. Requests concerning Google, Microsoft, Apple, meeting participants or another independent recipient may also need to be made to that recipient.</p>
+      <p>This page may be updated as features and data practices change. The date above identifies the latest revision. Changes to the use of Google data that require a new disclosure or consent must be communicated before that new use; a website edit alone does not replace required in-app consent.</p>
+    </section>
+
+    <footer>
+      <p><a href="/">Back to DynamicLand</a> &nbsp;·&nbsp; <a href="#policy">Back to top</a></p>
+      <p>DynamicLand for macOS · Privacy contact: <a href="mailto:amroalgg10@icloud.com">amroalgg10@icloud.com</a></p>
+    </footer>
+  </main>
 </body>
 </html>
