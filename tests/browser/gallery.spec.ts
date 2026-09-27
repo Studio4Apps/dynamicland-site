@@ -82,6 +82,8 @@ test('one clock, settled dwell, position-driven morph and stationary controls', 
   const initial = await progress(page);
   expect(initial).toBeGreaterThan(30);
   expect(initial).toBeLessThan(38);
+  // The entry morph uses native animations, independent of the mocked dwell clock.
+  await expect(root(page)).toHaveAttribute('data-controls-intro', 'settled');
   const bounds = async () =>
     page.locator('[data-rotation]').evaluate((button) => {
       const group = button.parentElement!,
@@ -405,6 +407,7 @@ test('one, five, seven slides; target sizes, responsive geometry, reduced motion
         await expect(rotation(page)).toHaveAccessibleName(
           motion === 'reduce' ? 'Play slideshow' : 'Pause slideshow',
         );
+        await expect(root(page)).toHaveAttribute('data-controls-intro', 'settled');
         const geometry = await root(page).evaluate((e) => {
           const button = e.querySelector('[data-rotation]')!,
             group = button.parentElement!;

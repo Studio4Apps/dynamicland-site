@@ -52,6 +52,10 @@
 .gallery[data-enhanced='true'] .galleryControls {
   visibility: visible;
 }
+.gallery[data-controls-intro='waiting'] .playbackGroup,
+.gallery[data-controls-intro='waiting'] .galleryCount {
+  opacity: 0;
+}
 .playbackGroup {
   --active-extra: 2.5rem;
   grid-column: 2;
@@ -79,9 +83,28 @@
 }
 .dots {
   order: -1;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
   display: flex;
   align-items: center;
   padding-inline: 1rem;
+}
+.capsule {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: inherit;
+  background: var(--surface);
+  pointer-events: none;
+}
+.paginationContent {
+  position: relative;
+  display: flex;
 }
 .dots button {
   --expansion: 0;

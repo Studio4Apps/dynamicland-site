@@ -17,6 +17,7 @@
     "format": "prettier --write src scripts docs tests *.json *.ts *.mjs"
   },
   "dependencies": {
+    "motion": "13.4.4",
     "next": "16.3.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"

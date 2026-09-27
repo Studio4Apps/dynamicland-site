@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createGalleryController, GALLERY_TIMING, type GalleryState } from './gallery-controller';
+import { createGalleryEntrance } from './gallery-entrance';
 import styles from './Interactive.module.css';
 
 type GalleryItem = { id: string; label: string; content: ReactNode };
@@ -12,6 +13,7 @@ export function Gallery({
   dwellMs?: number;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const controlsSeen = useRef(false);
   const [state, setState] = useState<GalleryState>({
     current: 0,
     start: true,
@@ -21,7 +23,12 @@ export function Gallery({
   });
   useEffect(() => {
     if (!root.current || !items.length) return;
-    return createGalleryController(root.current, dwellMs, setState);
+    const stopController = createGalleryController(root.current, dwellMs, setState);
+    const stopEntrance = createGalleryEntrance(root.current, controlsSeen);
+    return () => {
+      stopEntrance();
+      stopController();
+    };
   }, [items.length, dwellMs]);
 
   return (
@@ -34,8 +41,8 @@ export function Gallery({
       data-timing={GALLERY_TIMING.mode}
     >
       {items.length > 1 && (
-        <div className={`container ${styles.galleryControls}`}>
-          <div className={styles.playbackGroup}>
+        <div className={`container ${styles.galleryControls}`} data-gallery-controls>
+          <div className={styles.playbackGroup} data-playback-group>
             {/* First in reading/tab order, visually after the pagination. */}
             <button
               type="button"
@@ -52,22 +59,25 @@ export function Gallery({
               </svg>
             </button>
             <div className={styles.dots} role="group" aria-label="Choose a highlight">
-              {items.map((item, index) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  data-gallery-dot={index}
-                  aria-label={`Show ${item.label}`}
-                  aria-current={state.current === index ? 'true' : undefined}
-                >
-                  <span className={styles.indicator} data-indicator aria-hidden="true">
-                    <span className={styles.fill} data-dwell-fill />
-                  </span>
-                </button>
-              ))}
+              <span className={styles.capsule} data-gallery-capsule aria-hidden="true" />
+              <div className={styles.paginationContent} data-pagination-content>
+                {items.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    data-gallery-dot={index}
+                    aria-label={`Show ${item.label}`}
+                    aria-current={state.current === index ? 'true' : undefined}
+                  >
+                    <span className={styles.indicator} data-indicator aria-hidden="true">
+                      <span className={styles.fill} data-dwell-fill />
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-          <span className={styles.galleryCount} aria-hidden="true">
+          <span className={styles.galleryCount} data-gallery-count aria-hidden="true">
             {String(state.current + 1).padStart(2, '0')}
             <span> / {String(items.length).padStart(2, '0')}</span>
           </span>

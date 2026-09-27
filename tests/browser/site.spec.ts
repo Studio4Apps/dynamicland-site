@@ -221,23 +221,14 @@ test('gallery navigation, rapid reversal, native input, resize and live reduced 
   await expect.poll(() => region.evaluate((e) => e.scrollLeft)).toBeGreaterThan(200);
 });
 
-test('mobile menu focus, escape, outside interaction and responsive cleanup', async ({
-  page,
-  browserName,
-}) => {
+test('mobile menu focus, escape, outside interaction and responsive cleanup', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   const menu = page.getByLabel('Open navigation menu', { exact: true });
   await menu.focus();
   await menu.press('Enter');
-  const close = page.getByLabel('Close navigation menu', { exact: true });
-  await expect(close).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
-  // macOS WebKit follows the system keyboard preference: Option-Tab includes
-  // links/buttons when full keyboard navigation is disabled. Do not trap Tab.
-  await page.keyboard.press(
-    browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab',
-  );
+  // The trigger becomes the panel; keyboard focus follows it to the first link.
   await expect(
     page
       .getByRole('navigation', { name: 'Mobile navigation' })
@@ -246,7 +237,7 @@ test('mobile menu focus, escape, outside interaction and responsive cleanup', as
   await page.keyboard.press('Escape');
   await expect(menu).toBeFocused();
   await menu.click();
-  await expect(close).toBeVisible();
+  await expect(menu).toHaveAttribute('aria-hidden', 'true');
   await page.locator('#overview .fineprint').click();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).not.toBeVisible();
   await menu.click();
@@ -256,7 +247,7 @@ test('mobile menu focus, escape, outside interaction and responsive cleanup', as
     .click();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).not.toBeVisible();
   await menu.click();
-  await expect(close).toBeVisible();
+  await expect(menu).toHaveAttribute('aria-hidden', 'true');
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });

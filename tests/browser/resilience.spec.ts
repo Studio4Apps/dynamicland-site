@@ -21,7 +21,8 @@ test('vertical touch scrolling and horizontal swipe preserve gallery autoplay', 
   await page.goto('http://127.0.0.1:3001/');
   await page.getByLabel('Open navigation menu').tap();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
-  await page.getByLabel('Close navigation menu').tap();
+  await page.locator('#overview .fineprint').tap();
+  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).not.toBeVisible();
   const region = page.locator('[data-gallery-track]');
   await region.scrollIntoViewIfNeeded();
   const gallery = page.getByRole('region', { name: 'DynamicLand highlights' });
