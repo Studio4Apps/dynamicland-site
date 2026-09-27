@@ -29,19 +29,19 @@ export function HomeChapter() {
           </div>
         </div>
         <div className={styles.homeDetails}>
-          <div data-reveal="quiet">
+          <div>
             <span className={styles.number}>01</span>
             <h3>Pick your essentials.</h3>
             <p>
               Calendar, weather, battery, music, photos, and more. Choose what belongs in your Home.
             </p>
           </div>
-          <div data-reveal="quiet">
+          <div>
             <span className={styles.number}>02</span>
             <h3>Give everything its place.</h3>
             <p>Choose widget sizes and styles, then arrange them in a layout that works for you.</p>
           </div>
-          <div data-reveal="quiet">
+          <div>
             <span className={styles.number}>03</span>
             <h3>Keep your day close.</h3>
             <p>Hover over the notch for a quick look, then get back to what you were doing.</p>

@@ -9,7 +9,7 @@ export type GalleryState = {
   current: number;
   start: boolean;
   end: boolean;
-  playback: 'Play' | 'Pause' | 'Replay';
+  playback: 'Play' | 'Pause';
   announcement: string;
 };
 
@@ -33,10 +33,7 @@ export function createGalleryController(
     current = 0,
     settled = 0;
   let intent: 'play' | 'pause' = reduced.matches || cards.length < 2 ? 'pause' : 'play';
-  let ended = false,
-    inView = false,
-    hovered = false,
-    hoverOverride = false;
+  let inView = false;
   let elapsed = 0,
     clockAt: number | null = null,
     frame = 0,
@@ -59,18 +56,20 @@ export function createGalleryController(
     duration: number;
     manual: boolean;
   } | null = null;
-  let drag: { x: number; y: number; scroll: number; pointer: number; active: boolean } | null =
-    null;
-  let pointerAction: GalleryState['playback'] | null = null;
+  let drag: {
+    x: number;
+    y: number;
+    scroll: number;
+    pointer: number;
+    active: boolean;
+    mouse: boolean;
+  } | null = null;
 
-  const playback = (): GalleryState['playback'] =>
-    ended ? 'Replay' : intent === 'play' ? 'Pause' : 'Play';
+  const playback = (): GalleryState['playback'] => (intent === 'play' ? 'Pause' : 'Play');
   const eligible = () =>
     intent === 'play' &&
-    !ended &&
     inView &&
     !document.hidden &&
-    (!hovered || hoverOverride) &&
     !travel &&
     !nativeUntil &&
     !pointerDown &&
@@ -169,7 +168,6 @@ export function createGalleryController(
     if (settled !== current) {
       settled = current;
       elapsed = 0;
-      ended = false;
     }
     if (manual) announcement = `Highlight ${cards[current].getAttribute('aria-label')}`;
   }
@@ -182,10 +180,6 @@ export function createGalleryController(
   function go(index: number, manual: boolean) {
     const now = performance.now();
     sample(now);
-    if (manual) {
-      intent = 'pause';
-      hoverOverride = false;
-    }
     nativeUntil = 0;
     const selected = Math.max(0, Math.min(cards.length - 1, index));
     const destination = targets[selected] || 0;
@@ -210,11 +204,10 @@ export function createGalleryController(
   const pause = () => {
     sample(performance.now());
     intent = 'pause';
-    hoverOverride = false;
     reconcile();
   };
   const interrupt = () => {
-    pause();
+    sample(performance.now());
     travel = null;
     track.removeAttribute('data-moving');
     nativeUntil = performance.now() + 140;
@@ -223,10 +216,7 @@ export function createGalleryController(
   const updateView = () => {
     const box = track.getBoundingClientRect();
     const visible = Math.max(0, Math.min(box.bottom, innerHeight) - Math.max(box.top, 0));
-    inView =
-      visible >= Math.min(box.height * 0.35, innerHeight * 0.4) &&
-      box.right > 0 &&
-      box.left < innerWidth;
+    inView = visible > 0 && box.right > 0 && box.left < innerWidth;
     if (!inView) {
       completeTravel();
       captionAnimation?.cancel();
@@ -243,8 +233,11 @@ export function createGalleryController(
     const max = Math.max(0, track.scrollWidth - track.clientWidth);
     measuredWidth = track.clientWidth;
     measuredScrollWidth = track.scrollWidth;
+    // offsetLeft rounds each card independently to whole CSS pixels. Native
+    // scroll snapping retains fractional positions, especially on Retina screens.
+    const firstLeft = cards[0].getBoundingClientRect().left;
     targets = cards.map((card) =>
-      Math.min(max, Math.max(0, card.offsetLeft - cards[0].offsetLeft)),
+      Math.min(max, Math.max(0, card.getBoundingClientRect().left - firstLeft)),
     );
     writePosition(targets[selected] || 0);
     finish(manual);
@@ -271,65 +264,25 @@ export function createGalleryController(
       return;
     }
     if (eligible() && elapsed >= duration) {
-      if (current === cards.length - 1) {
-        ended = true;
-        intent = 'pause';
-      } else {
-        go(current + 1, false);
-        return;
-      }
+      go((current + 1) % cards.length, false);
+      return;
     }
     reconcile(now);
   }
 
   dots.forEach((dot, index) => listen(dot, 'click', () => go(index, true)));
-  const previous = root.querySelector('[data-previous]'),
-    next = root.querySelector('[data-next]');
-  if (previous) listen(previous, 'click', () => go((travel?.index ?? current) - 1, true));
-  if (next) listen(next, 'click', () => go((travel?.index ?? current) + 1, true));
   if (rotation) {
-    // Capture the intended pointer action before focusin changes the accessible state.
-    listen(rotation, 'pointerdown', () => {
-      pointerAction = playback();
-    });
-    listen(rotation, 'pointercancel', () => {
-      pointerAction = null;
-    });
-    listen(rotation, 'keydown', () => {
-      pointerAction = null;
-    });
-    listen(rotation, 'click', (event) => {
-      const action = (event as MouseEvent).detail ? (pointerAction ?? playback()) : playback();
-      pointerAction = null;
-      if (action === 'Pause') {
+    listen(rotation, 'click', () => {
+      if (intent === 'play') {
         pause();
         return;
       }
       sample(performance.now());
       intent = 'play';
-      hoverOverride = true;
       announcement = '';
-      if (action === 'Replay') {
-        ended = false;
-        elapsed = 0;
-        go(0, false);
-      } else reconcile();
+      reconcile();
     });
   }
-  listen(root, 'focusin', pause);
-  listen(root, 'pointerenter', (event) => {
-    if ((event as PointerEvent).pointerType !== 'mouse') return;
-    sample(performance.now());
-    hovered = true;
-    hoverOverride = false;
-    reconcile();
-  });
-  listen(root, 'pointerleave', (event) => {
-    if ((event as PointerEvent).pointerType !== 'mouse') return;
-    hovered = false;
-    hoverOverride = false;
-    reconcile();
-  });
   listen(
     track,
     'keydown',
@@ -361,27 +314,33 @@ export function createGalleryController(
       request();
       return;
     }
-    if (travel || Math.abs(track.scrollLeft - lastWritten) < 0.5) return;
+    // A native subpixel snap correction is not a new gesture. Treating it as
+    // input repeatedly suspends the dwell and starts another settlement.
+    if (travel || Math.abs(track.scrollLeft - lastWritten) <= 1) return;
     lastWritten = track.scrollLeft;
     sample(performance.now());
-    intent = 'pause';
     nativeUntil = performance.now() + 140;
     reconcile();
   });
-  listen(track, 'wheel', interrupt);
+  listen(track, 'wheel', (event) => {
+    const wheel = event as WheelEvent;
+    if (Math.abs(wheel.deltaX) > Math.abs(wheel.deltaY)) interrupt();
+  });
   listen(track, 'pointerdown', (event) => {
     const e = event as PointerEvent;
     if (e.button !== 0) return;
-    interrupt();
+    sample(performance.now());
+    completeTravel();
     pointerDown = true;
-    if (e.pointerType === 'mouse')
-      drag = {
-        x: e.clientX,
-        y: e.clientY,
-        scroll: track.scrollLeft,
-        pointer: e.pointerId,
-        active: false,
-      };
+    drag = {
+      x: e.clientX,
+      y: e.clientY,
+      scroll: track.scrollLeft,
+      pointer: e.pointerId,
+      active: false,
+      mouse: e.pointerType === 'mouse',
+    };
+    reconcile();
   });
   listen(
     track,
@@ -393,10 +352,13 @@ export function createGalleryController(
         dy = e.clientY - drag.y;
       if (!drag.active && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
         drag.active = true;
-        track.setPointerCapture(drag.pointer);
-        track.dataset.moving = 'true';
+        interrupt();
+        if (drag.mouse) {
+          track.setPointerCapture(drag.pointer);
+          track.dataset.moving = 'true';
+        }
       }
-      if (drag.active) {
+      if (drag.active && drag.mouse) {
         e.preventDefault();
         writePosition(drag.scroll - dx);
         nativeUntil = performance.now() + 140;

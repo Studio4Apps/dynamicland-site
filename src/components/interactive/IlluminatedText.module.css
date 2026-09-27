@@ -1,0 +1,32 @@
+.illuminated {
+  --word-rest: #f5f5f7;
+  --word-wait: #9e9aa4;
+  --word-light: #fff;
+}
+.illuminated[data-tone='purple'] {
+  --word-rest: #7811de;
+  --word-wait: #34203f;
+  --word-light: #7811de;
+}
+.word {
+  position: relative;
+  display: inline-block;
+  color: var(--word-rest);
+}
+.light {
+  position: absolute;
+  inset: 0;
+  color: var(--word-light);
+  pointer-events: none;
+}
+.illuminated[data-illuminating] .word {
+  color: var(--word-wait);
+}
+.illuminated:not([data-illuminating]) .light {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .illuminated[data-illuminating] .word {
+    color: var(--word-rest);
+  }
+}

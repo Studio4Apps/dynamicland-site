@@ -2,8 +2,8 @@
   position: relative;
   width: 100%;
   aspect-ratio: var(--media-ratio, 16 / 10);
-  background: #f2f2f4;
-  border: 1px solid #eaeaec;
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: clip;
   min-width: 0;
@@ -12,7 +12,7 @@
   position: absolute;
   bottom: 1rem;
   left: 1.25rem;
-  color: #6e6e77;
+  color: var(--muted);
   font-size: 0.625rem;
   letter-spacing: 0.055em;
   line-height: 1;

@@ -47,7 +47,7 @@ test('real dwell: visible progress, pause beyond a dwell, resume remaining time 
   await page.waitForTimeout(6500);
   expect(await progress(page)).toBeCloseTo(paused, 3);
   await expect(selected(page)).toHaveAttribute('data-gallery-dot', '0');
-  // Active-dot navigation preserves the elapsed time and pauses rotation.
+  // Active-dot navigation preserves the elapsed time and existing paused intent.
   await selected(page).click();
   expect(await progress(page)).toBeCloseTo(paused, 3);
   await rotation(page).click();
@@ -118,7 +118,7 @@ test('one clock, settled dwell, position-driven morph and stationary controls', 
   expect(await progress(page, 1)).toBe(0);
 });
 
-test('hover, sticky keyboard pause, explicit play, offscreen and visibility suspension', async ({
+test('hover and focus keep playing; explicit keyboard pause and visibility preserve intent', async ({
   page,
 }) => {
   await frozenPage(page);
@@ -126,17 +126,16 @@ test('hover, sticky keyboard pause, explicit play, offscreen and visibility susp
   await advance(page, 1500);
   await track(page).hover();
   const hovered = await progress(page);
-  await advance(page, 10000);
-  expect(await progress(page)).toBeCloseTo(hovered, 3);
+  await advance(page, 500);
+  expect(await progress(page)).toBeGreaterThan(hovered);
   await page.mouse.move(0, 0);
   await advance(page, 200);
   expect(await progress(page)).toBeGreaterThan(hovered);
   await rotation(page).focus();
-  await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+  await expect(rotation(page)).toHaveAccessibleName('Pause slideshow');
   await rotation(page).press('Space');
   await advance(page, 300);
-  await expect(root(page)).toHaveAttribute('data-playing', 'true');
-  await rotation(page).press('Enter');
+  await expect(root(page)).toHaveAttribute('data-playing', 'false');
   await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
   await page.getByRole('button', { name: 'Show Music within reach' }).focus();
   await page.locator('h1').click();
@@ -179,7 +178,7 @@ test('hover, sticky keyboard pause, explicit play, offscreen and visibility susp
   await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
 });
 
-test('resize preserves playing dwell; a drag interrupts travel and settles without stale advances', async ({
+test('resize preserves dwell; drag and horizontal wheel resume after settling', async ({
   page,
 }) => {
   // Real browser time here: native resize/scroll/snap events are not virtual-clock tasks.
@@ -188,7 +187,7 @@ test('resize preserves playing dwell; a drag interrupts travel and settles witho
   await page.getByRole('button', { name: 'Show Music within reach' }).click();
   await expect(track(page)).not.toHaveAttribute('data-moving', 'true');
   await expect(selected(page)).toHaveAttribute('data-gallery-dot', '1');
-  await rotation(page).click();
+  await expect(rotation(page)).toHaveAccessibleName('Pause slideshow');
   await page.mouse.move(0, 0);
   await expect.poll(() => progress(page, 1)).toBeGreaterThan(15);
   const before = await progress(page, 1);
@@ -208,7 +207,7 @@ test('resize preserves playing dwell; a drag interrupts travel and settles witho
   await page.mouse.move(70, box.y + 100, { steps: 12 });
   await page.mouse.up();
   await expect(track(page)).not.toHaveAttribute('data-moving', 'true');
-  await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+  await expect(rotation(page)).toHaveAccessibleName('Pause slideshow');
   const index = await selected(page).getAttribute('data-gallery-dot');
   await expect
     .poll(() =>
@@ -223,23 +222,34 @@ test('resize preserves playing dwell; a drag interrupts travel and settles witho
     .toBeLessThan(1);
   await page.waitForTimeout(1200);
   await expect(selected(page)).toHaveAttribute('data-gallery-dot', index!);
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  expect(await progress(page, Number(index))).toBeGreaterThan(0);
+  await track(page).hover();
+  await page.mouse.wheel(-700, 0);
+  await expect(selected(page)).not.toHaveAttribute('data-gallery-dot', index!);
+  await expect(track(page)).not.toHaveAttribute('data-moving', 'true');
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
 });
 
-test('last slide replay, repeated commands, live reduced motion and no automatic restart', async ({
+test('last slide loops repeatedly, pause persists and live reduced motion stops rotation', async ({
   page,
 }) => {
   await frozenPage(page);
   await enter(page);
   await page.getByRole('button', { name: 'Show Make it yours' }).dispatchEvent('click');
   await advance(page, 1000);
-  await rotation(page).dispatchEvent('click');
-  await advance(page, 6200);
-  await expect(rotation(page)).toHaveAccessibleName('Replay slideshow');
-  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '4');
-  await rotation(page).dispatchEvent('click');
-  await advance(page, 1000);
+  await expect(rotation(page)).toHaveAccessibleName('Pause slideshow');
+  await advance(page, 7100);
   await expect(selected(page)).toHaveAttribute('data-gallery-dot', '0');
+  await expect(rotation(page)).toHaveAccessibleName('Pause slideshow');
+  await expect(page.getByRole('button', { name: /Replay|Restart/ })).toHaveCount(0);
   expect(await progress(page)).toBeLessThan(3);
+  // Another complete pass must return to the first slide without user input.
+  for (const index of ['1', '2', '3', '4', '0']) {
+    await advance(page, 7100);
+    await expect(selected(page)).toHaveAttribute('data-gallery-dot', index);
+    await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  }
   await rotation(page).dispatchEvent('click');
   await rotation(page).dispatchEvent('click');
   await rotation(page).dispatchEvent('click');
@@ -255,6 +265,99 @@ test('last slide replay, repeated commands, live reduced motion and no automatic
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await advance(page, 10000);
   await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+});
+
+test('dot and keyboard selection preserve playback; only the rotation button changes intent', async ({
+  page,
+}) => {
+  await frozenPage(page);
+  await enter(page);
+  const music = page.getByRole('button', { name: 'Show Music within reach' });
+  await music.click();
+  await advance(page, 1100);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '1');
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  expect(await progress(page, 1)).toBeLessThan(5);
+  await advance(page, 7000);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '2');
+
+  await track(page).focus();
+  await track(page).press('ArrowRight');
+  await advance(page, 1100);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '3');
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  await rotation(page).click();
+  await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+  await music.click();
+  await advance(page, 1100);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '1');
+  await expect(root(page)).toHaveAttribute('data-playing', 'false');
+  await advance(page, 14000);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '1');
+  await track(page).focus();
+  await track(page).press('ArrowRight');
+  await advance(page, 1100);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '2');
+  await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+  await rotation(page).click();
+  await advance(page, 7100);
+  await expect(selected(page)).toHaveAttribute('data-gallery-dot', '3');
+});
+
+test('vertical page scrolling over the gallery resumes on return and preserves manual pause', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await root(page).scrollIntoViewIfNeeded();
+  await track(page).hover();
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  await expect.poll(() => progress(page)).toBeGreaterThan(5);
+  await page.mouse.wheel(0, 1800);
+  await expect(root(page)).toHaveAttribute('data-playing', 'false');
+  const frozen = await progress(page);
+  await page.waitForTimeout(300);
+  expect(await progress(page)).toBeCloseTo(frozen, 3);
+  await root(page).scrollIntoViewIfNeeded();
+  await expect(root(page)).toHaveAttribute('data-playing', 'true');
+  await expect.poll(() => progress(page)).toBeGreaterThan(frozen);
+  await rotation(page).click();
+  await expect(rotation(page)).toHaveAccessibleName('Play slideshow');
+  await track(page).hover();
+  await page.mouse.wheel(0, 1800);
+  await expect(root(page)).not.toBeInViewport();
+  await root(page).scrollIntoViewIfNeeded();
+  await expect(root(page)).toHaveAttribute('data-playing', 'false');
+});
+
+test.describe('fractional slide positions on Retina displays', () => {
+  test.use({ viewport: { width: 868, height: 923 }, deviceScaleFactor: 2 });
+
+  test('Photo 03 runs at normal dwell speed without repeated native snap corrections', async ({
+    page,
+  }) => {
+    for (const width of [851, 868]) {
+      await page.setViewportSize({ width, height: 923 });
+      await page.goto('/');
+      // Reproduce a 15px scrollbar gutter and fractional vw-based card widths.
+      // 868px matches the owner's viewport; 851px also exposes integer rounding.
+      await root(page).evaluate((element, trackWidth) => {
+        element.style.width = `${trackWidth}px`;
+      }, width - 15);
+      await page.getByRole('button', { name: 'Show Music within reach' }).click();
+      await expect(selected(page)).toHaveAttribute('data-gallery-dot', '1');
+      await expect(track(page)).not.toHaveAttribute('data-moving', 'true');
+      const before = await progress(page, 1);
+      await page.waitForTimeout(2000);
+      const gained = (await progress(page, 1)) - before;
+      expect(gained, `Photo 03 dwell at ${width}px`).toBeGreaterThan(28);
+      expect(gained).toBeLessThan(38);
+      await expect(selected(page)).toHaveAttribute('data-gallery-dot', '2', { timeout: 6000 });
+      await expect(track(page)).not.toHaveAttribute('data-moving', 'true');
+      const third = await progress(page, 2);
+      await page.waitForTimeout(2000);
+      expect((await progress(page, 2)) - third).toBeGreaterThan(28);
+    }
+  });
 });
 
 test('one, five, seven slides; target sizes, responsive geometry, reduced motion and clean remount', async ({

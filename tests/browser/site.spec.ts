@@ -35,7 +35,6 @@ async function measureChapterSpacing(page: Page) {
     const rotation = features?.querySelector('[data-rotation]');
     const controls = rotation?.closest('.container');
     const overview = document.querySelector('#overview');
-    const overviewCaption = overview?.querySelector('[class*="heroCaption"]');
     const home = document.querySelector('#home');
     const everyday = document.querySelector('section[aria-labelledby="everyday-title"]');
     const customization = document.querySelector('#customization');
@@ -43,7 +42,6 @@ async function measureChapterSpacing(page: Page) {
     const faq = document.querySelector('#faq');
     if (
       !overview ||
-      !overviewCaption ||
       !features ||
       !controls ||
       !home ||
@@ -54,7 +52,7 @@ async function measureChapterSpacing(page: Page) {
     )
       throw new Error('Homepage chapter boundary is incomplete');
 
-    const overviewBottom = rect(overviewCaption).bottom;
+    const overviewBottom = rect(overview).bottom;
     const featuresTop = visualTop(features);
     const controlsBottom = rect(controls).bottom;
     const homeTop = visualTop(home);
@@ -80,7 +78,7 @@ async function measureChapterSpacing(page: Page) {
   });
 }
 
-test('routes, real destinations, initial content, empty media and CSP', async ({
+test('routes, real destinations, hero image, empty product media and CSP', async ({
   page,
   request,
 }) => {
@@ -117,14 +115,25 @@ test('routes, real destinations, initial content, empty media and CSP', async ({
     if (anchor.startsWith('/#') || anchor.startsWith('#'))
       await expect(page.locator(`[id="${anchor.split('#')[1]}"]`)).toHaveCount(1);
   }
-  expect(await page.locator('[data-media-slot] img, [data-media-slot] video').count()).toBe(0);
+  const heroImage = page.locator('[data-hero-artwork] img');
+  await expect(heroImage).toBeVisible();
+  await expect(page.locator('[data-media-slot="hero"]')).toHaveCount(0);
+  await expect
+    .poll(() => heroImage.evaluate((img: HTMLImageElement) => img.naturalWidth))
+    .toBeGreaterThan(0);
+  await expect(page.locator('[data-media-slot] img, [data-media-slot] video')).toHaveCount(0);
   expect(
     await page
       .locator('button')
       .filter({ hasText: /^(Play|Watch|Zoom)$/ })
       .count(),
   ).toBe(0);
-  expect(mediaRequests).toEqual([]);
+  expect(mediaRequests.length).toBeGreaterThan(0);
+  expect(
+    mediaRequests.every((url) =>
+      /\/media\/(landing-page-(840|1672)|footer-(840|1448)|pro-card)\.webp$/.test(url),
+    ),
+  ).toBe(true);
   const one = await request.get('/'),
     two = await request.get('/');
   expect(one.headers()['content-security-policy']).not.toBe(
@@ -159,50 +168,50 @@ test('gallery navigation, rapid reversal, native input, resize and live reduced 
   await page.goto('/');
   const region = page.locator('[data-gallery-track]');
   await region.scrollIntoViewIfNeeded();
-  const next = page.getByRole('button', { name: 'Next highlight' }),
-    previous = page.getByRole('button', { name: 'Previous highlight' });
-  await expect(previous).toBeDisabled();
-  await next.click();
+  await expect(page.getByRole('button', { name: /^(Previous|Next) highlight$/ })).toHaveCount(0);
+  await region.focus();
+  await region.press('ArrowRight');
   await expect(selected(page)).toHaveAttribute('aria-label', 'Show Music within reach');
   await page.getByRole('button', { name: 'Show Make it yours' }).click();
-  await expect(next).toBeDisabled();
   await expect(selected(page)).toHaveAttribute('aria-label', 'Show Make it yours');
-  await previous.click();
-  await previous.click();
-  await next.click();
+  await region.focus();
+  await region.press('ArrowLeft');
+  await region.press('ArrowLeft');
+  await region.press('ArrowRight');
   await expect(selected(page)).toHaveAttribute('aria-label', 'Show Clipboard and files');
   await region.focus();
   await region.press('Home');
-  await expect(previous).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show A home for your day');
   await region.press('End');
   await page.setViewportSize({ width: 600, height: 700 });
   await expect(selected(page)).toHaveAttribute('aria-label', 'Show Make it yours');
-  await expect(next).toBeDisabled();
-  await previous.click();
+  await region.focus();
+  await region.press('ArrowLeft');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(selected(page)).toHaveAttribute('aria-label', 'Show Clipboard and files');
   await region.focus();
   await region.press('Home');
-  await expect(previous).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show A home for your day');
   await region.evaluate((e) => {
     e.scrollLeft = e.scrollWidth;
   });
-  await expect(next).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show Make it yours');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.getByRole('button', { name: 'Show A home for your day' }).click();
-  await expect(previous).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show A home for your day');
   // Native wheel interrupts scripted movement; vertical wheel remains page scrolling.
-  await next.click();
+  await region.focus();
+  await region.press('ArrowRight');
   await region.hover();
   await page.mouse.wheel(-500, 0);
   await expect(region).not.toHaveAttribute('data-moving', 'true');
   await region.focus();
   await region.press('End');
-  await expect(next).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show Make it yours');
   await page.setViewportSize({ width: 1440, height: 1000 });
   await region.focus();
   await region.press('Home');
-  await expect(previous).toBeDisabled();
+  await expect(selected(page)).toHaveAttribute('aria-label', 'Show A home for your day');
   const box = await region.boundingBox();
   if (!box) throw new Error('Missing gallery bounds');
   await page.mouse.move(box.x + 700, box.y + 100);
@@ -238,7 +247,7 @@ test('mobile menu focus, escape, outside interaction and responsive cleanup', as
   await expect(menu).toBeFocused();
   await menu.click();
   await expect(close).toBeVisible();
-  await page.locator('[data-media-slot="hero"]').click();
+  await page.locator('#overview .fineprint').click();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).not.toBeVisible();
   await menu.click();
   await page
@@ -304,6 +313,13 @@ test('no JavaScript and failed enhancement keep content and native controls usab
 test('accessibility across routes, menu and selected states', async ({ page }) => {
   for (const path of ['/', '/support', '/privacy', '/terms']) {
     await page.goto(path);
+    await expect(page.locator('header')).toHaveAttribute('data-scrolled', 'false');
+    // Check settled colors after hydration applies the homepage header theme.
+    await page.locator('header').evaluate(async (header) => {
+      await Promise.allSettled(
+        header.getAnimations({ subtree: true }).map((animation) => animation.finished),
+      );
+    });
     // DevTools test injection; the shipped site CSP remains enforced and unchanged.
     await page.evaluate(axe);
     const results = await page.evaluate(async () => {

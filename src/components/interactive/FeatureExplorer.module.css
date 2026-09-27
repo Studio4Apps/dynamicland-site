@@ -1,0 +1,220 @@
+.explorer {
+  position: relative;
+  text-align: left;
+  z-index: 25;
+}
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 3rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  background: #242127;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  list-style: none;
+  cursor: pointer;
+}
+.trigger::-webkit-details-marker {
+  display: none;
+}
+.trigger > svg {
+  transition: transform 220ms ease;
+}
+.trigger:hover > svg {
+  transform: translateY(2px);
+}
+.seeds {
+  display: grid;
+  grid-template-columns: repeat(2, 8px);
+  gap: 3px;
+  flex: none;
+}
+.seeds span {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+.seeds svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.panel {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  left: 50%;
+  width: min(34rem, calc(100vw - 40px));
+  margin-left: calc(min(34rem, 100vw - 40px) / -2);
+  max-height: calc(100dvh - 104px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 28px;
+  background: #242127;
+  color: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 20px 70px #20112b22;
+}
+.explorer[data-enhanced] .panel {
+  margin-left: 0;
+}
+.explorer:not([open]) .panel {
+  display: none;
+}
+.explorer[data-expanded] .trigger {
+  background: transparent;
+}
+.explorer[data-expanded] .trigger > * {
+  opacity: 0;
+}
+.explorer[data-expanded='false'] [data-explorer-copy] {
+  opacity: 0;
+}
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.eyebrow {
+  font-size: 0.625rem;
+  color: #cdb2e3;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+.panelHeader p {
+  color: #fff;
+  font-size: 1.625rem;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  margin-top: 0.35rem;
+}
+.close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffffff28;
+  border-radius: 50%;
+  color: #e8e2ed;
+  background: #ffffff0b;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.explorer[data-enhanced] .close {
+  display: flex;
+}
+.close:hover {
+  background: #ffffff18;
+}
+.destinations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.destinations a {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  column-gap: 0.7rem;
+  row-gap: 0.7rem;
+  padding: 1rem 0.75rem;
+  border-radius: 16px;
+  min-width: 0;
+}
+.destinations a:hover {
+  background: #ffffff0a;
+}
+.icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  color: #dcaeff;
+  background: #b36fff18;
+  border-radius: 12px;
+}
+.icon svg {
+  width: 24px;
+  height: 24px;
+}
+.destinations strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.description {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #bfb6c5;
+  margin-top: 0.25rem;
+}
+.destinationArrow {
+  display: none;
+}
+.allFeatures {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0.75rem 0.2rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid #ffffff20;
+  font-size: 0.8125rem;
+  color: #ddc5ef;
+}
+.panel :focus-visible {
+  outline-color: #d9a4ff;
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .trigger {
+    font-size: 0.875rem;
+    padding-inline: 1rem;
+  }
+  .panel {
+    padding: 1.25rem;
+  }
+  .destinations {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  .destinations a {
+    grid-template-columns: 2.5rem 1fr 1rem;
+    padding: 0.75rem 0.25rem;
+    align-items: center;
+  }
+  .destinationArrow {
+    display: block;
+    color: #ac99ba;
+  }
+  .panelHeader {
+    margin-bottom: 0.75rem;
+  }
+}
+@media (max-height: 520px) {
+  .panel {
+    padding: 1rem;
+  }
+  .panelHeader {
+    margin-bottom: 0.5rem;
+  }
+  .destinations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .destinations a {
+    padding: 0.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trigger:hover > svg {
+    transform: none;
+  }
+}

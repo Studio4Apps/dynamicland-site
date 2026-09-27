@@ -4,6 +4,32 @@ Completed locally on **2026-09-22**. Public launch has not been performed. See t
 
 The initial whole-site measurements below are the pre-correction baseline. The current highlights behavior and latest production regression results are documented in [Timed carousel correction](carousel-correction.md). The complete nine-boundary inventory, matched captures, and final rhythm measurements are documented in [Homepage vertical rhythm correction](spacing-correction.md).
 
+## Latest revision: signature motion
+
+The owner's feedback rejected the first pass's generic card entrances. Those entrances were removed. The current implementation instead connects a source control to an expanding feature directory, carries its four icons into their destination layout, stretches one shared navigation marker between links, and illuminates two editorial headings word by word. Details and source mappings are in [Native motion study](native-motion-study.md).
+
+Production build, TypeScript, and ESLint passed. The complete Chromium/WebKit suite passed **52 tests, with 4 pre-existing intentional WebKit skips**. New coverage includes shell reversal continuity, icon resting state, keyboard/focus restoration, real anchor navigation, 320px mobile and 844×390 landscape panel bounds, no-JavaScript disclosure fallback, live reduced motion, and navigation-marker retargeting. axe reported no violations in the open explorer as well as the existing route/menu checks. All screenshot slots remain empty. Security scan: 48 authored files and public/browser build outputs, zero findings.
+
+During QA, a delayed scroll event could dismiss an opening panel after the browser had already brought its trigger into view. Dismissal now compares actual trigger movement instead of reacting to every scroll event. Closed panels are explicitly removed from layout, preventing their absolute bounds from affecting narrow-page overflow. The navigation continuity test freezes its existing animation clock before taking two same-state geometry readings; WebKit can otherwise advance the compositor between the reads.
+
+Evidence and reproduction: `artifacts/signature-test.log`, `artifacts/browser-results.json`, and `node scripts/capture-signature-motion.mjs` (recording and profiling occur separately). Native-app inspection was source-only; there was no native app build, launch, deployment, or Git push.
+
+Desktop and mobile recordings were inspected through chronological frames and a 10fps close-up of the explorer opening/closing. The shell expands from the trigger, icons spread from their source positions, labels resolve after the shell, and the reverse returns to the original control. Settled desktop/mobile screenshots confirm readable labels and unchanged empty media. First-open profiling on a 4× throttled mobile viewport exposed unnecessary computed-style reads of the hidden disclosure subtree; these are now performed only when reversing a running transition.
+
+After that optimization the production build and all eight focused Chromium/WebKit signature-motion tests passed again (`artifacts/signature-focused.log`; the latest JSON report contains this focused rerun). The new recording/profile run emitted no page errors. In separate 1-second samples, p95 frame intervals were 16.7–16.8ms for opening, closing and reversal. Desktop first-open maximum was 33.3ms. The synthetic 4× CPU / 390×844 mobile first open still included one 58ms long task and a 66.7ms maximum interval; close/reversal maxima were 16.8ms without long tasks. These small local samples are not physical-device or field performance guarantees. Reduced motion ended with zero explorer animations, zero root overflow, and all media slots empty. Final results are in `artifacts/signature-motion/performance.json`.
+
+## Earlier native-inspired motion pass
+
+See [Native motion study](native-motion-study.md) for the source evidence and web adaptations. The app repository was inspected read-only; the app itself was not launched or profiled during this pass.
+
+- Production build, TypeScript, repository-wide ESLint, and all five unit contracts passed. Local security scan: 43 authored files plus public/browser build outputs, zero findings.
+- Full Chromium/WebKit regression: **44 passed, 4 existing intentional WebKit skips, 0 failures**. Eight of the passes are new motion cases (four scenarios × two engines). axe found no WCAG A/AA violations in the existing route/menu/selected-state checks. A transient entrance contrast failure was fixed by keeping section and menu text fully opaque.
+- Opened and inspected desktop/mobile screenshots and chronological video frames, with denser 10fps strips for menu opening and FAQ expansion/reversal. Settled layouts preserve their alignment; headings remain readable; empty product slots remain empty. Desktop and compact recordings also cover native scrolling, optical media entry, rapid preview reversal, pricing card entrances, and FAQ reversal.
+- Separate Chromium 153.0.8010.12 rAF samples covered Home optical entry, preview switching, and disclosure expansion: 54–55 intervals per action, median **16.7ms**, p95 **16.7–16.8ms**. The selector sample had one **33.3ms** maximum interval on each viewport; the other maxima were 16.8ms. No long tasks were observed within these short samples.
+- Desktop was 1440×1000 unthrottled; compact was 390×844 with **4× CPU throttle**. These are synthetic local samples, not physical-device or field frame-rate measurements. Video recording ran separately. Reduced motion finished with zero running animations, zero horizontal overflow, and visible hero copy on both viewports. Walkthroughs emitted no page errors.
+
+Raw evidence is in ignored `artifacts/native-motion/`; reproduce with `node scripts/capture-native-motion.mjs`. The full suite report is `artifacts/browser-results.json`. No public deployment or Git push was performed in this pass.
+
 ## IMPLEMENTED
 
 Four routes, responsive sticky navigation, five-card manual gallery with native scrolling and mouse drag, coordinated three-style selector, native FAQ, genuine download/support links, factual free/Pro information, two bounded blur entrances and reduced-motion fallbacks. Fifteen typed empty media slots with future image/video loading and quiet failure behavior. No screenshots, device mocks, stock art or simulated app UI were inserted.

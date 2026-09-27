@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { ProBadge } from '@/components/ProBadge';
+import { createMotionScope, MOTION, springEasing } from '@/lib/motion';
 import styles from './Interactive.module.css';
 type DetailItem = {
   id: string;
@@ -14,58 +15,69 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
   useEffect(() => {
     const element = root.current;
     if (!element) return;
-    const preference = matchMedia('(prefers-reduced-motion: reduce)');
+    const scope = createMotionScope();
     const controls = Array.from(element.querySelectorAll<HTMLInputElement>('input'));
     const previews = Array.from(element.querySelectorAll<HTMLElement>('[data-preview]'));
     let active = Math.max(
       0,
       controls.findIndex((input) => input.checked),
     );
-    let animations: Animation[] = [];
-    const settle = () => {
-      animations.forEach((animation) => animation.cancel());
-      animations = [];
-    };
     const select = () => {
       const next = controls.findIndex((input) => input.checked);
       if (next === active || next < 0) return;
-      settle();
+      // Read the rendered state before canceling: reversing mid-transition
+      // resumes from these values, including partially visible old previews.
+      const appearance = previews.map((preview, index) => {
+        if (scope.isAnimating(preview)) {
+          const style = getComputedStyle(preview);
+          return { opacity: Number(style.opacity), transform: style.transform };
+        }
+        return {
+          opacity: index === active ? 1 : 0,
+          transform: index === active ? 'none' : 'scale(1.012)',
+        };
+      });
+      scope.cancel();
       const incoming = previews[next],
         outgoing = previews[active];
       outgoing?.querySelectorAll('video').forEach((video) => video.pause());
-      if (!preference.matches && incoming?.animate && outgoing?.animate) {
-        animations = [
-          outgoing.animate(
-            [
-              { opacity: 1, visibility: 'visible' },
-              { opacity: 0, visibility: 'visible' },
-            ],
-            { duration: 180, easing: 'ease-in' },
-          ),
-          incoming.animate(
-            [
-              { opacity: 0, transform: 'translateY(8px)' },
-              { opacity: 1, transform: 'none' },
-            ],
-            { duration: 450, delay: 80, fill: 'backwards', easing: 'cubic-bezier(.22,.68,0,1)' },
-          ),
-        ];
+      previews.forEach((preview, index) => {
+        if (index === next || appearance[index].opacity <= 0) return;
+        scope.animate(
+          preview,
+          [
+            {
+              opacity: appearance[index].opacity,
+              transform: appearance[index].transform,
+              visibility: 'visible',
+            },
+            { opacity: 0, transform: appearance[index].transform, visibility: 'visible' },
+          ],
+          { duration: MOTION.sectionExitMs, easing: MOTION.exitEase },
+        );
+      });
+      if (incoming) {
+        const start = appearance[next];
+        const delay = start.opacity > 0 ? 0 : MOTION.sectionDelayMs;
+        scope.animate(incoming, [{ transform: start.transform }, { transform: 'none' }], {
+          duration: MOTION.sectionMs,
+          delay,
+          fill: 'backwards',
+          easing: springEasing(MOTION.sectionMs),
+        });
+        scope.animate(incoming, [{ opacity: start.opacity }, { opacity: 1 }], {
+          duration: 180,
+          delay,
+          fill: 'backwards',
+          easing: 'ease-out',
+        });
       }
       active = next;
     };
-    const visibility = () => {
-      if (document.hidden) settle();
-    };
     element.addEventListener('change', select);
-    preference.addEventListener('change', settle);
-    window.addEventListener('resize', settle);
-    document.addEventListener('visibilitychange', visibility);
     return () => {
-      settle();
+      scope.destroy();
       element.removeEventListener('change', select);
-      preference.removeEventListener('change', settle);
-      window.removeEventListener('resize', settle);
-      document.removeEventListener('visibilitychange', visibility);
     };
   }, []);
   return (
@@ -88,8 +100,10 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
                 ↗
               </span>
             </span>
-            <span id={`description-${item.id}`} className={styles.optionDescription}>
-              {item.description}
+            <span className={styles.optionBody}>
+              <span id={`description-${item.id}`} className={styles.optionDescription}>
+                <span>{item.description}</span>
+              </span>
             </span>
           </label>
         ))}

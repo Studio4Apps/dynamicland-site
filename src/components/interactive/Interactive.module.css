@@ -39,7 +39,7 @@
 .trailer {
   flex: 0 0 max(0px, calc(100% - var(--card-size) - 1.5rem));
 }
-/* The whole capsule + playback surface is centered independently of the arrows. */
+/* Keep the playback surface centered independently of the slide count. */
 .galleryControls {
   order: 1;
   display: grid;
@@ -68,11 +68,11 @@
   color: var(--ink);
 }
 .galleryCount span {
-  color: #727279;
+  color: var(--muted);
 }
 .dots,
 .playback {
-  background: rgba(232, 232, 237, 0.72);
+  background: var(--surface);
   border: 0;
   border-radius: 999px;
   height: 3.5rem;
@@ -118,45 +118,19 @@
   width: 3.5rem;
   padding: 0;
   color: #29292a;
+  transition:
+    transform 250ms var(--motion-settle),
+    background 160ms ease;
 }
 .playback svg {
   fill: currentColor;
 }
 .playback:hover {
-  background: rgba(222, 222, 228, 0.85);
+  background: var(--surface-hover);
 }
 .playback:active {
-  background: rgba(212, 212, 219, 0.9);
-}
-.arrows {
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: end;
-  display: flex;
-  gap: 0.5rem;
-}
-.arrows button {
-  display: grid;
-  place-items: center;
-  height: 2.75rem;
-  width: 2.75rem;
-  border-radius: 50%;
-  border: 1px solid #e3e3e7;
-  background: white;
-  transition:
-    background 160ms ease,
-    transform 160ms ease;
-}
-.arrows button:hover:not(:disabled) {
-  background: #f1e7fa;
-}
-.arrows button:active:not(:disabled) {
+  background: var(--surface-pressed);
   transform: scale(0.96);
-}
-.arrows button:disabled {
-  color: #b7b7bd;
-  background: #f7f7f9;
-  border-color: #f0f0f3;
 }
 .highlightCopy {
   padding: 1.625rem 0.125rem 0.25rem;
@@ -232,7 +206,8 @@
   font-size: 1.125rem;
   line-height: 1.4;
   font-weight: 600;
-  color: #68666c;
+  color: var(--muted);
+  transition: color 180ms ease;
 }
 .option:has(input:checked) .optionTitle {
   color: var(--ink);
@@ -241,20 +216,45 @@
   margin-left: auto;
   padding-inline: 0.75rem;
   font-size: 1.25rem;
-  color: #828087;
+  color: var(--muted);
+  transition:
+    color 180ms ease,
+    transform 250ms var(--motion-settle);
 }
 .option:has(input:checked) .optionArrow {
   color: var(--purple);
+  transform: rotate(45deg);
+}
+.optionBody {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 340ms var(--motion-settle),
+    opacity 140ms ease,
+    visibility 0s 340ms;
+}
+.option:has(input:checked) .optionBody {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 340ms var(--motion-settle),
+    opacity 180ms 60ms ease,
+    visibility 0s;
 }
 .optionDescription {
   display: block;
+  min-height: 0;
+  overflow: hidden;
   font-size: 0.9375rem;
   line-height: 1.7;
-  margin-top: 0.75rem;
   color: var(--muted);
 }
-.option:not(:has(input:checked)) .optionDescription {
-  display: none;
+.optionDescription > span {
+  display: block;
+  padding-top: 0.75rem;
 }
 .previewStage {
   display: grid;
@@ -265,6 +265,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform-origin: top center;
 }
 .selector:has(input[value='notch']:checked) [data-preview='notch'],
 .selector:has(input[value='pill']:checked) [data-preview='pill'],
@@ -302,7 +303,7 @@
   }
   .option:has(input:checked) {
     border-color: #cfacf0;
-    background: #fbf7ff;
+    background: var(--surface-raised);
   }
   .optionTitle {
     font-size: 0.875rem;
@@ -340,10 +341,9 @@
   }
   .optionDescription {
     font-size: 0.875rem;
-    margin-top: 0.5rem;
   }
-  .option:not(:has(input:checked)) .optionDescription {
-    display: none;
+  .optionDescription > span {
+    padding-top: 0.5rem;
   }
 }
 @media (max-width: 734px) {
@@ -361,14 +361,14 @@
   .galleryCount {
     display: none;
   }
-  .arrows {
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: center;
-  }
 }
 @media (max-width: 374px) {
   .dots {
     padding-inline: 0.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playback:active {
+    transform: none;
   }
 }

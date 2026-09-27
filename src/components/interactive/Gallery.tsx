@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Arrow } from '@/components/Icon';
 import { createGalleryController, GALLERY_TIMING, type GalleryState } from './gallery-controller';
 import styles from './Interactive.module.css';
 
@@ -47,15 +46,6 @@ export function Gallery({
               <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">
                 {state.playback === 'Pause' ? (
                   <path d="M4 1h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 0h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
-                ) : state.playback === 'Replay' ? (
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.35 4.35A8 8 0 1 1 2 10M4.35 1v3.35H7.7"
-                  />
                 ) : (
                   <path d="M4 2.1c0-.9.9-1.4 1.7-.9l12 7.9c.7.4.7 1.4 0 1.8l-12 7.9c-.8.5-1.7 0-1.7-.9z" />
                 )}
@@ -81,19 +71,6 @@ export function Gallery({
             {String(state.current + 1).padStart(2, '0')}
             <span> / {String(items.length).padStart(2, '0')}</span>
           </span>
-          <div className={styles.arrows}>
-            <button
-              type="button"
-              data-previous
-              aria-label="Previous highlight"
-              disabled={state.start}
-            >
-              <Arrow direction="left" />
-            </button>
-            <button type="button" data-next aria-label="Next highlight" disabled={state.end}>
-              <Arrow />
-            </button>
-          </div>
         </div>
       )}
       <div

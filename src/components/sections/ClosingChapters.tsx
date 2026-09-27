@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { DownloadButton } from '@/components/DownloadButton';
 import { ProBadge } from '@/components/ProBadge';
+import { Disclosure } from '@/components/interactive/Disclosure';
 import { Arrow, Check } from '@/components/Icon';
 import { faqs, product } from '@/content/product';
 import styles from './Sections.module.css';
@@ -86,10 +87,9 @@ export function FAQ() {
         </div>
         <div className={styles.faqList}>
           {faqs.map((item) => (
-            <details key={item.question}>
-              <summary>{item.question}</summary>
+            <Disclosure key={item.question} title={item.question}>
               <p>{item.answer}</p>
-            </details>
+            </Disclosure>
           ))}
         </div>
       </div>

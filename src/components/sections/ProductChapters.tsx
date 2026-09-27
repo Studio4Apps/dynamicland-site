@@ -2,6 +2,7 @@ import { MediaFrame } from '@/components/media/MediaFrame';
 import { ProBadge } from '@/components/ProBadge';
 import { DetailSelector } from '@/components/interactive/DetailSelector';
 import { customizations } from '@/content/product';
+import { IlluminatedText } from '@/components/interactive/IlluminatedText';
 import styles from './Sections.module.css';
 
 export function MusicChapter() {
@@ -12,9 +13,7 @@ export function MusicChapter() {
           <div className={styles.musicHeading}>
             <span className="eyebrow">Now Playing</span>
             <h2 id="music-title">
-              Your music.
-              <br />
-              Always in the right place.
+              <IlluminatedText lines={['Your music.', 'Always in the right place.']} />
             </h2>
             <p>
               Pause, skip, or switch your audio output from the notch. Keep your favorite soundtrack
@@ -77,7 +76,11 @@ export function ActivityChapter() {
 }
 export function EverydayChapter() {
   return (
-    <section className={`section ${styles.everyday}`} aria-labelledby="everyday-title">
+    <section
+      id="everyday"
+      className={`section ${styles.everyday}`}
+      aria-labelledby="everyday-title"
+    >
       <div className="container">
         <div className={styles.sectionHeading}>
           <div>
@@ -87,7 +90,7 @@ export function EverydayChapter() {
           </div>
         </div>
         <div className={styles.utilityGrid}>
-          <article className={styles.utilityCard} data-reveal="quiet">
+          <article className={styles.utilityCard}>
             <div className={styles.utilityCopy}>
               <h3>Copied. Kept. Found.</h3>
               <p>
@@ -98,7 +101,7 @@ export function EverydayChapter() {
             </div>
             <MediaFrame id="clipboard" />
           </article>
-          <article className={styles.utilityCard} data-reveal="quiet">
+          <article className={styles.utilityCard}>
             <div className={styles.utilityCopy}>
               <h3>A place to drop it.</h3>
               <p>
@@ -109,7 +112,7 @@ export function EverydayChapter() {
             </div>
             <MediaFrame id="tray" />
           </article>
-          <article className={styles.utilityCard} data-reveal="quiet">
+          <article className={styles.utilityCard}>
             <div className={styles.utilityCopy}>
               <h3>Catch the moment.</h3>
               <p>Set a timer, record a voice memo, or pick a color straight from your screen.</p>

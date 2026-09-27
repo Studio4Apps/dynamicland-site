@@ -65,7 +65,7 @@ export function MediaAsset({ slot }: { slot: MediaSlot }) {
           media={source.media}
         />
       ))}
-      {/* Native picture keeps future art direction explicit; all current slots are empty. */}
+      {/* Native picture keeps responsive sources and art direction explicit. */}
       <img
         src={slot.src}
         alt={slot.alt || ''}

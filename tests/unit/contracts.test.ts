@@ -44,10 +44,11 @@ test('all public product destinations use permitted protocols', () => {
   for (const url of [product.downloadUrl, product.privacyUrl, product.termsUrl])
     assert.ok(httpsUrl(url, 'public URL'));
 });
-test('all product slots are intentional empty states with valid stage geometry', () => {
+test('approved hero media and empty product slots have valid stage geometry', () => {
   assert.equal(new Set(Object.values(media).map((s) => s.id)).size, Object.keys(media).length);
   for (const slot of Object.values(media)) {
-    assert.equal(slot.src, null);
+    if (slot.id === 'hero') assert.ok(slot.src);
+    else assert.equal(slot.src, null);
     assert.equal(slot.fit, 'contain');
     assert.doesNotThrow(() => validateMedia(slot));
   }

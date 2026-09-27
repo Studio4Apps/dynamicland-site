@@ -63,7 +63,7 @@ for (const viewport of viewports) {
             '.eyebrow',
             '[data-media-slot]',
             '[data-gallery-card]',
-            '[class*="heroCaption"]',
+            '[data-hero-artwork]',
             '[class*="faqList"]',
             '[class*="compatibility"]',
             '[class*="priceGrid"]',
