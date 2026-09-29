@@ -2,7 +2,15 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { createMotionScope, MOTION, springEasing } from '@/lib/motion';
 
-export function Disclosure({ title, children }: { title: string; children: ReactNode }) {
+export function Disclosure({
+  title,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  children: ReactNode;
+  defaultOpen?: boolean;
+}) {
   const ref = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     const root = ref.current;
@@ -73,7 +81,7 @@ export function Disclosure({ title, children }: { title: string; children: React
     };
   }, []);
   return (
-    <details ref={ref} data-disclosure>
+    <details ref={ref} data-disclosure open={defaultOpen}>
       <summary>{title}</summary>
       <div data-disclosure-content>{children}</div>
     </details>

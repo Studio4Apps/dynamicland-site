@@ -78,16 +78,31 @@ export function FAQ() {
     <section id="faq" className={`section ${styles.faqSection}`} aria-labelledby="faq-title">
       <div className={`container ${styles.faq}`}>
         <div className={styles.faqIntro}>
-          <span className="eyebrow">A few useful answers</span>
-          <h2 id="faq-title">Good to know.</h2>
-          <p>A little help getting started.</p>
-          <a href="/support" className="textLink">
-            Visit Support <Arrow size={16} />
+          <div>
+            <span className={styles.faqEyebrow}>GET TO KNOW DYNAMICLAND</span>
+            <h2 id="faq-title">
+              Good to
+              <br />
+              know<span>.</span>
+            </h2>
+            <p>
+              A little clarity.
+              <br />
+              Before you make it yours.
+            </p>
+          </div>
+          <a href="/support" className={styles.faqSupport}>
+            <Image src={product.logo} width={44} height={44} alt="" unoptimized />
+            <span>
+              <strong>A little more help?</strong>
+              <span>Visit DynamicLand Support</span>
+            </span>
+            <Arrow size={18} />
           </a>
         </div>
         <div className={styles.faqList}>
-          {faqs.map((item) => (
-            <Disclosure key={item.question} title={item.question}>
+          {faqs.map((item, index) => (
+            <Disclosure key={item.question} title={item.question} defaultOpen={index === 0}>
               <p>{item.answer}</p>
             </Disclosure>
           ))}

@@ -390,33 +390,94 @@
   margin: 1.75rem auto 0;
   font-size: 0.8125rem;
 }
+/* One calm surface, with the answer—not ornament—as the focal point. */
 .faq {
   display: grid;
-  grid-template-columns: 0.7fr 1.3fr;
-  gap: 5rem;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(1.5rem, 4.5vw, 4rem);
+  background: var(--surface-raised);
+  border: 1px solid rgba(255, 245, 251, 0.55);
+  border-radius: 2.5rem;
+  box-shadow: 0 20px 60px -40px rgba(62, 35, 56, 0.2);
+}
+.faqIntro {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+}
+.faqEyebrow {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 1.75rem;
+}
+.faqIntro h2 {
+  font-size: clamp(3.5rem, 5.5vw, 5rem);
+  letter-spacing: -0.065em;
+  line-height: 0.99;
+}
+.faqIntro h2 > span {
+  color: var(--purple);
 }
 .faqIntro p {
-  margin-top: 1.25rem;
-  font-size: 1rem;
+  margin-top: 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
 }
-.faqIntro :global(.textLink) {
-  margin-top: 1rem;
+.faqSupport {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: fit-content;
+  padding-block: 0.5rem;
+  text-decoration: none;
+}
+.faqSupport > span {
+  display: grid;
+  gap: 0.3rem;
+}
+.faqSupport strong {
   font-size: 0.875rem;
+  font-weight: 600;
+}
+.faqSupport > span > span {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.faqSupport > svg {
+  margin-left: 0.5rem;
+  color: var(--purple);
+  transition: transform 240ms ease;
+}
+.faqSupport:hover > svg {
+  transform: translateX(4px);
 }
 .faqList {
-  border-top: 1px solid var(--line);
+  min-width: 0;
 }
 .faqList details {
   border-bottom: 1px solid var(--line);
 }
+.faqList details:last-child {
+  border-bottom: 0;
+}
 .faqList summary {
-  font-size: 1rem;
-  font-weight: 550;
-  line-height: 1.5;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
   list-style: none;
   cursor: pointer;
-  padding: 1.35rem 2.5rem 1.35rem 0;
+  padding: 1.5rem 3rem 1.5rem 0;
   position: relative;
+  transition: color 200ms ease;
+}
+.faqList details:first-child summary {
+  padding-top: 0.5rem;
 }
 .faqList summary::-webkit-details-marker {
   display: none;
@@ -425,23 +486,53 @@
 .faqList summary::after {
   content: '';
   position: absolute;
-  right: 0.3rem;
-  top: 2rem;
-  width: 12px;
-  height: 1.5px;
-  background: var(--muted);
-  transition: transform 200ms var(--motion-settle);
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.faqList summary::before {
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 50%;
+  background: var(--surface);
+  transition: background 220ms ease;
 }
 .faqList summary::after {
-  transform: rotate(90deg);
+  width: 10px;
+  height: 10px;
+  right: 10px;
+  background:
+    linear-gradient(currentColor, currentColor) center / 10px 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1.5px 10px no-repeat;
+  transition: transform 300ms var(--motion-settle);
+}
+.faqList details:first-child summary::before,
+.faqList details:first-child summary::after {
+  top: calc(50% - 0.5rem);
+}
+.faqList summary:hover {
+  color: var(--purple);
 }
 .faqList details[open]:not([data-expanded='false']) summary::after {
-  transform: rotate(0deg);
+  transform: translateY(-50%) rotate(45deg);
+  color: var(--purple);
+}
+.faqList details[open]:not([data-expanded='false']) summary::before {
+  background: #ddcbe8;
 }
 .faqList details p {
   font-size: 0.9375rem;
   line-height: 1.75;
-  padding: 0 2rem 1.5rem 0;
+  padding: 0 2.5rem 1.75rem 0;
+  max-width: 35rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faqList summary,
+  .faqList summary::before,
+  .faqList summary::after,
+  .faqSupport > svg {
+    transition: none;
+  }
 }
 .closing {
   text-align: center;
@@ -515,7 +606,21 @@
   .faq {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+    border-radius: 1.75rem;
   }
+  .faqIntro {
+    gap: 1.75rem;
+  }
+  .faqIntro h2 {
+    font-size: 3.5rem;
+  }
+  .faqList summary {
+    font-size: 1rem;
+  }
+  .faqList details p {
+    padding-right: 0;
+  }
+
   .hero {
     --hero-art-width: max(100vw, 44rem);
     --hero-scene-gap: 1rem;
