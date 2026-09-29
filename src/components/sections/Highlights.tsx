@@ -12,7 +12,7 @@ export function Highlights() {
       aria-labelledby="highlights-title"
     >
       <div className={`container ${styles.sectionHeading}`}>
-        <div>
+        <div data-motion-group="copy">
           <span className="eyebrow">Less switching. More doing.</span>
           <h2 id="highlights-title">A closer look at your new space.</h2>
           <p>

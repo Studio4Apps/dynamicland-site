@@ -2,17 +2,15 @@ import { DownloadButton } from '@/components/DownloadButton';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { media } from '@/content/media';
 import { FeatureExplorer } from '@/components/interactive/FeatureExplorer';
-import { IlluminatedText } from '@/components/interactive/IlluminatedText';
 import styles from './Sections.module.css';
 export function Hero() {
   return (
     <section id="overview" className={styles.hero} aria-labelledby="hero-title">
       <div className="container">
-        <div className={styles.heroCopy}>
+        <div className={styles.heroCopy} data-motion-group="copy">
           <h1 id="hero-title">
             Your Mac.
-            <br />
-            <IlluminatedText lines={['A little more connected.']} />
+            <br />A little more connected.
           </h1>
           <p>
             Music, widgets, and everyday essentials.

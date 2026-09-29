@@ -85,6 +85,7 @@ export function Gallery({
       )}
       <div
         data-gallery-track
+        data-motion="media"
         className={styles.track}
         role="group"
         aria-label="Highlight slides"

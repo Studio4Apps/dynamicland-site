@@ -7,7 +7,7 @@ export function HomeChapter() {
     <section id="home" className={`section ${styles.home}`} aria-labelledby="home-title">
       <div className="container">
         <div className={styles.split}>
-          <div className={styles.chapterCopy}>
+          <div className={styles.chapterCopy} data-motion-group="copy">
             <span className="eyebrow">
               Your Home <ProBadge />
             </span>
@@ -24,11 +24,11 @@ export function HomeChapter() {
               Make yourself at home <Arrow size={16} />
             </a>
           </div>
-          <div data-reveal="optical">
+          <div data-motion="media">
             <MediaFrame id="home" />
           </div>
         </div>
-        <div className={styles.homeDetails}>
+        <div className={styles.homeDetails} data-motion-group="details">
           <div>
             <span className={styles.number}>01</span>
             <h3>Pick your essentials.</h3>

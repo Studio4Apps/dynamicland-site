@@ -2,7 +2,6 @@ import { MediaFrame } from '@/components/media/MediaFrame';
 import { ProBadge } from '@/components/ProBadge';
 import { DetailSelector } from '@/components/interactive/DetailSelector';
 import { customizations } from '@/content/product';
-import { IlluminatedText } from '@/components/interactive/IlluminatedText';
 import styles from './Sections.module.css';
 
 export function MusicChapter() {
@@ -10,10 +9,12 @@ export function MusicChapter() {
     <section id="music" className={`section ${styles.music}`} aria-labelledby="music-title">
       <div className="container">
         <div className={styles.sectionHeading}>
-          <div className={styles.musicHeading}>
+          <div className={styles.musicHeading} data-motion-group="copy">
             <span className="eyebrow">Now Playing</span>
             <h2 id="music-title">
-              <IlluminatedText lines={['Your music.', 'Always in the right place.']} />
+              Your music.
+              <br />
+              Always in the right place.
             </h2>
             <p>
               Pause, skip, or switch your audio output from the notch. Keep your favorite soundtrack
@@ -25,10 +26,10 @@ export function MusicChapter() {
             <span>Spotify</span>
           </div>
         </div>
-        <div data-reveal="optical">
+        <div data-motion="media">
           <MediaFrame id="music" dark />
         </div>
-        <div className={styles.musicDetails}>
+        <div className={styles.musicDetails} data-motion-group="details">
           <div>
             <h3>Keep the controls close.</h3>
             <p>See what’s playing and control your music without switching away from your work.</p>
@@ -54,7 +55,7 @@ export function ActivityChapter() {
   return (
     <section className={`section ${styles.activity}`} aria-labelledby="activity-title">
       <div className={`container ${styles.split}`}>
-        <div className={styles.chapterCopy}>
+        <div className={styles.chapterCopy} data-motion-group="copy">
           <span className="eyebrow">
             MiniLand <ProBadge />
           </span>
@@ -69,7 +70,9 @@ export function ActivityChapter() {
           </p>
           <p>A quick glance, without opening the full island.</p>
         </div>
-        <MediaFrame id="activities" />
+        <div data-motion="media">
+          <MediaFrame id="activities" />
+        </div>
       </div>
     </section>
   );
@@ -83,13 +86,13 @@ export function EverydayChapter() {
     >
       <div className="container">
         <div className={styles.sectionHeading}>
-          <div>
+          <div data-motion-group="copy">
             <span className="eyebrow">The everyday, considered</span>
             <h2 id="everyday-title">Small tools. Fewer detours.</h2>
             <p>For the things you do again, and again, and again.</p>
           </div>
         </div>
-        <div className={styles.utilityGrid}>
+        <div className={styles.utilityGrid} data-motion-group="cards">
           <article className={styles.utilityCard}>
             <div className={styles.utilityCopy}>
               <h3>Copied. Kept. Found.</h3>
@@ -134,7 +137,7 @@ export function CustomizationChapter() {
     >
       <div className="container">
         <div className={styles.sectionHeading}>
-          <div>
+          <div data-motion-group="copy">
             <span className="eyebrow">Feels like your Mac</span>
             <h2 id="custom-title">Your island. Your way.</h2>
             <p>
@@ -146,7 +149,7 @@ export function CustomizationChapter() {
         <DetailSelector
           items={customizations.map((item) => ({ ...item, media: <MediaFrame id={item.slot} /> }))}
         />
-        <div className={styles.compatibility}>
+        <div className={styles.compatibility} data-motion-group="details">
           <div>
             <h3>Made for macOS.</h3>
             <p>

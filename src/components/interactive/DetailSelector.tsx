@@ -81,7 +81,7 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
     };
   }, []);
   return (
-    <div ref={root} className={styles.selector}>
+    <div ref={root} className={styles.selector} data-motion="media">
       <fieldset className={styles.options}>
         <legend className="srOnly">Explore island styles</legend>
         {items.map((item, index) => (

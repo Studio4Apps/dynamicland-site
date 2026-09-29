@@ -9,13 +9,16 @@ export function Pricing() {
   return (
     <section id="pricing" className={`section ${styles.pricing}`} aria-labelledby="pricing-title">
       <div className="container">
-        <div className={`${styles.centerHeading} ${styles.pricingHeading}`}>
+        <div
+          className={`${styles.centerHeading} ${styles.pricingHeading}`}
+          data-motion-group="copy"
+        >
           <h2 id="pricing-title">
             Start free. <span className={styles.accent}>Go further.</span>
           </h2>
           <p>Make room for DynamicLand. Add Pro when you’re ready.</p>
         </div>
-        <div className={styles.priceGrid}>
+        <div className={styles.priceGrid} data-motion-group="cards">
           <article className={styles.priceCard} aria-labelledby="free-plan-title">
             <span className={styles.planBrand}>DynamicLand</span>
             <h3 id="free-plan-title">Free</h3>
@@ -76,7 +79,7 @@ export function Pricing() {
 export function FAQ() {
   return (
     <section id="faq" className={`section ${styles.faqSection}`} aria-labelledby="faq-title">
-      <div className={`container ${styles.faq}`}>
+      <div className={`container ${styles.faq}`} data-motion="media">
         <div className={styles.faqIntro}>
           <div>
             <span className={styles.faqEyebrow}>GET TO KNOW DYNAMICLAND</span>
@@ -114,7 +117,7 @@ export function FAQ() {
 export function Closing() {
   return (
     <section className={styles.closing} aria-labelledby="closing-title">
-      <div className={`container ${styles.closingInner}`}>
+      <div className={`container ${styles.closingInner}`} data-motion-group="copy">
         <Image src={product.logo} width={72} height={72} alt="" unoptimized />
         <h2 id="closing-title">
           Make a little room

@@ -87,12 +87,17 @@ export function Updates() {
   return (
     <section id="updates" className={`section ${styles.section}`} aria-labelledby="updates-title">
       <div className={`container ${styles.heading}`}>
-        <div>
+        <div data-motion-group="copy">
           <span className="eyebrow">The latest from DynamicLand</span>
           <h2 id="updates-title">A little more. With every update.</h2>
         </div>
       </div>
-      <div ref={track} className={styles.track} aria-label="DynamicLand updates">
+      <div
+        ref={track}
+        className={styles.track}
+        data-motion-group="cards"
+        aria-label="DynamicLand updates"
+      >
         {updates.map((release) => (
           <UpdateCard key={release.id} release={release} onOpen={() => setSelected(release)} />
         ))}
