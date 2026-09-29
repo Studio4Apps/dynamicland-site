@@ -61,7 +61,10 @@ for (const width of [390, 320, 760]) {
     await page.waitForTimeout(450);
   }
   await page.evaluate(() => scrollTo({ top: 1000, behavior: 'instant' }));
-  await page.locator('[data-mobile-menu] summary').click();
+  // A real pointer preserves scroll; Chromium's locator scroll-into-view can
+  // scroll a sticky header's absolutely positioned child back toward the top.
+  const circle = await page.locator('[data-mobile-menu] summary').boundingBox();
+  await page.mouse.click(circle.x + circle.width / 2, circle.y + circle.height / 2);
   await page.waitForTimeout(600);
   await page.screenshot({ path: resolve(output, `page-open-${width}.png`) });
   await writeFile(

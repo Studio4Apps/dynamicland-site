@@ -1,0 +1,309 @@
+.section {
+  background: var(--canvas);
+}
+.heading {
+  margin-bottom: 2.75rem;
+}
+.heading h2 {
+  max-width: 52rem;
+}
+.track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0.25rem max(var(--gutter), calc((100% - var(--content)) / 2)) 1rem;
+  scroll-padding-inline: max(var(--gutter), calc((100% - var(--content)) / 2));
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+.card {
+  --release-colors: linear-gradient(110deg, #602060, #7811de);
+  --release-glass: linear-gradient(135deg, #7811de22, #a0408022);
+  position: relative;
+  flex: 0 0 min(56rem, calc(100vw - var(--gutter) * 2));
+  border: 0;
+  padding: 0;
+  border-radius: 1.75rem;
+  overflow: hidden;
+  text-align: left;
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+  scroll-snap-align: start;
+  isolation: isolate;
+}
+.cardHeading {
+  display: grid;
+  gap: 0.4rem;
+  padding: 2rem 5rem 1.75rem 2rem;
+}
+.version {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.name {
+  position: relative;
+  z-index: 3;
+  width: fit-content;
+  background: var(--release-colors);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  transform-origin: left center;
+  transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+.artwork {
+  display: block;
+  position: relative;
+  aspect-ratio: 4096 / 2160;
+  background: var(--surface);
+}
+.artwork img {
+  object-fit: contain;
+}
+.hover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  z-index: 2;
+  background: var(--release-glass), #eee5eb94;
+  backdrop-filter: blur(0px);
+  opacity: 0;
+  transition:
+    backdrop-filter 420ms ease,
+    background 420ms ease,
+    opacity 300ms ease;
+}
+.hover > span {
+  transform: translateY(-30px);
+}
+.plus,
+.close,
+.controls button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.plus {
+  position: absolute;
+  right: 1.25rem;
+  top: 1.25rem;
+  background: var(--surface-raised);
+}
+.card:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: -3px;
+}
+.card:focus-visible .hover {
+  opacity: 1;
+  backdrop-filter: blur(14px);
+}
+@media (hover: hover) {
+  .card:hover .hover {
+    opacity: 1;
+    backdrop-filter: blur(14px);
+  }
+}
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.controls button {
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+.dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(48rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: min(86dvh, 56rem);
+  overflow: hidden;
+  border: 1px solid #ffffff35;
+  border-radius: 1.75rem;
+  padding: 0;
+  color: var(--ink);
+  background: var(--surface-raised);
+  box-shadow: 0 24px 100px #21152730;
+  overscroll-behavior: contain;
+  animation: appear 440ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.dialog::backdrop {
+  background: #211b2538;
+  backdrop-filter: blur(12px);
+  animation: veil 440ms ease both;
+}
+.dialogContent {
+  max-height: min(calc(86dvh - 2px), calc(56rem - 2px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: 4rem clamp(2rem, 5vw, 4rem);
+}
+.dialogContent::-webkit-scrollbar {
+  display: none;
+}
+.dialog h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 1rem 0 2rem;
+}
+.dialog h2 span {
+  background: var(--release-colors, linear-gradient(110deg, #602060, #7811de));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.close {
+  position: absolute;
+  margin: 0;
+  top: 1rem;
+  right: 1rem;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.notes {
+  margin-bottom: 2rem;
+}
+.notes p {
+  white-space: pre-line;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+.closing {
+  animation: disappear 260ms ease both;
+}
+.closing::backdrop {
+  animation: unveil 260ms ease both;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes disappear {
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+@keyframes veil {
+  from {
+    background: #211b2500;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    background: #211b2538;
+    backdrop-filter: blur(12px);
+  }
+}
+@keyframes unveil {
+  to {
+    background: #211b2500;
+    backdrop-filter: blur(0px);
+  }
+}
+@media (max-width: 600px) {
+  .heading {
+    margin-bottom: 2rem;
+  }
+  .track {
+    gap: 1rem;
+  }
+  .cardHeading {
+    padding: 1.5rem 5rem 1.5rem 1.5rem;
+  }
+  .dialogContent {
+    padding: 4.5rem 1.5rem 2rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog,
+  .dialog::backdrop {
+    animation-duration: 1ms;
+  }
+  .hover {
+    transition: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hover {
+    background: var(--surface-raised) !important;
+  }
+  .dialog::backdrop {
+    backdrop-filter: none;
+    background: #211b25b0;
+  }
+}
+.noteBlock {
+  margin-bottom: 1.75rem;
+}
+.noteBlock h3 {
+  font-size: 1.1875rem;
+  margin-bottom: 0.625rem;
+  letter-spacing: -0.02em;
+}
+.noteBlock p {
+  margin-bottom: 0.5rem;
+}
+.bullet {
+  position: relative;
+  padding-left: 1.125rem;
+}
+.bullet::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--purple);
+}
+.controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.card:focus-visible .name {
+  transform: translate(var(--name-x, 0px), var(--name-y, 0px)) scale(1.16);
+}
+@media (hover: hover) {
+  .card:hover .name {
+    transform: translate(var(--name-x, 0px), var(--name-y, 0px)) scale(1.16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .name {
+    transition: none;
+  }
+}

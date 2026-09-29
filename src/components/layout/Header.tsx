@@ -5,6 +5,7 @@ import { product } from '@/content/product';
 import { DownloadButton } from '@/components/DownloadButton';
 import { Arrow } from '@/components/Icon';
 import { createMobileMenuMotion } from './mobile-menu-motion';
+import { createMobileMenuGlass } from './mobile-menu-glass';
 import { MorphNavigation, navigationLinks as links } from './MorphNavigation';
 import styles from './Layout.module.css';
 
@@ -17,12 +18,14 @@ export function Header() {
     const nav = header.current;
     if (!disclosure || !nav) return;
     menuMotion.current = createMobileMenuMotion(disclosure, nav);
+    const stopGlass = createMobileMenuGlass(disclosure, nav);
     const scroll = () => {
       nav.dataset.scrolled = String(window.scrollY > 12);
     };
     scroll();
     window.addEventListener('scroll', scroll, { passive: true });
     return () => {
+      stopGlass();
       menuMotion.current?.destroy();
       menuMotion.current = null;
       window.removeEventListener('scroll', scroll);
@@ -57,7 +60,7 @@ export function Header() {
   };
   return (
     <header ref={header} className={styles.header}>
-      <div className={`container ${styles.headerInner}`}>
+      <div className={`container ${styles.headerInner}`} data-menu-backdrop>
         <a href="/" className={styles.brand} aria-label="DynamicLand home">
           <Image src={product.logo} alt="" width={34} height={34} priority unoptimized />
           <span>DynamicLand</span>
@@ -65,27 +68,28 @@ export function Header() {
         <MorphNavigation />
         <div className={styles.headerActions}>
           <DownloadButton compact />
-          <details ref={menu} className={styles.mobileMenu} data-mobile-menu>
-            <summary aria-label="Open navigation menu" aria-controls="mobile-navigation">
-              <span className={styles.triggerGlass} data-menu-trigger-glass aria-hidden="true" />
-              <span className={styles.menuLines} data-menu-icon aria-hidden="true" />
-            </summary>
-            <div className={styles.mobilePanel} data-menu-panel>
-              <span className={styles.menuGlass} data-menu-glass aria-hidden="true" />
-              <div className={styles.menuClip} data-menu-clip>
-                <nav id="mobile-navigation" aria-label="Mobile navigation" onClick={navigateMobile}>
-                  {links.map((link) => (
-                    <a key={link.href} href={link.href}>
-                      <span>{link.label}</span>
-                      <Arrow size={16} />
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </div>
-          </details>
+          <span className={styles.menuSpace} aria-hidden="true" />
         </div>
       </div>
+      <details ref={menu} className={styles.mobileMenu} data-mobile-menu>
+        <summary aria-label="Open navigation menu" aria-controls="mobile-navigation">
+          <span className={styles.triggerGlass} data-menu-trigger-glass aria-hidden="true" />
+          <span className={styles.menuLines} data-menu-icon aria-hidden="true" />
+        </summary>
+        <div className={styles.mobilePanel} data-menu-panel>
+          <span className={styles.menuGlass} data-menu-glass aria-hidden="true" />
+          <div className={styles.menuClip} data-menu-clip>
+            <nav id="mobile-navigation" aria-label="Mobile navigation" onClick={navigateMobile}>
+              {links.map((link) => (
+                <a key={link.href} href={link.href}>
+                  <span>{link.label}</span>
+                  <Arrow size={16} />
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </details>
     </header>
   );
 }

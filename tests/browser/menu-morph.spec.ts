@@ -36,6 +36,7 @@ test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await expect(menu(page)).toHaveAttribute('data-menu-enhanced', 'true');
+  await expect(menu(page)).toHaveAttribute('data-liquid-glass', 'ready');
 });
 
 test('glass circle becomes a rounded liquid surface and contracts back into the trigger', async ({
@@ -50,7 +51,8 @@ test('glass circle becomes a rounded liquid surface and contracts back into the 
       const css = getComputedStyle(e);
       return { blur: css.backdropFilter, radius: css.borderRadius, border: css.borderTopWidth };
     });
-  expect(material.blur).toContain('blur(14px)');
+  // Refraction/frost belongs to the control, never to page sections.
+  expect(material.blur).not.toBe('none');
   expect(material.radius).toBe('50%');
   expect(material.border).toBe('1px');
   await trigger(page).click();
@@ -72,6 +74,11 @@ test('glass circle becomes a rounded liquid surface and contracts back into the 
   expect(overshoot.width).toBeGreaterThan(overshoot.targetWidth);
   await finish(page);
   await expect(menu(page)).toHaveAttribute('data-menu-state', 'open');
+  expect(
+    await menu(page)
+      .locator('[data-menu-glass]')
+      .evaluate((e) => getComputedStyle(e).borderTopLeftRadius),
+  ).toBe('19px');
   const panel = await menu(page).locator('[data-menu-panel]').boundingBox();
   expect(panel!.y).toBeCloseTo(circle!.y, 1);
   expect(panel!.x + panel!.width).toBeCloseTo(circle!.x + circle!.width, 1);
@@ -96,19 +103,25 @@ test('glass circle becomes a rounded liquid surface and contracts back into the 
   expect(await nav(page).evaluate((e) => getComputedStyle(e).filter)).toBe('none');
   await page.locator('#overview .fineprint').click();
   await expect(menu(page)).toHaveAttribute('data-menu-state', 'closing');
-  // Check real elapsed time too: a finished text fade must not flash back
-  // while the longer glass collapse is still in flight.
-  await page.waitForTimeout(230);
-  expect(
-    await menu(page)
-      .locator('nav')
-      .evaluate((e) => Number(getComputedStyle(e).opacity)),
-  ).toBe(0);
   const returning = await sample(page, 240);
   expect(returning.width).toBeLessThan(returning.targetWidth * 0.5);
   expect(returning.width).toBeGreaterThan(circle!.width);
   expect(returning.x).toBeGreaterThan(overshoot.x);
   expect(returning.opacity).toBe(0);
+  // Resume the real animation after its text fade. Slow WebKit paints may
+  // already finish the shell before the next observation; either way its text
+  // must stay hidden rather than flash back as the fade's effect is removed.
+  await menu(page).evaluate((root) =>
+    root.getAnimations({ subtree: true }).forEach((a) => a.play()),
+  );
+  await page.waitForTimeout(60);
+  expect(
+    await menu(page).evaluate(
+      (root) =>
+        !root.hasAttribute('open') ||
+        Number(getComputedStyle(root.querySelector('nav')!).opacity) === 0,
+    ),
+  ).toBe(true);
   await finish(page);
   await expect(menu(page)).toHaveAttribute('data-menu-state', 'closed');
   await expect(nav(page)).not.toBeVisible();

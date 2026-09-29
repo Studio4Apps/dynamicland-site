@@ -104,7 +104,8 @@
   font-size: 0.8125rem;
   border-radius: 0.625rem;
 }
-.mobileMenu {
+.mobileMenu,
+.menuSpace {
   display: none;
 }
 .footer {
@@ -221,18 +222,25 @@
   color: #e3d5f2;
 }
 @media (max-width: 760px) {
+  .menuSpace {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+  }
   .header:has(.mobileMenu[open]) {
     /* Let the expanding surface sample the page behind the header. */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  .header:has(+ :global(main #overview))[data-scrolled='false'] {
+  .mobileMenu {
     --menu-ink: var(--on-dark);
-    --menu-solid: #432588;
-    --menu-glass: linear-gradient(145deg, #ffffff24, #eee5ff0d), #24105566;
+    --menu-solid: #36363b;
+    --menu-glass: linear-gradient(145deg, #ffffff14, #ffffff05), #29292ebd;
     --menu-border: color-mix(in srgb, var(--on-dark) 21%, transparent);
     --menu-hover: color-mix(in srgb, var(--on-dark) 8%, transparent);
-    --menu-shadow: #1b0a482e;
+    --menu-shadow: #1414182e;
+    color: var(--menu-ink);
   }
   .headerInner {
     gap: 0.5rem;
@@ -242,7 +250,9 @@
   }
   .mobileMenu {
     display: block;
-    position: relative;
+    position: absolute;
+    top: calc((var(--header-height) - 2.75rem) / 2);
+    inset-inline-end: var(--gutter);
   }
   .mobileMenu summary {
     position: relative;
@@ -312,7 +322,7 @@
       inset 0 1px 0 #ffffff26;
   }
   .menuGlass {
-    border-radius: 1.5rem;
+    border-radius: 19px;
     box-shadow:
       0 18px 48px var(--menu-shadow, #3423451f),
       0 4px 12px #26163808,
@@ -320,7 +330,8 @@
   }
   .menuClip {
     position: relative;
-    border-radius: 1.5rem;
+    border-radius: 19px;
+    overflow: clip;
   }
   .mobileMenu nav {
     display: grid;
@@ -343,8 +354,8 @@
           color-mix(in srgb, var(--canvas) 60%, transparent)
         )
       );
-      -webkit-backdrop-filter: blur(14px) saturate(135%);
-      backdrop-filter: blur(14px) saturate(135%);
+      -webkit-backdrop-filter: blur(0.5px);
+      backdrop-filter: blur(0.5px);
     }
   }
   .mobileMenu nav a {
@@ -370,6 +381,7 @@
     background: var(--menu-hover, #6641800c);
   }
   .mobileMenu nav a:focus-visible {
+    outline-color: var(--on-dark);
     outline-offset: -3px;
   }
   @media (prefers-reduced-transparency: reduce) {

@@ -1,4 +1,5 @@
 import { createMotionScope, springEasing } from '@/lib/motion';
+import { MENU_GLASS } from './mobile-menu-glass';
 
 // Geometry sampled from the owner's 60fps menu recording. The surface travels
 // from the trigger, blooms below its destination, then settles into a rectangle.
@@ -62,7 +63,13 @@ export function createMobileMenuMotion(root: HTMLDetailsElement, header: HTMLEle
       height: from.height,
       radius: `${from.width / 2}px`,
     };
-    destination = { x: 0, y: 0, width: to.width, height: to.height, radius: '24px' };
+    destination = {
+      x: 0,
+      y: 0,
+      width: to.width,
+      height: to.height,
+      radius: `${Math.min(MENU_GLASS.radius, to.width / 2, to.height / 2)}px`,
+    };
   };
   const surfaceFrame = (shape: Shape): Keyframe => ({
     transform: `translate(${shape.x}px, ${shape.y}px)`,
@@ -110,7 +117,7 @@ export function createMobileMenuMotion(root: HTMLDetailsElement, header: HTMLEle
         mix(source.y + source.height / 2, destination.height / 2, travel) -
         height / 2 +
         destination.height * arc;
-      const radius = mix(Math.min(width, height) / 2, 24, corners);
+      const radius = mix(Math.min(width, height) / 2, parseFloat(destination.radius), corners);
       // A slightly tighter upper-right corner forms the returning droplet.
       const tail = opening ? 0 : Math.sin(Math.PI * Math.max(0, Math.min(1, travel))) * 0.35;
       const shape = {

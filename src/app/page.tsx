@@ -9,6 +9,7 @@ import {
   CustomizationChapter,
 } from '@/components/sections/ProductChapters';
 import { Pricing, FAQ, Closing } from '@/components/sections/ClosingChapters';
+import { Updates } from '@/components/sections/Updates';
 import { Motion } from '@/components/interactive/Motion';
 import { pageMetadata, serializeJsonLd, structuredData } from '@/lib/seo';
 import { product } from '@/content/product';
@@ -35,6 +36,7 @@ export default async function Page() {
       <CustomizationChapter />
       <Pricing />
       <FAQ />
+      <Updates />
       <Closing />
       <Motion />
     </main>

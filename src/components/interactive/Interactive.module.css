@@ -1,12 +1,11 @@
 .gallery {
   display: flex;
   flex-direction: column;
-  max-width: var(--wide);
-  margin-inline: auto;
+  width: 100%;
 }
 .track {
   --card-size: min(51.5rem, 80vw);
-  --track-gutter: max(var(--gutter), calc((100% - var(--content)) / 2));
+  --track-gutter: max(var(--gutter), calc((100% - var(--card-size)) / 2));
   display: flex;
   position: relative;
   gap: 1.5rem;
