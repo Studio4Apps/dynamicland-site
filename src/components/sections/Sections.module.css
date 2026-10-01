@@ -112,6 +112,11 @@
 .home {
   padding-top: 0;
 }
+.home > :global(.container),
+.activity > :global(.container) {
+  position: relative;
+  z-index: 2;
+}
 .highlights {
   padding-block: var(--space-chapter-independent);
 }
@@ -175,8 +180,36 @@
   font-size: 1.0625rem;
 }
 .music {
+  position: relative;
+  isolation: isolate;
+  z-index: 1;
   color: #f7f7f9;
-  background: #171719;
+  background: #000;
+}
+.music::before,
+.music::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  aspect-ratio: 2508 / 627;
+  pointer-events: none;
+  z-index: -1;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.music::before {
+  bottom: 100%;
+  background-image: url('/media/music-top.webp');
+  background-position: center bottom;
+  mask-image: linear-gradient(to bottom, transparent, #000 65%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 65%);
+}
+.music::after {
+  top: 100%;
+  background-image: url('/media/music-bottom.webp');
+  background-position: center top;
+  mask-image: linear-gradient(to bottom, #000 35%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent);
 }
 .music :global(.eyebrow) {
   color: #c294ed;

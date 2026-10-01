@@ -100,7 +100,15 @@ export function Motion() {
     };
     const onFocus = (event: FocusEvent) => {
       entries.forEach((entry) => {
-        if (event.target instanceof Node && entry.element.contains(event.target)) settle(entry);
+        // Reveal pending keyboard destinations immediately. Let an entrance
+        // already in progress finish so pointer-down focus cannot move the
+        // control out from under the pointer before its click is dispatched.
+        if (
+          entry.state === 'waiting' &&
+          event.target instanceof Node &&
+          entry.element.contains(event.target)
+        )
+          settle(entry);
       });
     };
     const onVisibility = () => {

@@ -19,8 +19,18 @@ export function Header() {
     if (!disclosure || !nav) return;
     menuMotion.current = createMobileMenuMotion(disclosure, nav);
     const stopGlass = createMobileMenuGlass(disclosure, nav);
+    const darkSections = Array.from(
+      document.querySelectorAll<HTMLElement>('#overview, #music, footer'),
+    );
     const scroll = () => {
       nav.dataset.scrolled = String(window.scrollY > 12);
+      const midpoint = nav.offsetHeight / 2;
+      nav.dataset.onDark = String(
+        darkSections.some((section) => {
+          const rect = section.getBoundingClientRect();
+          return rect.top <= midpoint && rect.bottom > midpoint;
+        }),
+      );
     };
     scroll();
     window.addEventListener('scroll', scroll, { passive: true });

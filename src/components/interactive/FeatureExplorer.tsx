@@ -6,18 +6,18 @@ import { createMotionScope, springEasing } from '@/lib/motion';
 import styles from './FeatureExplorer.module.css';
 
 const destinations = [
-  { href: '#home', title: 'Your Home', detail: 'The essentials, together.', icon: 'home' },
-  { href: '#music', title: 'Your music', detail: 'Keep your soundtrack close.', icon: 'music' },
+  { href: '#home', title: 'Your Home', detail: 'Your widgets. Your day.', icon: 'home' },
+  { href: '#music', title: 'Your music', detail: 'A soundtrack within reach.', icon: 'music' },
   {
     href: '#everyday',
     title: 'Everyday tools',
-    detail: 'Small things. Fewer detours.',
+    detail: 'Copy. Collect. Keep moving.',
     icon: 'tools',
   },
   {
     href: '#customization',
     title: 'Make it yours',
-    detail: 'Your island. Your style.',
+    detail: 'A little more you.',
     icon: 'style',
   },
 ] as const;
@@ -61,11 +61,11 @@ export function FeatureExplorer() {
     let expanded = false;
     let restoreFocus = false;
     let sourceClip = '';
-    let anchorTop = 0;
+    let anchorScrollY = 0;
     let iconOrigins: string[] = [];
     const place = () => {
       const anchor = summary.getBoundingClientRect();
-      anchorTop = anchor.top;
+      anchorScrollY = window.scrollY;
       const width = panel.offsetWidth,
         height = panel.offsetHeight;
       const x = Math.max(
@@ -119,6 +119,16 @@ export function FeatureExplorer() {
       expanded = next;
       restoreFocus = restore;
       scope.cancel();
+      // Once the click has landed, settle the hero entrance before measuring
+      // the morph. Its moving ancestor must not offset the expanded panel.
+      if (next && !running) {
+        root
+          .closest('[data-motion-state]')
+          ?.getAnimations()
+          .forEach((animation) => {
+            animation.finish();
+          });
+      }
       root.open = true;
       // Measure the final layout only once per fresh opening, never per frame.
       if (next && !running) place();
@@ -221,8 +231,7 @@ export function FeatureExplorer() {
     window.addEventListener(
       'scroll',
       () => {
-        if (root.open && Math.abs(summary.getBoundingClientRect().top - anchorTop) > 2)
-          setOpen(false, false, true);
+        if (root.open && Math.abs(window.scrollY - anchorScrollY) > 2) setOpen(false, false, true);
       },
       { signal: abort.signal, passive: true },
     );
@@ -240,32 +249,49 @@ export function FeatureExplorer() {
       <summary className={styles.trigger} aria-controls="feature-explorer-panel">
         <span className={styles.seeds} aria-hidden="true">
           {destinations.map((item) => (
-            <span data-seed key={item.icon}>
+            <span data-seed data-feature={item.icon} key={item.icon}>
               <FeatureIcon kind={item.icon} />
             </span>
           ))}
         </span>
         <span>Explore the features</span>
-        <Arrow size={16} direction="down" />
+        <span className={styles.triggerArrow}>
+          <Arrow size={16} direction="down" />
+        </span>
       </summary>
       <div id="feature-explorer-panel" data-explorer-panel className={styles.panel}>
         <div data-explorer-content>
           <div className={styles.panelHeader} data-explorer-copy>
             <div>
-              <span className={styles.eyebrow}>A LITTLE MORE CONNECTED</span>
-              <p>Find your space.</p>
+              <span className={styles.eyebrow}>EXPLORE DYNAMICLAND</span>
+              <p>
+                Your Mac.
+                <br />
+                <span>Within reach.</span>
+              </p>
             </div>
             <button type="button" aria-label="Close feature explorer" className={styles.close}>
-              <span aria-hidden="true">×</span>
+              <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
             </button>
           </div>
           <nav aria-label="Explore DynamicLand" className={styles.destinations}>
             {destinations.map((item) => (
-              <a href={item.href} key={item.icon}>
+              <a href={item.href} key={item.icon} data-feature={item.icon}>
                 <span className={styles.icon} data-destination-icon>
                   <FeatureIcon kind={item.icon} />
                 </span>
-                <span data-explorer-copy>
+                <span data-explorer-copy className={styles.destinationCopy}>
                   <strong>{item.title}</strong>
                   <span className={styles.description}>{item.detail}</span>
                 </span>
@@ -276,7 +302,13 @@ export function FeatureExplorer() {
             ))}
           </nav>
           <a href="#features" className={styles.allFeatures} data-explorer-copy>
-            See the highlights <Arrow size={16} />
+            <span>
+              See the highlights
+              <span className={styles.footerDetail}>A closer look at your new space.</span>
+            </span>
+            <span className={styles.footerArrow}>
+              <Arrow size={18} />
+            </span>
           </a>
         </div>
       </div>
