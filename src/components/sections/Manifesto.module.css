@@ -10,7 +10,7 @@
   max-width: 12.6em;
   margin-inline: auto;
   color: var(--ink);
-  font-size: clamp(2.5rem, 6.3vw, 7.75rem);
+  font-size: clamp(2.5rem, 5.6vw, 5.75rem);
   font-weight: 400;
   font-optical-sizing: auto;
   line-height: 1;
