@@ -10,6 +10,7 @@ import {
 } from '@/components/sections/ProductChapters';
 import { Pricing, FAQ, Closing } from '@/components/sections/ClosingChapters';
 import { Updates } from '@/components/sections/Updates';
+import { Manifesto } from '@/components/sections/Manifesto';
 import { Motion } from '@/components/interactive/Motion';
 import { pageMetadata, serializeJsonLd, structuredData } from '@/lib/seo';
 import { product } from '@/content/product';
@@ -37,6 +38,7 @@ export default async function Page() {
       <Pricing />
       <FAQ />
       <Updates />
+      <Manifesto />
       <Closing />
       <Motion />
     </main>

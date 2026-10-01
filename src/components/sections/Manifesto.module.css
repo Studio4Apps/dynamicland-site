@@ -1,0 +1,323 @@
+.section {
+  --island-open: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --island-close: cubic-bezier(0.22, 1, 0.36, 1);
+  --pop: cubic-bezier(0.34, 1.5, 0.5, 1);
+  --rise: cubic-bezier(0.19, 1, 0.22, 1);
+  background: var(--canvas);
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+}
+.statement {
+  max-width: 12.6em;
+  margin-inline: auto;
+  color: var(--ink);
+  font-size: clamp(2.5rem, 6.3vw, 7.75rem);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  line-height: 1;
+  letter-spacing: -0.052em;
+  text-align: center;
+  text-wrap: balance;
+}
+.phrase {
+  white-space: nowrap;
+}
+.accent {
+  color: var(--purple);
+  font-style: italic;
+  letter-spacing: -0.03em;
+}
+
+/* Entrance: word by word, each one resolving out of a heavy blur as it rises
+   into place. Marks follow the same order and settle on the island's spring. */
+.word,
+.mark {
+  display: inline-block;
+}
+.rise {
+  display: inline-block;
+}
+.mark {
+  position: relative;
+  /* Centre every mark on the lowercase letters, between baseline and x-height. */
+  top: -0.05em;
+  margin-inline: 0.05em;
+  vertical-align: middle;
+}
+.statement[data-reveal] .rise,
+.statement[data-reveal] .mark {
+  transition:
+    opacity 1100ms ease,
+    filter 1500ms var(--rise),
+    transform 1600ms var(--rise);
+  transition-delay: calc(var(--i) * 42ms);
+}
+.statement[data-reveal] .mark {
+  transition-property: opacity, filter, transform;
+  transition-timing-function: ease, var(--rise), var(--pop);
+}
+.statement[data-reveal='waiting'] .rise {
+  opacity: 0;
+  filter: blur(0.32em);
+  transform: translateY(0.4em);
+  transition: none;
+}
+.statement[data-reveal='waiting'] .mark {
+  opacity: 0;
+  filter: blur(0.3em);
+  transform: translateY(0.4em) scale(0.55);
+  transition: none;
+}
+
+/* Island: the compact Now Playing pill, artwork and waveform in its ears. */
+.island {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.islandBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.16em;
+  height: 0.58em;
+  padding-inline: 0.13em 0.2em;
+  border-radius: 0.29em;
+  background: #000;
+  box-shadow:
+    inset 0 0 0 0.012em #ffffff1a,
+    0 0.06em 0.18em #00000038;
+  transition: transform 520ms var(--island-close);
+}
+.artwork {
+  display: grid;
+  place-items: center;
+  width: 0.41em;
+  height: 0.41em;
+  border-radius: 0.095em;
+  background: linear-gradient(135deg, #fab86b, #d9704d);
+}
+.artwork svg {
+  width: 62%;
+  height: 62%;
+  filter: drop-shadow(0 0.01em 0.02em #0006);
+}
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 0.032em;
+  height: 0.26em;
+}
+.wave span {
+  display: block;
+  width: 0.042em;
+  height: calc(var(--h) * 100%);
+  border-radius: 1em;
+  background: #f5478c;
+  transform-origin: center;
+  animation: breathe 1.6s ease-in-out infinite alternate;
+  animation-delay: calc(var(--bar) * -0.37s);
+}
+.wave span:nth-child(3n + 2) {
+  background: #7a61f2;
+}
+.wave span:nth-child(3n) {
+  background: #5cc7f5;
+}
+.island[data-state='open'] .islandBody {
+  transform: scale(1.16);
+  transition: transform 900ms var(--island-open);
+}
+.island[data-state='open'] .wave span {
+  animation: play 420ms ease-in-out infinite alternate;
+  animation-delay: calc(var(--bar) * -0.13s);
+}
+@keyframes breathe {
+  from {
+    scale: 1 0.8;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+@keyframes play {
+  from {
+    scale: 1 0.35;
+  }
+  to {
+    scale: 1 1.08;
+  }
+}
+
+/* Widgets: the app's own Home icons, fanned and dealt. */
+.deck {
+  position: relative;
+  display: block;
+  width: 1.34em;
+  height: 0.66em;
+  cursor: pointer;
+}
+.card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0.66em;
+  height: 0.66em;
+  margin-left: -0.33em;
+  border-radius: 22%;
+  filter: drop-shadow(0 0.03em 0.05em #26212740);
+  transition:
+    transform 520ms var(--island-open),
+    opacity 320ms ease;
+}
+.card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.card[data-slot='0'] {
+  z-index: 1;
+  transform: translateX(-0.36em) rotate(-8deg) scale(0.86);
+}
+.card[data-slot='1'] {
+  z-index: 3;
+}
+.card[data-slot='2'] {
+  z-index: 2;
+  transform: translateX(0.36em) rotate(8deg) scale(0.86);
+}
+.card[data-slot='held'] {
+  z-index: 0;
+  opacity: 0;
+  transform: translateY(0.1em) scale(0.5);
+}
+.deck[data-open] .card[data-slot='0'] {
+  transform: translateX(-0.5em) translateY(0.03em) rotate(-14deg) scale(0.88);
+}
+.deck[data-open] .card[data-slot='1'] {
+  transform: translateY(-0.05em) scale(1.08);
+}
+.deck[data-open] .card[data-slot='2'] {
+  transform: translateX(0.5em) translateY(0.03em) rotate(14deg) scale(0.88);
+}
+
+/* Mini Bubble: one black bubble that swipes between live activities. */
+.bubble {
+  position: relative;
+  display: block;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #000;
+  box-shadow:
+    inset 0 0 0 0.012em #ffffff1f,
+    0 0.05em 0.14em #00000038;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 520ms var(--island-close);
+}
+.bubble:not([data-state='idle']) {
+  transform: scale(1.14);
+  transition: transform 900ms var(--island-open);
+}
+.face {
+  position: absolute;
+  inset: 17%;
+  transition:
+    transform 560ms var(--island-open),
+    opacity 300ms ease,
+    filter 300ms ease;
+}
+.face svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.face[data-face='transfer'] {
+  opacity: 0;
+  filter: blur(0.03em);
+  transform: translateX(110%);
+}
+.bubble[data-state='transfer'] .face[data-face='timer'],
+.bubble[data-state='sent'] .face[data-face='timer'] {
+  opacity: 0;
+  filter: blur(0.03em);
+  transform: translateX(-110%);
+}
+.bubble[data-state='transfer'] .face[data-face='transfer'],
+.bubble[data-state='sent'] .face[data-face='transfer'] {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+.timerArc,
+.transferArc {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.timerArc {
+  stroke-dasharray: 62 100;
+  transition: stroke-dasharray 500ms ease;
+}
+.timerHand {
+  transform: rotate(223deg);
+  transform-origin: 12px 12px;
+  transition: transform 500ms ease;
+}
+.bubble[data-state='ending'] .timerArc {
+  stroke-dasharray: 100 100;
+  transition: stroke-dasharray 560ms cubic-bezier(0.5, 0, 0.3, 1);
+}
+.bubble[data-state='ending'] .timerHand {
+  transform: rotate(360deg);
+  transition: transform 560ms cubic-bezier(0.5, 0, 0.3, 1);
+}
+.transferArc {
+  stroke-dasharray: 8 100;
+  transition: stroke-dasharray 200ms ease;
+}
+.bubble[data-state='transfer'] .transferArc,
+.bubble[data-state='sent'] .transferArc {
+  stroke-dasharray: 100 100;
+  transition: stroke-dasharray 820ms cubic-bezier(0.55, 0, 0.3, 1) 120ms;
+}
+.up {
+  transition:
+    opacity 160ms ease,
+    transform 300ms ease;
+}
+.done {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+}
+.bubble[data-state='sent'] .up {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+.bubble[data-state='sent'] .done {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 420ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .island[data-state='idle']:hover .islandBody {
+    transform: scale(1.04);
+  }
+}
+@media (max-width: 600px) {
+  .statement {
+    letter-spacing: -0.04em;
+    line-height: 1.06;
+  }
+  .phrase {
+    white-space: normal;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .statement *,
+  .statement *::before {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    animation: none !important;
+  }
+}
