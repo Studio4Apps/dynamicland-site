@@ -2,7 +2,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { ProBadge } from '@/components/ProBadge';
 import { createMotionScope, MOTION, springEasing } from '@/lib/motion';
-import styles from './Interactive.module.css';
+import styles from './DetailSelector.module.css';
 type DetailItem = {
   id: string;
   title: string;
@@ -15,13 +15,34 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
   useEffect(() => {
     const element = root.current;
     if (!element) return;
-    const scope = createMotionScope();
     const controls = Array.from(element.querySelectorAll<HTMLInputElement>('input'));
     const previews = Array.from(element.querySelectorAll<HTMLElement>('[data-preview]'));
+    const options = element.querySelector<HTMLElement>('fieldset')!;
+    const indicator = element.querySelector<HTMLElement>('[data-style-indicator]')!;
     let active = Math.max(
       0,
       controls.findIndex((input) => input.checked),
     );
+    const placeIndicator = () => {
+      const selected = controls.find((input) => input.checked)?.closest('label');
+      if (!selected) return;
+      const parent = options.getBoundingClientRect();
+      const target = selected.getBoundingClientRect();
+      indicator.style.width = `${target.width}px`;
+      indicator.style.height = `${target.height}px`;
+      indicator.style.transform = `translate(${target.left - parent.left}px, ${target.top - parent.top}px)`;
+    };
+    const scope = createMotionScope(placeIndicator);
+    placeIndicator();
+    element.dataset.selectorReady = 'true';
+    const observer =
+      typeof ResizeObserver === 'function'
+        ? new ResizeObserver(() => {
+            scope.cancel();
+            placeIndicator();
+          })
+        : null;
+    observer?.observe(options);
     const select = () => {
       const next = controls.findIndex((input) => input.checked);
       if (next === active || next < 0) return;
@@ -37,7 +58,23 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
           transform: index === active ? 'none' : 'scale(1.012)',
         };
       });
+      const fromIndicator = getComputedStyle(indicator).transform;
+      const fromWidth = getComputedStyle(indicator).width;
+      const fromHeight = getComputedStyle(indicator).height;
       scope.cancel();
+      placeIndicator();
+      scope.animate(
+        indicator,
+        [
+          { transform: fromIndicator, width: fromWidth, height: fromHeight },
+          {
+            transform: indicator.style.transform,
+            width: indicator.style.width,
+            height: indicator.style.height,
+          },
+        ],
+        { duration: 520, easing: springEasing(520, 0.38, 0.9) },
+      );
       const incoming = previews[next],
         outgoing = previews[active];
       outgoing?.querySelectorAll('video').forEach((video) => video.pause());
@@ -76,38 +113,14 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
     };
     element.addEventListener('change', select);
     return () => {
+      observer?.disconnect();
       scope.destroy();
       element.removeEventListener('change', select);
+      delete element.dataset.selectorReady;
     };
   }, []);
   return (
     <div ref={root} className={styles.selector} data-motion="media">
-      <fieldset className={styles.options}>
-        <legend className="srOnly">Explore island styles</legend>
-        {items.map((item, index) => (
-          <label key={item.id} className={styles.option}>
-            <input
-              type="radio"
-              name="island-style"
-              value={item.id}
-              defaultChecked={index === 0}
-              aria-controls={`description-${item.id} preview-${item.id}`}
-            />
-            <span className={styles.optionTitle}>
-              {item.title}
-              {item.pro && <ProBadge />}
-              <span className={styles.optionArrow} aria-hidden="true">
-                ↗
-              </span>
-            </span>
-            <span className={styles.optionBody}>
-              <span id={`description-${item.id}`} className={styles.optionDescription}>
-                <span>{item.description}</span>
-              </span>
-            </span>
-          </label>
-        ))}
-      </fieldset>
       <div className={styles.previewStage}>
         {items.map((item) => (
           <div
@@ -120,6 +133,77 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
           </div>
         ))}
       </div>
+      <fieldset className={styles.options}>
+        <legend className="srOnly">Explore island styles</legend>
+        <span className={styles.indicator} data-style-indicator aria-hidden="true" />
+        {items.map((item, index) => (
+          <label key={item.id} className={styles.option}>
+            <input
+              type="radio"
+              name="island-style"
+              value={item.id}
+              defaultChecked={index === 0}
+              aria-describedby={`description-${item.id}`}
+              aria-controls={`description-${item.id} preview-${item.id}`}
+            />
+            <span className={styles.glyph} aria-hidden="true">
+              <StyleGlyph id={item.id} />
+            </span>
+            <span className={styles.optionTitle}>
+              {item.title.split(' ').map((word, i) => (
+                <span key={`${item.id}-${word}`}>
+                  {i > 0 && ' '}
+                  {word}
+                </span>
+              ))}
+            </span>
+            {item.pro && <ProBadge />}
+            <span className={styles.optionHint} aria-hidden="true">
+              {item.id === 'notch'
+                ? 'At the screen’s edge'
+                : item.id === 'pill'
+                  ? 'A floating silhouette'
+                  : 'A translucent finish'}
+            </span>
+          </label>
+        ))}
+      </fieldset>
+      <div className={styles.descriptionStage}>
+        {items.map((item) => (
+          <p
+            key={item.id}
+            id={`description-${item.id}`}
+            data-description={item.id}
+            className={styles.description}
+          >
+            {item.description}
+          </p>
+        ))}
+      </div>
     </div>
+  );
+}
+
+function StyleGlyph({ id }: { id: string }) {
+  return (
+    <svg viewBox="0 0 64 32" fill="none">
+      {id === 'notch' ? (
+        <>
+          <path className={styles.edge} d="M3 5h58" />
+          <path
+            className={styles.silhouette}
+            d="M13 5h38c-4 0-5 1-5 5v8c0 5-3 8-8 8H26c-5 0-8-3-8-8v-8c0-4-1-5-5-5Z"
+          />
+        </>
+      ) : id === 'pill' ? (
+        <rect className={styles.silhouette} x="11" y="7" width="42" height="20" rx="10" />
+      ) : (
+        <>
+          <rect className={styles.glassBack} x="8" y="3" width="39" height="21" rx="10.5" />
+          <rect className={styles.glassFront} x="17" y="9" width="39" height="21" rx="10.5" />
+          <path className={styles.glassShine} d="M23 14c1-1 3-2 5-2h14" />
+        </>
+      )}
+    </svg>
   );
 }

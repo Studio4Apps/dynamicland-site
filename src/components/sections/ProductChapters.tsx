@@ -3,6 +3,7 @@ import { ProBadge } from '@/components/ProBadge';
 import { DetailSelector } from '@/components/interactive/DetailSelector';
 import { customizations } from '@/content/product';
 import styles from './Sections.module.css';
+import appearance from './Customization.module.css';
 
 export function MusicChapter() {
   return (
@@ -132,25 +133,31 @@ export function CustomizationChapter() {
   return (
     <section
       id="customization"
-      className={`section ${styles.customization}`}
+      className={`section ${appearance.section}`}
       aria-labelledby="custom-title"
     >
       <div className="container">
-        <div className={styles.sectionHeading}>
+        <div className={appearance.heading}>
           <div data-motion-group="copy">
-            <span className="eyebrow">Feels like your Mac</span>
+            <span className="eyebrow">Make it yours</span>
             <h2 id="custom-title">Your island. Your way.</h2>
-            <p>
-              A familiar notch or a floating pill. A classic finish or Liquid Glass.
-              <br className={styles.desktopBreak} /> Find your look, then make the details yours.
-            </p>
           </div>
+          <p data-motion="copy">
+            The shape. The finish. The little details.
+            <br /> An island that feels at home on your Mac.
+          </p>
         </div>
         <DetailSelector
           items={customizations.map((item) => ({ ...item, media: <MediaFrame id={item.slot} /> }))}
         />
-        <div className={styles.compatibility} data-motion-group="details">
+        <div className={appearance.details} data-motion-group="details">
           <div>
+            <span className={appearance.detailIcon} aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="4" y="5" width="24" height="17" rx="3" />
+                <path d="M11 27h10M16 22v5M12 5v3h8V5" />
+              </svg>
+            </span>
             <h3>Made for macOS.</h3>
             <p>
               DynamicLand runs on macOS 26.0 or later. Check the App Store for your Mac’s
@@ -158,6 +165,13 @@ export function CustomizationChapter() {
             </p>
           </div>
           <div>
+            <span className={appearance.detailIcon} aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="3" y="6" width="19" height="14" rx="2.5" />
+                <rect x="21" y="14" width="8" height="12" rx="2" />
+                <path d="M9 25h7M12.5 20v5" />
+              </svg>
+            </span>
             <h3>
               More screens, same feeling. <ProBadge />
             </h3>
@@ -167,6 +181,12 @@ export function CustomizationChapter() {
             </p>
           </div>
           <div>
+            <span className={appearance.detailIcon} aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M3 16s4.5-8 13-8 13 8 13 8-4.5 8-13 8S3 16 3 16Z" />
+                <circle cx="16" cy="16" r="3.5" />
+              </svg>
+            </span>
             <h3>There when you need it.</h3>
             <p>
               Hide your island when idle or in full screen. Use global keyboard shortcuts with Pro.

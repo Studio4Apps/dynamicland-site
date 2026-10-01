@@ -53,8 +53,8 @@ export const media = {
   clipboard: slot('clipboard', 'Photo 09', 'Clipboard feature', '16 / 10'),
   tray: slot('tray', 'Photo 10', 'File Tray feature', '1 / 1'),
   tools: slot('tools', 'Photo 11', 'Timer and Voice Memos', '1 / 1'),
-  'custom-notch': slot('custom-notch', 'Photo 12', 'Dynamic Notch preview', '4 / 3'),
-  'custom-pill': slot('custom-pill', 'Photo 13', 'Dynamic Pill preview', '4 / 3'),
-  'custom-glass': slot('custom-glass', 'Photo 14', 'Liquid Glass preview', '4 / 3'),
+  'custom-notch': slot('custom-notch', 'Photo 12', 'Dynamic Notch preview', '16 / 9'),
+  'custom-pill': slot('custom-pill', 'Photo 13', 'Dynamic Pill preview', '16 / 9'),
+  'custom-glass': slot('custom-glass', 'Photo 14', 'Liquid Glass preview', '16 / 9'),
 } satisfies Record<string, MediaSlot>;
 export type SlotId = keyof typeof media;

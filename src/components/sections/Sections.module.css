@@ -294,24 +294,6 @@
 .utilityCard :global(.pro) {
   margin-top: 1rem;
 }
-.customization {
-  padding-top: 0;
-}
-.compatibility {
-  border-top: 1px solid var(--line);
-  padding-top: 2.5rem;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3rem;
-  margin-top: var(--space-subsection);
-}
-.compatibility h3 {
-  font-size: 1rem;
-  margin-bottom: 0.65rem;
-}
-.compatibility p {
-  font-size: 0.875rem;
-}
 .pricing {
   background: var(--surface);
   padding-bottom: var(--space-related-edge);
@@ -659,9 +641,6 @@
     --hero-scene-gap: 1rem;
     padding-top: calc(var(--header-height) + 2.5rem);
   }
-  .compatibility {
-    gap: 1.5rem;
-  }
 }
 @media (max-width: 600px) {
   .heroCopy h1 {
@@ -683,8 +662,7 @@
     display: none;
   }
   .homeDetails,
-  .musicDetails,
-  .compatibility {
+  .musicDetails {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
