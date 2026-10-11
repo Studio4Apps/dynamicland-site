@@ -19,7 +19,7 @@
 .preview > [data-media-slot] {
   border-radius: 1.75rem;
   background: var(--surface-raised);
-  border-color: #cebec94d;
+  border-color: var(--line);
 }
 .selector:has(input[value='notch']:checked) [data-preview='notch'],
 .selector:has(input[value='pill']:checked) [data-preview='pill'],

@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Newsreader } from 'next/font/google';
 import {
   Fragment,
   useEffect,
@@ -13,13 +12,6 @@ import {
 } from 'react';
 import { springEasing } from '@/lib/motion';
 import styles from './Manifesto.module.css';
-
-const serif = Newsreader({
-  subsets: ['latin'],
-  axes: ['opsz'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
 
 // An editorial statement with small, working pieces of DynamicLand set into
 // the copy: the compact island, the Home widget icons, and a Mini Bubble.
@@ -96,7 +88,7 @@ export function Manifesto() {
   return (
     <section ref={section} className={`section ${styles.section}`} aria-label="Why DynamicLand">
       <div className="container">
-        <p ref={ref} className={`${serif.className} ${styles.statement}`}>
+        <p ref={ref} className={styles.statement}>
           {story.map((part, partIndex) => {
             if (typeof part === 'object')
               return (

@@ -9,7 +9,7 @@
   margin-bottom: 3rem;
 }
 .heading :global(.eyebrow) {
-  margin-bottom: 1.125rem;
+  margin-bottom: 0.875rem;
 }
 .heading h2 {
   font-size: clamp(2.375rem, 4vw, 3.5rem);
@@ -34,7 +34,7 @@
   display: block;
   width: 2rem;
   height: 2rem;
-  color: #736473;
+  color: var(--muted);
   margin-bottom: 1.125rem;
 }
 .detailIcon svg {

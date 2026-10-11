@@ -1,5 +1,4 @@
 import { MediaFrame } from '@/components/media/MediaFrame';
-import { ProBadge } from '@/components/ProBadge';
 import { DetailSelector } from '@/components/interactive/DetailSelector';
 import { customizations } from '@/content/product';
 import styles from './Sections.module.css';
@@ -40,9 +39,7 @@ export function MusicChapter() {
             <p>Browse Apple Music playlists, charts, For You, and Replay from your island.</p>
           </div>
           <div>
-            <h3>
-              Follow every line. <ProBadge />
-            </h3>
+            <h3>Follow every line.</h3>
             <p>
               Read synced lyrics as the song plays. Select a line to jump straight to that moment.
             </p>
@@ -57,9 +54,7 @@ export function ActivityChapter() {
     <section className={`section ${styles.activity}`} aria-labelledby="activity-title">
       <div className={`container ${styles.split}`}>
         <div className={styles.chapterCopy} data-motion-group="copy">
-          <span className="eyebrow">
-            MiniLand <ProBadge />
-          </span>
+          <span className="eyebrow">MiniLand</span>
           <h2 id="activity-title">
             Life moves.
             <br />
@@ -120,7 +115,6 @@ export function EverydayChapter() {
             <div className={styles.utilityCopy}>
               <h3>Catch the moment.</h3>
               <p>Set a timer, record a voice memo, or pick a color straight from your screen.</p>
-              <ProBadge />
             </div>
             <MediaFrame id="tools" />
           </article>
@@ -172,9 +166,7 @@ export function CustomizationChapter() {
                 <path d="M9 25h7M12.5 20v5" />
               </svg>
             </span>
-            <h3>
-              More screens, same feeling. <ProBadge />
-            </h3>
+            <h3>More screens, same feeling.</h3>
             <p>
               Add an island to your external displays, with per-display settings and Sidecar
               support.

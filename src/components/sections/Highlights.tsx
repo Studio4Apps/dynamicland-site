@@ -1,7 +1,6 @@
 import { highlights } from '@/content/product';
 import { Gallery } from '@/components/interactive/Gallery';
 import { MediaFrame } from '@/components/media/MediaFrame';
-import { ProBadge } from '@/components/ProBadge';
 import styles from './Sections.module.css';
 import galleryStyles from '@/components/interactive/Interactive.module.css';
 export function Highlights() {
@@ -29,9 +28,7 @@ export function Highlights() {
             <>
               <MediaFrame id={item.slot} />
               <div className={galleryStyles.highlightCopy} data-gallery-caption>
-                <span>
-                  {item.tag} {item.pro && <ProBadge />}
-                </span>
+                <span className="eyebrow">{item.tag}</span>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
               </div>

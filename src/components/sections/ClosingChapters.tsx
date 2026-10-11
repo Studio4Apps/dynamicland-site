@@ -82,7 +82,7 @@ export function FAQ() {
       <div className={`container ${styles.faq}`} data-motion="media">
         <div className={styles.faqIntro}>
           <div>
-            <span className={styles.faqEyebrow}>GET TO KNOW DYNAMICLAND</span>
+            <span className={`eyebrow ${styles.faqEyebrow}`}>Get to know DynamicLand</span>
             <h2 id="faq-title">
               Good to
               <br />

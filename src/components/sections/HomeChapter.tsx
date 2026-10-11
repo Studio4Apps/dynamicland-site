@@ -1,6 +1,5 @@
 import { MediaFrame } from '@/components/media/MediaFrame';
 import { Arrow } from '@/components/Icon';
-import { ProBadge } from '@/components/ProBadge';
 import styles from './Sections.module.css';
 export function HomeChapter() {
   return (
@@ -8,9 +7,7 @@ export function HomeChapter() {
       <div className="container">
         <div className={styles.split}>
           <div className={styles.chapterCopy} data-motion-group="copy">
-            <span className="eyebrow">
-              Your Home <ProBadge />
-            </span>
+            <span className="eyebrow">Your Home</span>
             <h2 id="home-title">
               A small space.
               <br />A lot more you.

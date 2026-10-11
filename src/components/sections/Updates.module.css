@@ -30,7 +30,7 @@
   border-radius: 1.75rem;
   overflow: hidden;
   text-align: left;
-  background: var(--surface-raised);
+  background: var(--surface);
   color: var(--ink);
   cursor: pointer;
   scroll-snap-align: start;
@@ -46,6 +46,7 @@
   font-weight: 600;
 }
 .name {
+  font-family: var(--font-rounded);
   position: relative;
   z-index: 3;
   width: fit-content;
@@ -81,7 +82,7 @@
   font-weight: 600;
   letter-spacing: -0.03em;
   z-index: 2;
-  background: var(--release-glass), #eee5eb94;
+  background: var(--release-glass), #ffffff94;
   backdrop-filter: blur(0px);
   opacity: 0;
   transition:

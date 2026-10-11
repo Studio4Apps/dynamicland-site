@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, type ReactNode } from 'react';
-import { ProBadge } from '@/components/ProBadge';
 import { createMotionScope, MOTION, springEasing } from '@/lib/motion';
 import styles from './DetailSelector.module.css';
 type DetailItem = {
@@ -157,7 +156,7 @@ export function DetailSelector({ items }: { items: DetailItem[] }) {
                 </span>
               ))}
             </span>
-            {item.pro && <ProBadge />}
+
             <span className={styles.optionHint} aria-hidden="true">
               {item.id === 'notch'
                 ? 'At the screen’s edge'

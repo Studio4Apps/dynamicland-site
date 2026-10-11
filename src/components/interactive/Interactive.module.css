@@ -159,12 +159,6 @@
   max-width: 42rem;
 }
 .highlightCopy > span {
-  display: block;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--purple);
   margin-bottom: 0.625rem;
 }
 .highlightCopy h3 {

@@ -124,10 +124,11 @@
   margin: 0.25rem 0 1.5rem;
 }
 .eyebrow {
-  font-size: 0.6rem;
-  color: #bcb0ca;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #c7b8d0;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--section-label-tracking);
 }
 .panelHeader p {
   color: #fff5fb;

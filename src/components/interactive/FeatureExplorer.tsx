@@ -263,7 +263,7 @@ export function FeatureExplorer() {
         <div data-explorer-content>
           <div className={styles.panelHeader} data-explorer-copy>
             <div>
-              <span className={styles.eyebrow}>EXPLORE DYNAMICLAND</span>
+              <span className={styles.eyebrow}>Explore DynamicLand</span>
               <p>
                 Your Mac.
                 <br />

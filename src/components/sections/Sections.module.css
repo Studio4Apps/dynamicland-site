@@ -186,33 +186,8 @@
   color: #f7f7f9;
   background: #000;
 }
-.music::before,
-.music::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  aspect-ratio: 2508 / 627;
-  pointer-events: none;
-  z-index: -1;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-.music::before {
-  bottom: 100%;
-  background-image: url('/media/music-top.webp');
-  background-position: center bottom;
-  mask-image: linear-gradient(to bottom, transparent, #000 65%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 65%);
-}
-.music::after {
-  top: 100%;
-  background-image: url('/media/music-bottom.webp');
-  background-position: center top;
-  mask-image: linear-gradient(to bottom, #000 35%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent);
-}
 .music :global(.eyebrow) {
-  color: #c294ed;
+  color: #ceb9db;
 }
 .music .sectionHeading p,
 .music p {
@@ -411,10 +386,10 @@
   grid-template-columns: 0.8fr 1.2fr;
   gap: clamp(2rem, 5vw, 5rem);
   padding: clamp(1.5rem, 4.5vw, 4rem);
-  background: var(--surface-raised);
-  border: 1px solid rgba(255, 245, 251, 0.55);
+  background: var(--surface);
+  border: 1px solid #e8e8ed;
   border-radius: 2.5rem;
-  box-shadow: 0 20px 60px -40px rgba(62, 35, 56, 0.2);
+  box-shadow: 0 20px 60px -40px rgb(29 29 31 / 12%);
 }
 .faqIntro {
   display: flex;
@@ -423,12 +398,7 @@
   gap: 3rem;
 }
 .faqEyebrow {
-  display: block;
-  font-size: 0.625rem;
-  font-weight: 650;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 .faqIntro h2 {
   font-size: clamp(3.5rem, 5.5vw, 5rem);
@@ -533,7 +503,7 @@
   color: var(--purple);
 }
 .faqList details[open]:not([data-expanded='false']) summary::before {
-  background: #ddcbe8;
+  background: var(--surface-hover);
 }
 .faqList details p {
   font-size: 0.9375rem;
