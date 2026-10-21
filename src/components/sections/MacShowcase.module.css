@@ -4,7 +4,7 @@
   --close: 0;
   --w: min(60rem, 90vw, calc((100svh - 19rem) * 1.12));
   position: relative;
-  height: 210svh;
+  height: 160svh;
   background: var(--canvas);
   color: var(--ink);
 }

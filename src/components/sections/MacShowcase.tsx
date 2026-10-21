@@ -49,7 +49,7 @@ export function MacShowcase() {
       // Closing: a stretch of the pinned scroll, held open first so the island is seen.
       const pinned = Math.max(root.offsetHeight - view, 1);
       const progress = clamp(-rect.top / pinned);
-      const close = easeInOut(clamp((progress - 0.28) / 0.62));
+      const close = easeInOut(clamp((progress - 0.15) / 0.7));
       root.style.setProperty('--enter', enter.toFixed(4));
       root.style.setProperty('--close', close.toFixed(4));
       root.dataset.closed = String(close > 0.98);
