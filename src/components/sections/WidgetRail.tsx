@@ -31,6 +31,9 @@ export function WidgetRail() {
         '--travel',
         `${Math.max(0, track.scrollWidth - element.clientWidth)}px`,
       );
+      // Where the page scroll drives the row, drop any offset left by a swipe
+      // at a narrower width, or the two would add up.
+      if (getComputedStyle(element).overflowX === 'hidden') element.scrollLeft = 0;
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -57,12 +60,7 @@ export function WidgetRail() {
             <li key={widget.file} style={{ '--tint': widget.tint } as CSSProperties}>
               <div className={styles.railTile}>
                 <span>{widget.name}</span>
-                <Image
-                  src={`/media/widgets/${widget.file}.png`}
-                  alt=""
-                  width={160}
-                  height={160}
-                />
+                <Image src={`/media/widgets/${widget.file}.png`} alt="" width={160} height={160} />
               </div>
               <p>
                 <strong>{widget.name}.</strong> {widget.line}

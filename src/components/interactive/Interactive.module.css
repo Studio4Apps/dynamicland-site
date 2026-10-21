@@ -11,7 +11,9 @@
 }
 .track {
   --card-size: min(51.5rem, 80vw);
-  --track-gutter: max(var(--gutter), calc((100% - var(--card-size)) / 2));
+  /* The first card starts where the heading's text does, as Apple's galleries
+     line up with their copy: the same inset as .container. */
+  --track-gutter: max(var(--gutter), calc((100% - var(--content)) / 2));
   display: flex;
   position: relative;
   gap: 1.5rem;
@@ -32,6 +34,9 @@
 }
 .track:active {
   cursor: grabbing;
+}
+.track img {
+  -webkit-user-drag: none;
 }
 .track:focus-visible {
   outline-offset: -4px;

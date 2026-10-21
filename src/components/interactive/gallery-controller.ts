@@ -63,6 +63,10 @@ export function createGalleryController(
     pointer: number;
     active: boolean;
     mouse: boolean;
+    from: number;
+    lastX: number;
+    lastAt: number;
+    velocity: number;
   } | null = null;
 
   const playback = (): GalleryState['playback'] => (intent === 'play' ? 'Pause' : 'Play');
@@ -322,6 +326,9 @@ export function createGalleryController(
     nativeUntil = performance.now() + 140;
     reconcile();
   });
+  // Images in a slide must never start a native drag: it would cancel the
+  // pointer stream and leave a ghost copy under the cursor.
+  listen(track, 'dragstart', (event) => event.preventDefault(), false);
   listen(track, 'wheel', (event) => {
     const wheel = event as WheelEvent;
     if (Math.abs(wheel.deltaX) > Math.abs(wheel.deltaY)) interrupt();
@@ -339,6 +346,10 @@ export function createGalleryController(
       pointer: e.pointerId,
       active: false,
       mouse: e.pointerType === 'mouse',
+      from: nearest(),
+      lastX: e.clientX,
+      lastAt: e.timeStamp,
+      velocity: 0,
     };
     reconcile();
   });
@@ -360,6 +371,9 @@ export function createGalleryController(
       }
       if (drag.active && drag.mouse) {
         e.preventDefault();
+        drag.velocity = (e.clientX - drag.lastX) / Math.max(e.timeStamp - drag.lastAt, 1);
+        drag.lastX = e.clientX;
+        drag.lastAt = e.timeStamp;
         writePosition(drag.scroll - dx);
         nativeUntil = performance.now() + 140;
         render();
@@ -369,11 +383,26 @@ export function createGalleryController(
   );
   const release = () => {
     if (!pointerDown && !drag) return;
+    const thrown = drag?.active && drag.mouse ? drag : null;
     if (drag?.active && track.hasPointerCapture(drag.pointer))
       track.releasePointerCapture(drag.pointer);
     drag = null;
     pointerDown = false;
     track.removeAttribute('data-moving');
+    if (thrown && targets.length > 1) {
+      // A mouse drag goes where it was pulled: past a small threshold, or with
+      // a quick flick, on to the neighbouring slide rather than back again.
+      const pitch = Math.abs(targets[1] - targets[0]) || track.clientWidth;
+      const pulled = track.scrollLeft - thrown.scroll - thrown.velocity * 220;
+      const landing = nearest();
+      go(
+        landing === thrown.from && Math.abs(pulled) > pitch * 0.18
+          ? thrown.from + Math.sign(pulled)
+          : landing,
+        true,
+      );
+      return;
+    }
     if (nativeUntil) nativeUntil = performance.now() + 140;
     reconcile();
   };

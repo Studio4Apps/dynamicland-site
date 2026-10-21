@@ -6,6 +6,32 @@ import { updates, type ReleaseUpdate } from '@/content/updates';
 import styles from './Updates.module.css';
 import { applyImagePalette } from '@/lib/image-palette';
 
+// The rail scrolls natively on touch. Arrows and mouse drags move it card by
+// card to exact snap positions, so smooth scrolling and snapping never fight.
+function snapPoints(rail: HTMLElement) {
+  const pad = parseFloat(getComputedStyle(rail).scrollPaddingLeft) || 0;
+  const max = rail.scrollWidth - rail.clientWidth;
+  return [...rail.querySelectorAll<HTMLElement>('[data-release]')].map((card) =>
+    Math.max(0, Math.min(card.offsetLeft - pad, max)),
+  );
+}
+function nearest(points: number[], left: number) {
+  return points.reduce(
+    (best, point, i) => (Math.abs(point - left) < Math.abs(points[best] - left) ? i : best),
+    0,
+  );
+}
+function glide(rail: HTMLElement, index: number, target: { current: number | null }) {
+  const points = snapPoints(rail);
+  const next = Math.max(0, Math.min(index, points.length - 1));
+  // Already there: no scroll will run, so nothing must wait for one to end.
+  target.current = Math.abs(points[next] - rail.scrollLeft) < 2 ? null : next;
+  rail.scrollTo({
+    left: points[next],
+    behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+  });
+}
+
 export function Updates() {
   const [selected, setSelected] = useState<ReleaseUpdate | null>(null);
   const [closing, setClosing] = useState(false);
@@ -13,6 +39,19 @@ export function Updates() {
   const dialog = useRef<HTMLDialogElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Card the rail is gliding to, so repeated presses build on it.
+  const target = useRef<number | null>(null);
+  const step = (direction: 1 | -1) => {
+    const rail = track.current;
+    if (!rail) return;
+    const points = snapPoints(rail);
+    const from = target.current ?? nearest(points, rail.scrollLeft);
+    // The last cards can share one stop at the end of the rail; skip past them.
+    let to = from + direction;
+    while (to > 0 && to < points.length - 1 && points[to] === points[from]) to += direction;
+    glide(rail, to, target);
+  };
 
   useEffect(() => {
     const rail = track.current;
@@ -22,12 +61,79 @@ export function Updates() {
         start: rail.scrollLeft <= 2,
         end: rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 2,
       });
+    let settle: ReturnType<typeof setTimeout> | undefined;
+    let start: { x: number; left: number } | null = null;
+    const settled = () => {
+      // Mid-drag the rail scrolls in small steps; only a finished glide counts.
+      if (start) return;
+      target.current = null;
+      delete rail.dataset.dragging;
+      measure();
+    };
+    const onScroll = () => {
+      measure();
+      // Fallback for browsers without scrollend.
+      clearTimeout(settle);
+      settle = setTimeout(settled, 160);
+    };
     measure();
-    rail.addEventListener('scroll', measure, { passive: true });
+    rail.addEventListener('scroll', onScroll, { passive: true });
+    rail.addEventListener('scrollend', settled);
     const observer = new ResizeObserver(measure);
     observer.observe(rail);
+
+    // Mouse drag: follow the pointer, then glide to the card it was thrown towards.
+    let moved = false;
+    let last = { x: 0, t: 0, v: 0 };
+    const down = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      start = { x: event.clientX, left: rail.scrollLeft };
+      moved = false;
+      last = { x: event.clientX, t: event.timeStamp, v: 0 };
+    };
+    const move = (event: PointerEvent) => {
+      if (!start) return;
+      const dx = event.clientX - start.x;
+      if (!moved) {
+        if (Math.abs(dx) < 6) return;
+        moved = true;
+        target.current = null;
+        rail.dataset.dragging = 'true';
+        rail.setPointerCapture(event.pointerId);
+      }
+      rail.scrollLeft = start.left - dx;
+      const dt = Math.max(event.timeStamp - last.t, 1);
+      last = { x: event.clientX, t: event.timeStamp, v: (event.clientX - last.x) / dt };
+    };
+    const up = (event: PointerEvent) => {
+      if (!start) return;
+      start = null;
+      if (!moved) return;
+      if (rail.hasPointerCapture(event.pointerId)) rail.releasePointerCapture(event.pointerId);
+      // A drag is never a click on the card under the pointer. The click, if
+      // any, follows this pointerup at once; the guard is gone a tick later.
+      const swallow = (click: MouseEvent) => {
+        click.preventDefault();
+        click.stopPropagation();
+      };
+      rail.addEventListener('click', swallow, { capture: true, once: true });
+      setTimeout(() => rail.removeEventListener('click', swallow, { capture: true }), 0);
+      const points = snapPoints(rail);
+      const thrown = rail.scrollLeft - last.v * 220;
+      glide(rail, nearest(points, thrown), target);
+    };
+    rail.addEventListener('pointerdown', down);
+    rail.addEventListener('pointermove', move);
+    rail.addEventListener('pointerup', up);
+    rail.addEventListener('pointercancel', up);
     return () => {
-      rail.removeEventListener('scroll', measure);
+      clearTimeout(settle);
+      rail.removeEventListener('scroll', onScroll);
+      rail.removeEventListener('scrollend', settled);
+      rail.removeEventListener('pointerdown', down);
+      rail.removeEventListener('pointermove', move);
+      rail.removeEventListener('pointerup', up);
+      rail.removeEventListener('pointercancel', up);
       observer.disconnect();
     };
   }, []);
@@ -99,7 +205,7 @@ export function Updates() {
       <div
         ref={track}
         className={styles.track}
-        data-motion-group="cards"
+        data-motion="cards"
         aria-label="DynamicLand updates"
       >
         {updates.map((release) => (
@@ -107,33 +213,11 @@ export function Updates() {
         ))}
       </div>
       <div className={`container ${styles.controls}`}>
-        <button
-          aria-label="Previous update"
-          disabled={edges.start}
-          onClick={() =>
-            track.current?.scrollBy({
-              left: -track.current.clientWidth * 0.75,
-              behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
-                ? 'instant'
-                : 'smooth',
-            })
-          }
-        >
-          ←
+        <button aria-label="Previous update" disabled={edges.start} onClick={() => step(-1)}>
+          <Chevron direction="previous" />
         </button>
-        <button
-          aria-label="Next update"
-          disabled={edges.end}
-          onClick={() =>
-            track.current?.scrollBy({
-              left: track.current.clientWidth * 0.75,
-              behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
-                ? 'instant'
-                : 'smooth',
-            })
-          }
-        >
-          →
+        <button aria-label="Next update" disabled={edges.end} onClick={() => step(1)}>
+          <Chevron direction="next" />
         </button>
       </div>
       {selected && (
@@ -263,6 +347,7 @@ function UpdateCard({ release, onOpen }: { release: ReleaseUpdate; onOpen: () =>
             src={release.image}
             alt=""
             fill
+            draggable={false}
             sizes="(max-width: 960px) 94vw, 896px"
             onLoad={(event) => {
               if (card.current)
@@ -278,5 +363,20 @@ function UpdateCard({ release, onOpen }: { release: ReleaseUpdate; onOpen: () =>
         +
       </span>
     </button>
+  );
+}
+
+function Chevron({ direction }: { direction: 'previous' | 'next' }) {
+  return (
+    <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
+      <path
+        d={direction === 'next' ? 'M15.5 11.5 22 18l-6.5 6.5' : 'M20.5 11.5 14 18l6.5 6.5'}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

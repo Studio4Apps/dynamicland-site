@@ -371,6 +371,14 @@
 .railViewport {
   overflow-x: auto;
   scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+/* Swiped by hand on phones, the row rests on a whole tile. */
+@media (max-width: 760px) {
+  .railViewport {
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+  }
 }
 .railViewport::-webkit-scrollbar {
   display: none;
@@ -385,6 +393,7 @@
 }
 .railTrack li {
   width: clamp(14rem, 21vw, 18.5rem);
+  scroll-snap-align: start;
 }
 .railTile {
   position: relative;

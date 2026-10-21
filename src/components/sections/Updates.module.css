@@ -34,10 +34,34 @@
   gap: 1.5rem;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 0.25rem max(var(--gutter), calc((100% - var(--content)) / 2)) 1rem;
+  /* A scrolling row clips whatever overflows it, so it holds room for the
+     cards' shadow (about 44px below, 8px above) and gives that room back with
+     negative margins: the spacing around the row stays as it was. */
+  padding: 0.75rem max(var(--gutter), calc((100% - var(--content)) / 2)) 3.25rem;
+  margin-block: -0.5rem -2.25rem;
   scroll-padding-inline: max(var(--gutter), calc((100% - var(--content)) / 2));
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
+  /* Cards measure their snap positions against the rail. */
+  position: relative;
+}
+@media (hover: hover) and (pointer: fine) {
+  .track {
+    cursor: grab;
+  }
+}
+/* While a mouse drags the rail it follows the pointer freely; snapping
+   returns once the glide to the nearest card has finished. */
+.track[data-dragging] {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+.track[data-dragging] .card {
+  cursor: grabbing;
+}
+.artwork img {
+  -webkit-user-drag: none;
 }
 .track::-webkit-scrollbar {
   display: none;
@@ -54,7 +78,9 @@
   text-align: left;
   background: var(--canvas);
   color: var(--ink);
-  box-shadow: 0 1px 2px #1d1d1f0a, 0 18px 50px -24px #2a175a33;
+  box-shadow:
+    0 1px 2px #1d1d1f0a,
+    0 18px 50px -24px #2a175a33;
   cursor: pointer;
   scroll-snap-align: start;
   isolation: isolate;
@@ -150,15 +176,39 @@
     backdrop-filter: blur(14px);
   }
 }
+/* Paddle buttons: soft grey circles with a chevron, as on Apple's galleries. */
 .controls {
+  /* Above the row's shadow room, which reaches under the buttons. */
+  position: relative;
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+  gap: 1.125rem;
+  margin-top: 1.25rem;
 }
 .controls button {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
   cursor: pointer;
-  font-size: 1.25rem;
+  background: rgb(210 210 215 / 64%);
+  color: rgb(0 0 0 / 56%);
+  transition:
+    background-color 100ms linear,
+    color 100ms linear;
+}
+.controls button svg {
+  width: 100%;
+  height: 100%;
+}
+@media (hover: hover) {
+  .controls button:not(:disabled):hover {
+    background: rgb(223 223 227 / 70%);
+    color: rgb(0 0 0 / 64%);
+  }
+}
+.controls button:not(:disabled):active {
+  background: rgb(193 193 198 / 70%);
+  color: rgb(0 0 0 / 64%);
 }
 .dialog {
   position: fixed;
@@ -314,7 +364,8 @@
   color: var(--purple);
 }
 .controls button:disabled {
-  opacity: 0.35;
+  background: rgb(232 232 237 / 64%);
+  color: rgb(0 0 0 / 24%);
   cursor: default;
 }
 
