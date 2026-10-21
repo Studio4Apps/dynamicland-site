@@ -23,7 +23,7 @@
       height: calc(var(--frame, 100lvh) + 5rem);
       animation: carry linear both;
       animation-timeline: scroll(root block);
-      animation-range: 0px var(--travel, 95svh);
+      animation-range: 0px var(--travel, 50svh);
     }
   }
 }
@@ -48,7 +48,7 @@
     .tint {
       animation: untint linear both;
       animation-timeline: scroll(root block);
-      animation-range: 0px calc(var(--frame, 100lvh) + var(--sink-room, 95svh));
+      animation-range: 0px calc(var(--frame, 100lvh) + var(--sink-room, 50svh));
     }
   }
 }
@@ -68,7 +68,7 @@
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(0, var(--travel, 95svh), 0);
+    transform: translate3d(0, var(--travel, 50svh), 0);
   }
 }
 /* The stage. Everything is positioned against the horizon line the scene
@@ -266,11 +266,11 @@
   .dry,
   .wet {
     animation-name: sink;
-    animation-range: 0px var(--travel, 95svh);
+    animation-range: 0px var(--travel, 50svh);
   }
   .flipped {
     animation-name: rise;
-    animation-range: 0px var(--travel, 95svh);
+    animation-range: 0px var(--travel, 50svh);
   }
   .intro {
     animation-name: introFade;
@@ -286,7 +286,7 @@
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(0, var(--sink-end, 59svh), 0);
+    transform: translate3d(0, var(--sink-end, 57.5svh), 0);
   }
 }
 @keyframes rise {
@@ -294,7 +294,7 @@
     transform: translate3d(0, 0, 0) scaleY(-1.06);
   }
   to {
-    transform: translate3d(0, calc(-1 * var(--sink-end, 59svh)), 0) scaleY(-1.06);
+    transform: translate3d(0, calc(-1 * var(--sink-end, 57.5svh)), 0) scaleY(-1.06);
   }
 }
 @keyframes introFade {

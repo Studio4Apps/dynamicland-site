@@ -18,7 +18,7 @@
   /* The stage reaches under the phone's toolbars (large viewport); the
      extra --sink-room is the scroll the headline takes to sink. */
   --frame: max(100lvh, 36rem);
-  --sink-room: 95svh;
+  --sink-room: 50svh;
   position: relative;
   overflow: clip;
   height: calc(var(--frame) + var(--sink-room));

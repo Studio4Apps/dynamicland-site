@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './LakeHero.module.css';
 
 // How far the headline travels for each pixel scrolled while the stage is pinned.
-const SINK = 0.62;
+const SINK = 1.15;
 
 // The pinned stage of the hero: a lake scene with the headline hanging between
 // the clouds. Scrolling lowers the headline towards its own reflection until
