@@ -1,6 +1,5 @@
 import { DownloadButton } from '@/components/DownloadButton';
 import { MediaAsset } from '@/components/media/MediaAsset';
-import { FeatureExplorer } from '@/components/interactive/FeatureExplorer';
 import { LakeHero } from '@/components/scene/LakeHero';
 import { media } from '@/content/media';
 import styles from './Home.module.css';
@@ -28,7 +27,6 @@ export function Hero() {
             </p>
             <div className={styles.heroActions}>
               <DownloadButton />
-              <FeatureExplorer />
             </div>
             <p className={`fineprint ${styles.heroFine}`}>
               Free download <span aria-hidden="true">·</span> macOS 26.0 or later{' '}

@@ -1,71 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from 'axe-core';
 
-test('explorer morph reverses from the rendered shell and restores focus', async ({ page }) => {
-  await page.goto('/');
-  const root = page.locator('[data-feature-explorer]');
-  const summary = root.locator('summary');
-  const panel = root.locator('[data-explorer-panel]');
-  await summary.focus();
-  await summary.press('Enter');
-  await page.waitForTimeout(90);
-  const continuity = await root.evaluate((root) => {
-    const panel = root.querySelector('[data-explorer-panel]')!;
-    const before = getComputedStyle(panel).clipPath;
-    root.querySelector<HTMLButtonElement>('button')!.click();
-    const after = getComputedStyle(panel).clipPath;
-    root.querySelector('summary')!.click();
-    return { before, after };
-  });
-  expect(continuity.before).not.toBe('none');
-  expect(continuity.after).toBe(continuity.before);
-  await expect(root).toHaveAttribute('data-expanded', 'true');
-  await expect.poll(() => panel.evaluate((el) => el.getAnimations().length)).toBe(0);
-  await expect(page.getByRole('button', { name: 'Close feature explorer' })).toBeFocused();
-  const final = await root
-    .locator('[data-destination-icon]')
-    .evaluateAll((icons) => icons.map((el) => getComputedStyle(el).transform));
-  expect(final.every((value) => value === 'none')).toBe(true);
-  await page.keyboard.press('Escape');
-  await expect(root).not.toHaveAttribute('open', '');
-  await expect(summary).toBeFocused();
-  await summary.click();
-  await expect.poll(() => panel.evaluate((el) => el.getAnimations().length)).toBe(0);
-  await page
-    .getByRole('navigation', { name: 'Explore DynamicLand' })
-    .getByRole('link', { name: /Your music/ })
-    .click();
-  await expect(page).toHaveURL(/#music$/);
-  await expect(root).not.toHaveAttribute('open', '');
-});
-
-test('explorer stays inside compact and short viewports, and reduced motion settles in place', async ({
-  page,
-}) => {
-  for (const viewport of [
-    { width: 390, height: 844 },
-    { width: 844, height: 390 },
-    { width: 320, height: 568 },
-  ]) {
-    await page.setViewportSize(viewport);
-    await page.goto('/');
-    const summary = page.locator('[data-feature-explorer] summary');
-    await summary.click();
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    const panel = page.locator('[data-explorer-panel]');
-    await expect.poll(() => panel.evaluate((el) => el.getAnimations().length)).toBe(0);
-    const rect = await panel.boundingBox();
-    expect(rect!.x).toBeGreaterThanOrEqual(19);
-    expect(rect!.x + rect!.width).toBeLessThanOrEqual(viewport.width - 19);
-    expect(rect!.y).toBeGreaterThanOrEqual(63);
-    expect(rect!.y + rect!.height).toBeLessThanOrEqual(viewport.height);
-    await page.keyboard.press('Escape');
-    await expect(summary).toBeFocused();
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-  }
-});
-
-test('explorer remains native without JavaScript and open navigation is accessible', async ({
+test('mobile navigation works without JavaScript and the homepage remains accessible', async ({
   page,
   browser,
 }) => {
@@ -75,18 +11,14 @@ test('explorer remains native without JavaScript and open navigation is accessib
   });
   const fallback = await context.newPage();
   await fallback.goto('/');
-  const summary = fallback.locator('[data-feature-explorer] summary');
-  await summary.click();
-  await expect(fallback.getByRole('navigation', { name: 'Explore DynamicLand' })).toBeVisible();
-  await summary.click();
-  await expect(fallback.getByRole('navigation', { name: 'Explore DynamicLand' })).not.toBeVisible();
+  const menu = fallback.getByLabel('Open navigation menu');
+  await menu.click();
+  await expect(fallback.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
+  await menu.click();
+  await expect(fallback.getByRole('navigation', { name: 'Mobile navigation' })).not.toBeVisible();
   await context.close();
+
   await page.goto('/');
-  await page.locator('[data-feature-explorer] summary').click();
-  await expect
-    .poll(() => page.locator('[data-explorer-panel]').evaluate((el) => el.getAnimations().length))
-    .toBe(0);
-  // DevTools injection for QA only; the production CSP is unchanged.
   await page.evaluate(AxeBuilder.source);
   const violations = await page.evaluate(
     async () =>
