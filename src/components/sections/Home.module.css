@@ -15,10 +15,17 @@
 /* ——— Hero ——— */
 /* A tall section that pins the lake scene while the headline sinks. */
 .hero {
+  /* The stage reaches under the phone's toolbars (large viewport); the
+     extra --sink-room is the scroll the headline takes to sink. */
+  --frame: max(100lvh, 36rem);
+  --sink-room: 95svh;
   position: relative;
-  height: 195svh;
+  overflow: clip;
+  height: calc(var(--frame) + var(--sink-room));
   color: #fff;
-  background: #0a0822;
+  /* The colour of the lake's near water. Safari on iPhone paints the strip
+     under its collapsed address bar with this, so it reads as more lake. */
+  background: #0f0d1c;
 }
 .heroLine {
   display: block;

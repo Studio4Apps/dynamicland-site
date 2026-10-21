@@ -180,48 +180,54 @@ export function LakeHero({
   }, []);
 
   return (
-    <div ref={sticky} className={styles.sticky} data-state={state}>
-      <div className={styles.scene}>
-        {/* A still of the scene, painted before any script runs. */}
-        <div className={styles.poster} data-hero-artwork>
-          {poster}
-        </div>
-        <div className={styles.stage} aria-hidden="true">
-          <canvas ref={canvas} className={styles.canvas} />
-        </div>
-      </div>
+    <div className={styles.track}>
+      {/* Safari colours its status bar from pinned layers at the top edge. */}
+      <div className={styles.tint} aria-hidden="true" />
+      <div className={styles.pin}>
+        <div ref={sticky} className={styles.sticky} data-state={state}>
+          <div className={styles.scene}>
+            {/* A still of the scene, painted before any script runs. */}
+            <div className={styles.poster} data-hero-artwork>
+              {poster}
+            </div>
+            <div className={styles.stage} aria-hidden="true">
+              <canvas ref={canvas} className={styles.canvas} />
+            </div>
+          </div>
 
-      {/* The headline above the water, clipped at the waterline. */}
-      <div ref={above} className={styles.above}>
-        <h1
-          ref={heading}
-          id="hero-title"
-          className={`${styles.title} ${styles.copy} ${styles.dry}`}
-        >
-          {title}
-        </h1>
-      </div>
-      {/* What has sunk: dim, cold and wavering, fading with depth. */}
-      <div ref={under} className={styles.under} aria-hidden="true">
-        <div ref={ghost} className={`${styles.title} ${styles.copy} ${styles.wet}`}>
-          <div className={styles.waver}>{title}</div>
-        </div>
-      </div>
-      {/* Its reflection on the surface. */}
-      <div ref={reflection} className={styles.mirror} aria-hidden="true">
-        <div ref={mirror} className={`${styles.title} ${styles.copy} ${styles.flipped}`}>
-          <div className={styles.waver}>{title}</div>
-        </div>
-      </div>
-      <div ref={seam} className={styles.seam} aria-hidden="true" />
+          {/* The headline above the water, clipped at the waterline. */}
+          <div ref={above} className={styles.above}>
+            <h1
+              ref={heading}
+              id="hero-title"
+              className={`${styles.title} ${styles.copy} ${styles.dry}`}
+            >
+              {title}
+            </h1>
+          </div>
+          {/* What has sunk: dim, cold and wavering, fading with depth. */}
+          <div ref={under} className={styles.under} aria-hidden="true">
+            <div ref={ghost} className={`${styles.title} ${styles.copy} ${styles.wet}`}>
+              <div className={styles.waver}>{title}</div>
+            </div>
+          </div>
+          {/* Its reflection on the surface. */}
+          <div ref={reflection} className={styles.mirror} aria-hidden="true">
+            <div ref={mirror} className={`${styles.title} ${styles.copy} ${styles.flipped}`}>
+              <div className={styles.waver}>{title}</div>
+            </div>
+          </div>
+          <div ref={seam} className={styles.seam} aria-hidden="true" />
 
-      <div className={styles.content}>
-        {/* Holds the headline's place so the introduction flows beneath it. */}
-        <div ref={spacer} className={`${styles.title} ${styles.spacer}`} aria-hidden="true">
-          {title}
-        </div>
-        <div ref={introduction} className={styles.intro}>
-          {intro}
+          <div className={styles.content}>
+            {/* Holds the headline's place so the introduction flows beneath it. */}
+            <div ref={spacer} className={`${styles.title} ${styles.spacer}`} aria-hidden="true">
+              {title}
+            </div>
+            <div ref={introduction} className={styles.intro}>
+              {intro}
+            </div>
+          </div>
         </div>
       </div>
     </div>
