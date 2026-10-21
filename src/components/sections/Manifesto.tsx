@@ -41,15 +41,6 @@ const tokenCount = story.reduce(
   0,
 );
 
-const stats = [
-  { value: 11, unit: 'widgets', title: 'Your Home.', text: 'Calendar, weather, music, photos, and more.' },
-  { value: 2, unit: 'music apps', title: 'Now Playing.', text: 'Apple Music and Spotify, from the notch.' },
-  { value: 3, unit: 'island styles', title: 'Make it yours.', text: 'Dynamic Notch, Dynamic Pill, Liquid Glass.' },
-  { value: 26, unit: 'macOS', title: 'Made for Mac.', text: 'Runs on macOS 26.0 or later.', prefix: true },
-];
-
-const WORD_STAGGER_MS = 42;
-
 export function Manifesto() {
   const section = useRef<HTMLElement>(null);
   const ref = useRef<HTMLParagraphElement>(null);
@@ -61,29 +52,40 @@ export function Manifesto() {
     section.current?.style.setProperty('--pop', springEasing(800, 0.5, 0.62));
   }, []);
 
+  // The statement stays pinned while it is read: each word rises out of a blur
+  // as the visitor scrolls through the pinned stretch, and the page moves on once the last
+  // one has arrived. Reading starts as the section's top reaches mid-screen.
   useEffect(() => {
-    const root = ref.current;
-    if (!root || typeof IntersectionObserver !== 'function') return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    // Only prepare copy that is still below the fold; never hide what is seen.
-    if (root.getBoundingClientRect().top < innerHeight * 0.82) return;
-    root.dataset.entrance = 'waiting';
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        observer.disconnect();
-        root.dataset.entrance = 'running';
-        const count = root.querySelectorAll('[data-token]').length;
-        timer = setTimeout(() => delete root.dataset.entrance, count * WORD_STAGGER_MS + 1800);
-      },
-      { rootMargin: '0px 0px -20% 0px' },
-    );
-    observer.observe(root);
+    const root = section.current;
+    const statement = ref.current;
+    if (!root || !statement) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      if (reduced.matches) {
+        statement.style.removeProperty('--p');
+        return;
+      }
+      const rect = root.getBoundingClientRect();
+      const lead = innerHeight / 2;
+      // Finish a little before the pin lets go, so the whole line rests a beat.
+      const span = Math.max(root.offsetHeight - innerHeight, 1) * 0.85 + lead;
+      const p = Math.min(Math.max((lead - rect.top) / span, 0), 1);
+      statement.style.setProperty('--p', p.toFixed(4));
+    };
+    const request = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    addEventListener('scroll', request, { passive: true });
+    addEventListener('resize', request);
+    reduced.addEventListener('change', request);
     return () => {
-      observer.disconnect();
-      if (timer) clearTimeout(timer);
-      delete root.dataset.entrance;
+      cancelAnimationFrame(frame);
+      removeEventListener('scroll', request);
+      removeEventListener('resize', request);
+      reduced.removeEventListener('change', request);
     };
   }, []);
 
@@ -118,16 +120,9 @@ export function Manifesto() {
   };
 
   return (
-    <section ref={section} className={`section ${styles.section}`} aria-label="Why DynamicLand">
-      <div className="container">
-        <p
-          ref={ref}
-          className={styles.statement}
-          style={{ '--n': tokenCount } as CSSProperties}
-          data-scroll
-          data-scroll-start="0.78"
-          data-scroll-end="-0.05"
-        >
+    <section ref={section} className={styles.section} aria-label="Why DynamicLand">
+      <div className={`container ${styles.pin}`}>
+        <p ref={ref} className={styles.statement} style={{ '--n': tokenCount } as CSSProperties}>
           {story.map((part, partIndex) => {
             if (typeof part === 'object')
               return 'accent' in part
@@ -142,22 +137,6 @@ export function Manifesto() {
             return words(part, `w${partIndex}`);
           })}
         </p>
-        <dl className={styles.stats} data-reveal-group="120">
-          {stats.map((stat) => (
-            <div key={stat.unit}>
-              <dt>
-                <span className={styles.figure}>
-                  {stat.prefix && <small>{stat.unit} </small>}
-                  <span data-count={stat.value}>{stat.value}</span>
-                  {!stat.prefix && <small> {stat.unit}</small>}
-                </span>
-              </dt>
-              <dd>
-                <strong>{stat.title}</strong> {stat.text}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
     </section>
   );

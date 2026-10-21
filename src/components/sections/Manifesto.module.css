@@ -3,15 +3,25 @@
   --island-close: cubic-bezier(0.22, 1, 0.36, 1);
   --pop: cubic-bezier(0.34, 1.5, 0.5, 1);
   --rise: cubic-bezier(0.19, 1, 0.22, 1);
+  /* One screen to sit in, plus the scroll it takes to read the statement. */
+  height: calc(100svh + 50svh);
   background: var(--canvas);
-  padding-block: clamp(4.5rem, 8vw, 8rem);
+}
+.pin {
+  position: sticky;
+  top: 0;
+  display: grid;
+  place-items: center;
+  height: 100svh;
+  padding-top: var(--header-height);
 }
 .statement {
   font-family: var(--font-display);
-  max-width: 12.6em;
+  max-width: 13em;
   margin-inline: auto;
   color: var(--ink);
-  font-size: clamp(2.5rem, 5.6vw, 5.75rem);
+  /* Capped by height too, so the whole statement fits the pinned screen. */
+  font-size: clamp(2.25rem, min(4.7vw, 7.8svh), 4.75rem);
   font-weight: 600;
   font-optical-sizing: auto;
   line-height: 1.08;
@@ -23,40 +33,40 @@
   white-space: nowrap;
 }
 
-/* Reading light: words brighten in order as the statement scrolls through,
-   and a highlight passes over each key phrase as the reading reaches it.
-   Without the scroll controller --p stays 1 and everything reads at once. */
-.word {
-  opacity: clamp(0.16, calc((var(--p, 1) * (var(--n) + 5) - var(--i)) / 4), 1);
+/* Reading: as the statement scrolls through, each word in turn rises out of
+   a heavy blur into place, marks settle on the island's spring, and a
+   highlight passes over each key phrase as the reading reaches it. --w is a
+   token's own progress. Without the scroll controller --p stays 1 and
+   everything reads at once. */
+.word,
+.mark {
+  --w: clamp(0, calc((var(--p, 1) * (var(--n) + 5) - var(--i)) / 4), 1);
 }
 .pass {
   --reach: clamp(0, calc((var(--p, 1) * (var(--n) + 5) - var(--i0) - 1) / (var(--len) + 1)), 1);
   padding-inline: 0.05em;
   margin-inline: -0.05em;
   border-radius: 0.14em;
-  background: linear-gradient(90deg, var(--marker), #f1e6ff) 0 92% /
-    calc(var(--reach) * 100%) 42% no-repeat;
+  background: linear-gradient(90deg, var(--marker), #f1e6ff) 0 92% / calc(var(--reach) * 100%) 42%
+    no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   transition: background-size 380ms var(--sweep-ease);
-}
-/* The highlight waits until the words themselves have arrived. */
-.statement[data-entrance] .pass {
-  background-size: 0% 42%;
 }
 .accent {
   color: var(--purple);
   letter-spacing: -0.03em;
 }
 
-/* Entrance: word by word, each one resolving out of a heavy blur as it rises
-   into place. Marks follow the same order and settle on the island's spring. */
 .word,
 .mark {
   display: inline-block;
 }
 .rise {
   display: inline-block;
+  opacity: calc(0.08 + var(--w) * 0.92);
+  filter: blur(calc((1 - var(--w)) * 0.28em));
+  transform: translate3d(0, calc((1 - var(--w)) * 0.35em), 0);
 }
 .mark {
   position: relative;
@@ -64,30 +74,9 @@
   top: -0.05em;
   margin-inline: 0.05em;
   vertical-align: middle;
-}
-.statement[data-entrance] .rise,
-.statement[data-entrance] .mark {
-  transition:
-    opacity 1100ms ease,
-    filter 1500ms var(--rise),
-    transform 1600ms var(--rise);
-  transition-delay: calc(var(--i) * 42ms);
-}
-.statement[data-entrance] .mark {
-  transition-property: opacity, filter, transform;
-  transition-timing-function: ease, var(--rise), var(--pop);
-}
-.statement[data-entrance='waiting'] .rise {
-  opacity: 0;
-  filter: blur(0.32em);
-  transform: translateY(0.4em);
-  transition: none;
-}
-.statement[data-entrance='waiting'] .mark {
-  opacity: 0;
-  filter: blur(0.3em);
-  transform: translateY(0.4em) scale(0.55);
-  transition: none;
+  opacity: var(--w);
+  filter: blur(calc((1 - var(--w)) * 0.24em));
+  transform: translate3d(0, calc((1 - var(--w)) * 0.35em), 0) scale(calc(0.6 + var(--w) * 0.4));
 }
 
 /* Island: the compact Now Playing pill, artwork and waveform in its ears. */
@@ -321,55 +310,9 @@
   transition: stroke-dashoffset 420ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
 }
 
-/* Four quiet figures under the statement, separated by a hairline. */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2rem;
-  margin: clamp(4rem, 8vw, 7rem) 0 0;
-  padding-top: 2rem;
-  border-top: 1px solid var(--line);
-  text-align: left;
-}
-.stats dt {
-  margin-bottom: 0.75rem;
-}
-.figure {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 3vw, 2.625rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-}
-.figure small {
-  font-size: 0.5em;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--muted);
-}
-.stats dd {
-  margin: 0;
-  max-width: 15rem;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-.stats strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .island[data-state='idle']:hover .islandBody {
     transform: scale(1.04);
-  }
-}
-@media (max-width: 900px) {
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 2.5rem;
   }
 }
 @media (max-width: 600px) {
@@ -382,6 +325,14 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .section {
+    height: auto;
+  }
+  .pin {
+    position: static;
+    height: auto;
+    padding-block: clamp(4.5rem, 8vw, 8rem);
+  }
   .statement *,
   .statement *::before {
     transition-duration: 1ms !important;
