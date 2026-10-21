@@ -77,10 +77,6 @@ export function Gallery({
               </div>
             </div>
           </div>
-          <span className={styles.galleryCount} data-gallery-count aria-hidden="true">
-            {String(state.current + 1).padStart(2, '0')}
-            <span> / {String(items.length).padStart(2, '0')}</span>
-          </span>
         </div>
       )}
       <div

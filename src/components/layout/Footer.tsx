@@ -1,52 +1,66 @@
 import Image from 'next/image';
-import { DownloadButton } from '@/components/DownloadButton';
 import { product } from '@/content/product';
-import styles from './Layout.module.css';
+import styles from './Footer.module.css';
+
+const columns = [
+  {
+    title: 'Explore',
+    links: [
+      { href: '/#overview', label: 'Overview' },
+      { href: '/#features', label: 'Features' },
+      { href: '/#customization', label: 'Customization' },
+      { href: '/#pricing', label: 'Pricing' },
+    ],
+  },
+  {
+    title: 'Inside the island',
+    links: [
+      { href: '/#home', label: 'Home widgets' },
+      { href: '/#music', label: 'Now Playing' },
+      { href: '/#everyday', label: 'Everyday tools' },
+      { href: '/#updates', label: 'What’s new' },
+    ],
+  },
+  {
+    title: 'Here to help',
+    links: [
+      { href: '/support', label: 'Support' },
+      { href: '/privacy', label: 'Privacy' },
+      { href: '/terms', label: 'Terms' },
+      { href: product.downloadUrl, label: 'Mac App Store' },
+    ],
+  },
+];
+
 export function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={styles.footerArtwork} aria-hidden="true">
-        <picture>
-          <source media="(max-width: 760px)" srcSet="/media/footer-840.webp" />
-          <Image
-            src="/media/footer-1448.webp"
-            alt=""
-            width={1448}
-            height={1086}
-            loading="lazy"
-            unoptimized
-          />
-        </picture>
-      </div>
       <div className="container">
-        <div className={styles.footerTop}>
-          <div className={styles.footerIntro}>
+        <div className={styles.top}>
+          <div className={styles.intro}>
             <a href="/" className={styles.brand}>
-              <Image src={product.logo} alt="" width={44} height={44} unoptimized />
+              <Image src={product.logo} alt="" width={32} height={32} unoptimized />
               DynamicLand
             </a>
-            <p>A little more connected to your Mac.</p>
-            <DownloadButton />
+            <p>
+              Widgets, music, and everyday essentials around your notch. A little more connected
+              to your Mac.
+            </p>
           </div>
-          <div className={styles.footerLinks}>
-            <div>
-              <strong>Explore</strong>
-              <a href="/#overview">Overview</a>
-              <a href="/#features">Features</a>
-              <a href="/#pricing">Pricing</a>
-              <a href={product.downloadUrl}>Download</a>
-            </div>
-            <div>
-              <strong>Here to help</strong>
-              <a href="/support">Support</a>
-              <a href="/privacy">Privacy</a>
-              <a href="/terms">Terms</a>
-            </div>
-          </div>
+          {columns.map((column) => (
+            <nav key={column.title} aria-label={column.title} className={styles.column}>
+              <strong>{column.title}</strong>
+              {column.links.map((link) => (
+                <a key={link.href} href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          ))}
         </div>
-        <div className={styles.footerBottom}>
+        <div className={styles.bottom}>
           <span>© 2026 {product.publisher}. DynamicLand.</span>
-          <span>Made for macOS.</span>
+          <span>Made for macOS · {product.platform}</span>
         </div>
       </div>
     </footer>

@@ -1,11 +1,33 @@
 .section {
-  background: var(--canvas);
+  background: var(--surface);
+  padding-block: clamp(5rem, 10vw, 9rem);
 }
 .heading {
-  margin-bottom: 2.75rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 1rem 4rem;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
 .heading h2 {
   max-width: 52rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 3.1vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.038em;
+  line-height: 1.08;
+}
+.heading > p {
+  justify-self: end;
+  max-width: 26rem;
+}
+@media (max-width: 960px) {
+  .heading {
+    grid-template-columns: 1fr;
+  }
+  .heading > p {
+    justify-self: start;
+  }
 }
 .track {
   display: flex;
@@ -30,8 +52,9 @@
   border-radius: 1.75rem;
   overflow: hidden;
   text-align: left;
-  background: var(--surface);
+  background: var(--canvas);
   color: var(--ink);
+  box-shadow: 0 1px 2px #1d1d1f0a, 0 18px 50px -24px #2a175a33;
   cursor: pointer;
   scroll-snap-align: start;
   isolation: isolate;

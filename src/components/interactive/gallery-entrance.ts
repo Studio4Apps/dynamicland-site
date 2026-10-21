@@ -17,11 +17,10 @@ export function createGalleryEntrance(root: HTMLElement, seen: { current: boolea
   const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-gallery-dot]'));
   const indicators = Array.from(root.querySelectorAll<HTMLElement>('[data-indicator]'));
   const icon = rotation.querySelector('svg')!;
-  const count = anchor.querySelector<HTMLElement>('[data-gallery-count]')!;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const abort = new AbortController();
   const animations: ReturnType<typeof animate>[] = [];
-  const animated = [group, shell, pagination, rotation, icon, count, ...dots, ...indicators];
+  const animated = [group, shell, pagination, rotation, icon, ...dots, ...indicators];
   const originalStyles = animated.map((element) => element.getAttribute('style'));
   let observer: IntersectionObserver | undefined;
   let visible = false;
@@ -157,7 +156,6 @@ export function createGalleryEntrance(root: HTMLElement, seen: { current: boolea
           { delay: timing(0.76), duration: timing(0.42), ease: [0.33, 0, 0.67, 1] },
         ),
         animate(icon, { opacity: [0, 1] }, { delay: timing(1), duration: timing(0.42) }),
-        animate(count, { opacity: [0, 1] }, { delay: timing(1.02), duration: timing(0.34) }),
       );
       void Promise.all(animations).then(() => {
         if (!disposed && root.dataset.controlsIntro === 'entering') settle();

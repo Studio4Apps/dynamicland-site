@@ -38,7 +38,7 @@
 .trailer {
   flex: 0 0 max(0px, calc(100% - var(--card-size) - 1.5rem));
 }
-/* Keep the playback surface centered independently of the slide count. */
+/* Keep the playback surface centered below the slides. */
 .galleryControls {
   order: 1;
   display: grid;
@@ -51,8 +51,7 @@
 .gallery[data-enhanced='true'] .galleryControls {
   visibility: visible;
 }
-.gallery[data-controls-intro='waiting'] .playbackGroup,
-.gallery[data-controls-intro='waiting'] .galleryCount {
+.gallery[data-controls-intro='waiting'] .playbackGroup {
   opacity: 0;
 }
 .playbackGroup {
@@ -62,16 +61,6 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-.galleryCount {
-  grid-column: 1;
-  grid-row: 1;
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-}
-.galleryCount span {
-  color: var(--muted);
 }
 .dots,
 .playback {
@@ -191,9 +180,6 @@
   .playbackGroup {
     grid-column: 1;
     justify-self: center;
-  }
-  .galleryCount {
-    display: none;
   }
 }
 @media (max-width: 374px) {

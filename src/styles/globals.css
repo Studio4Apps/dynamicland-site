@@ -272,6 +272,90 @@
   .skipLink:focus {
     transform: translateY(0);
   }
+  /* Editorial type and motion shared by the home page chapters. */
+  :root {
+    --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro', system-ui,
+      'Segoe UI', Helvetica, Arial, sans-serif;
+    --rise: cubic-bezier(0.19, 1, 0.22, 1);
+    --sweep-ease: cubic-bezier(0.65, 0, 0.25, 1);
+    --marker: #e7d5ff;
+    --violet: #7a2df0;
+    --midnight: #1b1233;
+  }
+  .scrollMeter {
+    position: fixed;
+    z-index: 60;
+    inset: 0 0 auto;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+    transform: scaleX(var(--p, 0));
+    transform-origin: 0 50%;
+    pointer-events: none;
+  }
+  [data-choreo='static'] .scrollMeter {
+    display: none;
+  }
+  [data-reveal][data-state='waiting'],
+  [data-reveal-child][data-state='waiting'] {
+    opacity: 0;
+    translate: 0 1.75rem;
+    filter: blur(12px);
+  }
+  [data-reveal][data-state='running'],
+  [data-reveal-child][data-state='running'] {
+    transition:
+      opacity 900ms ease var(--rd, 0ms),
+      translate 1300ms var(--rise) var(--rd, 0ms),
+      filter 1100ms var(--rise) var(--rd, 0ms);
+  }
+  [data-draw] :is(path, circle, rect, line, polyline) {
+    stroke-dasharray: 1;
+  }
+  [data-draw][data-state='waiting'] :is(path, circle, rect, line, polyline) {
+    stroke-dashoffset: 1;
+  }
+  [data-draw][data-state='running'] :is(path, circle, rect, line, polyline) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1400ms var(--sweep-ease) 250ms;
+  }
+  /* A highlight that passes over the words once they are read. */
+  .sweep {
+    padding-inline: 0.06em;
+    margin-inline: -0.06em;
+    border-radius: 0.18em;
+    background: linear-gradient(var(--marker), var(--marker)) 0 88% / 100% 46% no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  [data-sweep][data-state='waiting'] .sweep,
+  [data-sweep][data-state='waiting'].sweep {
+    background-size: 0% 46%;
+  }
+  [data-sweep][data-state='running'] .sweep,
+  [data-sweep][data-state='running'].sweep {
+    transition: background-size 1100ms var(--sweep-ease) 450ms;
+  }
+  /* A band of light that travels across the letters and leaves them lit. */
+  .sheen {
+    background: linear-gradient(
+        100deg,
+        var(--sheen-to, #e3c9ff) 0 40%,
+        #fff 50%,
+        var(--sheen-from, currentColor) 60% 100%
+      )
+      0 0 / 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  [data-sweep][data-state='waiting'] .sheen,
+  [data-sweep][data-state='waiting'].sheen {
+    background-position: 100% 0;
+  }
+  [data-sweep][data-state='running'] .sheen,
+  [data-sweep][data-state='running'].sheen {
+    transition: background-position 1600ms var(--sweep-ease) 500ms;
+  }
   @media (max-width: 600px) {
     :root {
       --gap: 1rem;

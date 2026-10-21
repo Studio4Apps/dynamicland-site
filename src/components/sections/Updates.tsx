@@ -91,6 +91,10 @@ export function Updates() {
           <span className="eyebrow">The latest from DynamicLand</span>
           <h2 id="updates-title">A little more. With every update.</h2>
         </div>
+        <p data-motion="copy">
+          Every release brings something new to your island. Open an update to see everything that
+          changed.
+        </p>
       </div>
       <div
         ref={track}

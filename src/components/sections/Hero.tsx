@@ -1,34 +1,42 @@
 import { DownloadButton } from '@/components/DownloadButton';
 import { MediaAsset } from '@/components/media/MediaAsset';
-import { media } from '@/content/media';
 import { FeatureExplorer } from '@/components/interactive/FeatureExplorer';
-import styles from './Sections.module.css';
+import { LakeHero } from '@/components/scene/LakeHero';
+import { media } from '@/content/media';
+import styles from './Home.module.css';
+
+// A violet lake at nightfall. The headline hangs between the clouds and sinks
+// beneath the water as the visitor scrolls on.
 export function Hero() {
   return (
     <section id="overview" className={styles.hero} aria-labelledby="hero-title">
-      <div className="container">
-        <div className={styles.heroCopy} data-motion-group="copy">
-          <h1 id="hero-title">
-            Your Mac.
-            <br />A little more connected.
-          </h1>
-          <p>
-            Music, widgets, and everyday essentials.
-            <br className={styles.desktopBreak} /> Right where you look. Right at your notch.
-          </p>
-          <div className={styles.heroActions}>
-            <DownloadButton />
-            <FeatureExplorer />
+      <LakeHero
+        poster={<MediaAsset slot={media.hero} />}
+        title={
+          <>
+            <span className={styles.heroLine}>Your Mac.</span>{' '}
+            <span className={styles.heroLine}>
+              A little more <span className={styles.heroSheen}>connected.</span>
+            </span>
+          </>
+        }
+        intro={
+          <div className={styles.heroIntro} data-reveal-group="110">
+            <p>
+              Music, widgets, and everyday essentials. Right where you look, right at your notch, so
+              the things you reach for every day are always one hover away.
+            </p>
+            <div className={styles.heroActions}>
+              <DownloadButton />
+              <FeatureExplorer />
+            </div>
+            <p className={`fineprint ${styles.heroFine}`}>
+              Free download <span aria-hidden="true">·</span> macOS 26.0 or later{' '}
+              <span aria-hidden="true">·</span> Pro available
+            </p>
           </div>
-          <p className="fineprint">
-            Free download <span aria-hidden="true">·</span> macOS 26.0 or later{' '}
-            <span aria-hidden="true">·</span> Pro available
-          </p>
-        </div>
-      </div>
-      <div className={styles.heroArtwork} data-hero-artwork aria-hidden="true">
-        <MediaAsset slot={media.hero} />
-      </div>
+        }
+      />
     </section>
   );
 }

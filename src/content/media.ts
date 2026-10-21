@@ -23,16 +23,21 @@ const slot = (
 ): MediaSlot => ({ id, label, role, ratio, type, src: null, fit: 'contain', position: 'center' });
 export const media = {
   hero: {
-    ...slot('hero', 'Landing illustration', 'Full-width overview background', '1672 / 941'),
-    src: '/media/landing-page-1672.webp',
-    width: 1672,
-    height: 941,
-    alt: 'DynamicLand illustration: glowing widgets float above a MacBook notch in a purple and gold landscape.',
+    ...slot('hero', 'Lake at twilight', 'Poster for the live hero scene', '16 / 9'),
+    src: '/media/lake-1600.webp',
+    width: 1600,
+    height: 900,
+    alt: 'A rowing boat with a lit lantern on a still violet lake at twilight, under a crescent moon.',
     responsive: [
       {
-        srcSet: '/media/landing-page-840.webp 840w, /media/landing-page-1672.webp 1672w',
-        sizes:
-          '(max-width: 704px) 704px, (max-width: 760px) 100vw, (max-width: 1216px) 1216px, 100vw',
+        media: '(max-aspect-ratio: 4/5)',
+        srcSet: '/media/lake-portrait-780.webp 780w',
+        sizes: '100vw',
+      },
+      {
+        srcSet:
+          '/media/lake-960.webp 960w, /media/lake-1600.webp 1600w, /media/lake-2400.webp 2400w',
+        sizes: '100vw',
       },
     ],
     priority: true,

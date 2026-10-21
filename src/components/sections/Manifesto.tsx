@@ -17,15 +17,35 @@ import styles from './Manifesto.module.css';
 // the copy: the compact island, the Home widget icons, and a Mini Bubble.
 // The sentence is complete without them, so they stay aria-hidden.
 type Mark = 'island' | 'widgets' | 'bubble';
-const story: (string | Mark | { accent: string })[] = [
-  'Hover your notch',
+type Part = string | Mark | { accent: string } | { sweep: string };
+const story: Part[] = [
+  { sweep: 'Hover your notch' },
   'island',
   'and DynamicLand opens into a home for',
   'widgets',
   'the things you use every day. Music, timers, and transfers stay',
   'bubble',
-  'one glance away, so your Mac feels',
+  { sweep: 'one glance away,' },
+  'so your Mac feels',
   { accent: 'a little more connected.' },
+];
+const MARKS: Mark[] = ['island', 'widgets', 'bubble'];
+const tokenCount = story.reduce(
+  (total, part) =>
+    total +
+    (typeof part === 'string'
+      ? MARKS.includes(part as Mark)
+        ? 1
+        : part.split(' ').length
+      : ('accent' in part ? part.accent : part.sweep).split(' ').length),
+  0,
+);
+
+const stats = [
+  { value: 11, unit: 'widgets', title: 'Your Home.', text: 'Calendar, weather, music, photos, and more.' },
+  { value: 2, unit: 'music apps', title: 'Now Playing.', text: 'Apple Music and Spotify, from the notch.' },
+  { value: 3, unit: 'island styles', title: 'Make it yours.', text: 'Dynamic Notch, Dynamic Pill, Liquid Glass.' },
+  { value: 26, unit: 'macOS', title: 'Made for Mac.', text: 'Runs on macOS 26.0 or later.', prefix: true },
 ];
 
 const WORD_STAGGER_MS = 42;
@@ -47,15 +67,15 @@ export function Manifesto() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     // Only prepare copy that is still below the fold; never hide what is seen.
     if (root.getBoundingClientRect().top < innerHeight * 0.82) return;
-    root.dataset.reveal = 'waiting';
+    root.dataset.entrance = 'waiting';
     let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
-        root.dataset.reveal = 'running';
+        root.dataset.entrance = 'running';
         const count = root.querySelectorAll('[data-token]').length;
-        timer = setTimeout(() => delete root.dataset.reveal, count * WORD_STAGGER_MS + 1800);
+        timer = setTimeout(() => delete root.dataset.entrance, count * WORD_STAGGER_MS + 1800);
       },
       { rootMargin: '0px 0px -20% 0px' },
     );
@@ -63,7 +83,7 @@ export function Manifesto() {
     return () => {
       observer.disconnect();
       if (timer) clearTimeout(timer);
-      delete root.dataset.reveal;
+      delete root.dataset.entrance;
     };
   }, []);
 
@@ -73,10 +93,10 @@ export function Manifesto() {
       {content}
     </span>
   );
-  const words = (text: string, key: string, accent = false) =>
+  const words = (text: string, key: string, inPhrase = false, accent = false) =>
     text.split(' ').map((word, i) => (
       <Fragment key={`${key}-${i}`}>
-        {(i > 0 || !accent) && ' '}
+        {(i > 0 || !inPhrase) && ' '}
         {token(
           <span className={styles.rise}>{word}</span>,
           `${key}-${i}`,
@@ -84,19 +104,35 @@ export function Manifesto() {
         )}
       </Fragment>
     ));
+  // A highlight passes over a phrase as the reading reaches it.
+  const sweep = (text: string, key: string, accent = false) => {
+    const style = { '--i0': index, '--len': text.split(' ').length } as CSSProperties;
+    return (
+      <Fragment key={key}>
+        {' '}
+        <span className={`${styles.phrase} ${styles.pass}`} style={style}>
+          {words(text, key, true, accent)}
+        </span>
+      </Fragment>
+    );
+  };
 
   return (
     <section ref={section} className={`section ${styles.section}`} aria-label="Why DynamicLand">
       <div className="container">
-        <p ref={ref} className={styles.statement}>
+        <p
+          ref={ref}
+          className={styles.statement}
+          style={{ '--n': tokenCount } as CSSProperties}
+          data-scroll
+          data-scroll-start="0.78"
+          data-scroll-end="-0.05"
+        >
           {story.map((part, partIndex) => {
             if (typeof part === 'object')
-              return (
-                <Fragment key={partIndex}>
-                  {' '}
-                  <span className={styles.phrase}>{words(part.accent, `a${partIndex}`, true)}</span>
-                </Fragment>
-              );
+              return 'accent' in part
+                ? sweep(part.accent, `a${partIndex}`, true)
+                : sweep(part.sweep, `s${partIndex}`);
             if (part === 'island')
               return [' ', token(<IslandMark />, `m${partIndex}`, styles.mark)];
             if (part === 'widgets')
@@ -106,6 +142,22 @@ export function Manifesto() {
             return words(part, `w${partIndex}`);
           })}
         </p>
+        <dl className={styles.stats} data-reveal-group="120">
+          {stats.map((stat) => (
+            <div key={stat.unit}>
+              <dt>
+                <span className={styles.figure}>
+                  {stat.prefix && <small>{stat.unit} </small>}
+                  <span data-count={stat.value}>{stat.value}</span>
+                  {!stat.prefix && <small> {stat.unit}</small>}
+                </span>
+              </dt>
+              <dd>
+                <strong>{stat.title}</strong> {stat.text}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );
