@@ -1,0 +1,419 @@
+/* The pinned stretch: the lid is held open for a beat, then folds shut. */
+.showcase {
+  --enter: 0;
+  --close: 0;
+  --w: min(60rem, 90vw, calc((100svh - 19rem) * 1.12));
+  position: relative;
+  height: 210svh;
+  background: var(--canvas);
+  color: var(--ink);
+}
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 5svh, 3.5rem);
+  padding: var(--header-height) var(--gutter) 2rem;
+  overflow: clip;
+}
+
+/* ——— Copy: the lead gives way to the closing line as the lid comes down ——— */
+.copy {
+  display: grid;
+  text-align: center;
+}
+.lead,
+.outro {
+  grid-area: 1 / 1;
+  align-self: center;
+}
+.lead {
+  opacity: calc(1 - var(--close) * 2.5);
+  transform: translate3d(0, calc(var(--close) * -1.5rem), 0);
+}
+.lead h2,
+.outro {
+  font-family: var(--font-display);
+  font-size: clamp(2.125rem, 4.6vw, 3.75rem);
+  font-weight: 650;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+.lead p {
+  max-width: 30rem;
+  margin: 0.875rem auto 0;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.outro {
+  max-width: 16em;
+  margin-inline: auto;
+  text-wrap: balance;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: calc((var(--close) - 0.72) * 4);
+  transform: translate3d(0, calc((1 - var(--close)) * 1.25rem), 0);
+}
+
+/* ——— The MacBook ———
+   Real proportions (13" Air): lid and base share one width, the deck is as
+   deep as the lid is tall. The eye sits above the hinge, so the keyboard shows
+   in front of the screen and the closed lid's aluminium faces the viewer. */
+.scene {
+  --h: calc(var(--w) * 0.69);
+  --thick: calc(var(--w) * 0.018);
+  --rim: calc(var(--w) * 0.009);
+  width: var(--w);
+  opacity: calc(0.25 + var(--enter) * 0.75);
+  perspective: calc(var(--w) * 4);
+  perspective-origin: 50% calc(var(--w) * -0.3);
+  /* Lifts as the lid shuts, so the closed Mac sits under the closing line.
+     The eye travels with it: this is the perspective container. */
+  transform: translate3d(0, calc(var(--close) * var(--w) * -0.42), 0);
+}
+.laptop {
+  position: relative;
+  height: var(--h);
+  margin-bottom: calc(var(--w) * 0.2);
+  transform-style: preserve-3d;
+  transform: translate3d(0, calc((1 - var(--enter)) * 14%), 0) scale(calc(0.8 + var(--enter) * 0.2));
+  will-change: transform;
+}
+.lid {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  /* Open, it leans back a little; shut, it lies on the deck. */
+  transform: rotateX(calc(10deg - var(--close) * 100deg));
+  will-change: transform;
+}
+.front,
+.back {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--w) * 0.024) calc(var(--w) * 0.024) calc(var(--w) * 0.004)
+    calc(var(--w) * 0.004);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Safari draws the screen's composited layers (the island, the glare) even
+   when the face is turned away, so each face is also switched off outright
+   once the lid passes the eye line: tilted 76° towards the viewer, which is
+   --close 0.86 for an eye 0.99W above the hinge at 4W. */
+.front {
+  opacity: calc((0.86 - var(--close)) * 1000);
+  background: #0b0b0d;
+  box-shadow:
+    inset 0 0 0 calc(var(--w) * 0.0022) #b4b7be,
+    inset 0 0 0 calc(var(--w) * 0.0032) #2c2c31;
+}
+/* The aluminium back of the lid, one lid-thickness behind the glass. */
+.back {
+  opacity: calc((var(--close) - 0.86) * 1000);
+  background:
+    radial-gradient(120% 80% at 50% 0%, #ffffff8c, transparent 60%),
+    linear-gradient(180deg, #e3e5e9, #c3c6cc 70%, #b2b5bc);
+  box-shadow: inset 0 0 0 1px #a9acb3;
+  transform: translateZ(calc(-1 * var(--rim))) rotateY(180deg);
+}
+/* The lid's top edge, its thickness: seen head-on once the lid is shut. */
+.rim {
+  position: absolute;
+  top: 0;
+  left: calc(var(--w) * 0.012);
+  right: calc(var(--w) * 0.012);
+  height: var(--rim);
+  background: linear-gradient(180deg, #8d9098, #d7d9de);
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+}
+.display {
+  position: absolute;
+  inset: 3.2% 2.2% 6.6%;
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.006);
+  background: #1b1233;
+  container-type: inline-size;
+}
+.recording,
+.desktop,
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.menubar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.8cqw;
+  height: 2.7cqw;
+  padding-inline: 1.6cqw;
+  background: #120a2a59;
+  color: #fff;
+  font-size: 1.15cqw;
+  font-weight: 500;
+}
+.menubar span:first-child {
+  font-weight: 700;
+}
+.clock {
+  margin-left: auto;
+}
+.dock {
+  position: absolute;
+  bottom: 1.3cqw;
+  left: 50%;
+  display: flex;
+  gap: 0.8cqw;
+  padding: 0.75cqw;
+  border-radius: 1.7cqw;
+  background: #ffffff2e;
+  box-shadow: inset 0 0 0 1px #ffffff2b;
+  transform: translateX(-50%);
+}
+.dock span {
+  width: 3.6cqw;
+  height: 3.6cqw;
+  border-radius: 0.95cqw;
+  box-shadow: inset 0 1px 0 #ffffff4d;
+}
+
+/* The notch, which is also DynamicLand's island: it opens into Now Playing
+   and settles back, on a loop. */
+.island {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  width: 12cqw;
+  height: 2.7cqw;
+  padding-inline: 1.4cqw;
+  overflow: hidden;
+  background: #000;
+  border-radius: 0 0 1.1cqw 1.1cqw;
+  transform: translateX(-50%);
+  animation: island 7s cubic-bezier(0.34, 1.25, 0.5, 1) infinite;
+}
+.island > * {
+  opacity: 0;
+  animation: islandContent 7s ease infinite;
+}
+.art {
+  flex: none;
+  width: 5.4cqw;
+  height: 5.4cqw;
+  border-radius: 1.1cqw;
+  background:
+    radial-gradient(circle at 30% 30%, #ffc4e6, transparent 60%),
+    linear-gradient(135deg, #8810f8, #d986ff);
+}
+.track {
+  display: grid;
+  flex: 1;
+  gap: 0.8cqw;
+}
+.track b,
+.track i {
+  display: block;
+  height: 0.9cqw;
+  border-radius: 1cqw;
+  background: #fff;
+}
+.track b {
+  width: 70%;
+}
+.track i {
+  width: 45%;
+  background: #ffffff70;
+}
+.bars {
+  display: flex;
+  align-items: center;
+  gap: 0.45cqw;
+  height: 3cqw;
+}
+.bars i {
+  width: 0.55cqw;
+  height: 100%;
+  border-radius: 1cqw;
+  background: #d986ff;
+  transform-origin: 50% 50%;
+  animation: bar 0.9s ease-in-out infinite alternate;
+}
+.bars i:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.bars i:nth-child(3) {
+  animation-delay: -0.6s;
+}
+.bars i:nth-child(4) {
+  animation-delay: -0.15s;
+}
+@keyframes island {
+  0%,
+  14%,
+  88%,
+  100% {
+    width: 12cqw;
+    height: 2.7cqw;
+    border-radius: 0 0 1.1cqw 1.1cqw;
+  }
+  24%,
+  78% {
+    width: 38cqw;
+    height: 8.6cqw;
+    border-radius: 0 0 3cqw 3cqw;
+  }
+}
+@keyframes islandContent {
+  0%,
+  20%,
+  82%,
+  100% {
+    opacity: 0;
+  }
+  28%,
+  76% {
+    opacity: 1;
+  }
+}
+@keyframes bar {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Light slides across the glass as it tilts, and the screen dims as it shuts. */
+.glare,
+.dim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.glare {
+  left: -60%;
+  width: 220%;
+  background: linear-gradient(112deg, transparent 38%, #ffffff59 50%, transparent 62%);
+  opacity: calc(var(--close) * (1 - var(--close)) * 2.6);
+  transform: translate3d(calc((var(--close) - 0.5) * 50%), 0, 0);
+}
+.dim {
+  background: #000;
+  opacity: calc(var(--close) * 0.9);
+}
+
+.deck,
+.edge,
+.shadow {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+.deck {
+  height: var(--h);
+  border-radius: 0 0 calc(var(--w) * 0.03) calc(var(--w) * 0.03);
+  background: linear-gradient(180deg, #c9ccd2, #e4e6ea 30%, #d9dbe0);
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+}
+.keyboard {
+  position: absolute;
+  top: 7%;
+  left: 9%;
+  right: 9%;
+  height: 44%;
+  border-radius: calc(var(--w) * 0.008);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5.6%, #4a4a50 5.6% 6.67%),
+    repeating-linear-gradient(180deg, transparent 0 14.5%, #4a4a50 14.5% 16.67%), #1c1c1f;
+  box-shadow: 0 0 0 calc(var(--w) * 0.003) #b9bcc2;
+}
+.trackpad {
+  position: absolute;
+  top: 56%;
+  left: 31%;
+  right: 31%;
+  bottom: 6%;
+  border-radius: calc(var(--w) * 0.012);
+  background: linear-gradient(180deg, #d2d4d9, #dfe1e5);
+  box-shadow: inset 0 0 0 1px #b4b7be;
+}
+/* The base's front edge, a deck's depth closer to the viewer. */
+.edge {
+  height: var(--thick);
+  border-radius: 0 0 calc(var(--w) * 0.012) calc(var(--w) * 0.012);
+  background: linear-gradient(180deg, #f1f2f4, #c9cbd1 45%, #9a9da5);
+  transform: translateZ(var(--h));
+}
+.scoop {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14%;
+  height: 45%;
+  border-radius: 0 0 calc(var(--w) * 0.01) calc(var(--w) * 0.01);
+  background: linear-gradient(180deg, #a3a6ad, #c9cbd1);
+  transform: translateX(-50%);
+}
+/* A soft shadow on the floor beneath the whole machine. */
+.shadow {
+  top: calc(100% + var(--thick));
+  left: -6%;
+  width: 112%;
+  height: calc(var(--h) * 1.1);
+  background: radial-gradient(closest-side, #1d1d1f40, transparent);
+  transform-origin: 50% 0;
+  transform: rotateX(90deg) translateY(-6%);
+}
+
+@media (max-width: 760px) {
+  .showcase {
+    --w: min(80vw, calc((100svh - 17rem) * 1.12));
+  }
+  .lead p {
+    font-size: 0.9375rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase {
+    --enter: 1;
+    --close: 0;
+    height: auto;
+  }
+  .pin {
+    position: static;
+    height: auto;
+    padding-block: var(--section);
+  }
+  .island {
+    animation: none;
+    width: 38cqw;
+    height: 8.6cqw;
+    border-radius: 0 0 3cqw 3cqw;
+  }
+  .island > *,
+  .bars i {
+    animation: none;
+    opacity: 1;
+  }
+}

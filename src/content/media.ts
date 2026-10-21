@@ -54,6 +54,13 @@ export const media = {
   ),
   home: slot('home', 'Photo 07', 'Home widget chapter', '6 / 5'),
   music: slot('music', 'Video 01', 'Now Playing chapter', '2 / 1', 'video'),
+  showcase: slot(
+    'showcase',
+    'Video 02',
+    'MacBook screen in the closing-lid showcase',
+    '16 / 10',
+    'video',
+  ),
   activities: slot('activities', 'Photo 08', 'MiniLand activities', '16 / 9'),
   clipboard: slot('clipboard', 'Photo 09', 'Clipboard feature', '16 / 10'),
   tray: slot('tray', 'Photo 10', 'File Tray feature', '1 / 1'),

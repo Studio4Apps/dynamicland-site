@@ -1,5 +1,6 @@
 import { headers } from 'next/headers';
 import { Hero } from '@/components/sections/Hero';
+import { MacShowcase } from '@/components/sections/MacShowcase';
 import { Manifesto } from '@/components/sections/Manifesto';
 import { Highlights } from '@/components/sections/Highlights';
 import {
@@ -33,6 +34,7 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData()) }}
       />
       <Hero />
+      <MacShowcase />
       <Manifesto />
       <Highlights />
       <Capabilities />
