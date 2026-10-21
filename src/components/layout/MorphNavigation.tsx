@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { createMotionScope, springProgress } from '@/lib/motion';
+import { product } from '@/content/product';
 import styles from './Layout.module.css';
 
 export const navigationLinks = [
@@ -18,7 +19,7 @@ export function MorphNavigation() {
     const nav = ref.current;
     if (!nav) return;
     const indicator = nav.querySelector<HTMLElement>('[data-nav-indicator]')!;
-    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a'));
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a:not([data-nav-download])'));
     const abort = new AbortController();
     let selected = pathname === '/support' ? 3 : 0;
     let preview: number | null = null;
@@ -160,6 +161,14 @@ export function MorphNavigation() {
         { signal: abort.signal },
       );
     });
+    nav.querySelector('[data-nav-download]')?.addEventListener(
+      'pointerenter',
+      () => {
+        preview = null;
+        move(selected);
+      },
+      { signal: abort.signal },
+    );
     nav.addEventListener(
       'pointerleave',
       () => {
@@ -213,6 +222,9 @@ export function MorphNavigation() {
           {link.label}
         </a>
       ))}
+      <a href={product.downloadUrl} className={styles.navDownload} data-nav-download>
+        Download
+      </a>
     </nav>
   );
 }
