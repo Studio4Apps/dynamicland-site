@@ -41,39 +41,50 @@ export function Gallery({
       data-timing={GALLERY_TIMING.mode}
     >
       {items.length > 1 && (
-        <div className={`container ${styles.galleryControls}`} data-gallery-controls>
-          <div className={styles.playbackGroup} data-playback-group>
-            {/* First in reading/tab order, visually after the pagination. */}
-            <button
-              type="button"
-              data-rotation
-              className={styles.playback}
-              aria-label={`${state.playback} slideshow`}
-            >
-              <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">
-                {state.playback === 'Pause' ? (
-                  <path d="M4 1h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 0h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
-                ) : (
-                  <path d="M4 2.1c0-.9.9-1.4 1.7-.9l12 7.9c.7.4.7 1.4 0 1.8l-12 7.9c-.8.5-1.7 0-1.7-.9z" />
-                )}
-              </svg>
-            </button>
-            <div className={styles.dots} role="group" aria-label="Choose a highlight">
-              <span className={styles.capsule} data-gallery-capsule aria-hidden="true" />
-              <div className={styles.paginationContent} data-pagination-content>
-                {items.map((item, index) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    data-gallery-dot={index}
-                    aria-label={`Show ${item.label}`}
-                    aria-current={state.current === index ? 'true' : undefined}
-                  >
-                    <span className={styles.indicator} data-indicator aria-hidden="true">
-                      <span className={styles.fill} data-dwell-fill />
-                    </span>
-                  </button>
-                ))}
+        // The lane bounds the floating controls: they ride the bottom of the
+        // screen from a quarter of the way into the slides down to their resting
+        // place under the captions, and stop at either end.
+        <div className={styles.controlsLane}>
+          <div className={`container ${styles.galleryControls}`} data-gallery-controls>
+            <div className={styles.playbackGroup} data-playback-group>
+              {/* First in reading/tab order, visually after the pagination. */}
+              <button
+                type="button"
+                data-rotation
+                className={styles.playback}
+                aria-label={`${state.playback} slideshow`}
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  {state.playback === 'Pause' ? (
+                    <path d="M4 1h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 0h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
+                  ) : (
+                    <path d="M4 2.1c0-.9.9-1.4 1.7-.9l12 7.9c.7.4.7 1.4 0 1.8l-12 7.9c-.8.5-1.7 0-1.7-.9z" />
+                  )}
+                </svg>
+              </button>
+              <div className={styles.dots} role="group" aria-label="Choose a highlight">
+                <span className={styles.capsule} data-gallery-capsule aria-hidden="true" />
+                <div className={styles.paginationContent} data-pagination-content>
+                  {items.map((item, index) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      data-gallery-dot={index}
+                      aria-label={`Show ${item.label}`}
+                      aria-current={state.current === index ? 'true' : undefined}
+                    >
+                      <span className={styles.indicator} data-indicator aria-hidden="true">
+                        <span className={styles.fill} data-dwell-fill />
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
