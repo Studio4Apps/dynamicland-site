@@ -242,6 +242,25 @@
     transform: scale(0.96);
     transition-duration: 120ms;
   }
+  .appStoreBadge {
+    display: inline-flex;
+    border-radius: 0.625rem;
+    transition: transform 160ms ease;
+  }
+  .appStoreBadge img {
+    display: block;
+    width: auto;
+    height: 3.25rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .appStoreBadge:hover {
+      transform: translateY(-1px);
+    }
+  }
+  .appStoreBadge:active {
+    transform: scale(0.96);
+    transition-duration: 120ms;
+  }
   .fineprint {
     font-size: 0.8125rem;
     line-height: 1.6;

@@ -76,7 +76,10 @@
    all meet the water in the same place. Script measures the positions once
    per resize; scrolling only changes transforms. */
 .sticky {
-  --title-top: calc(var(--header-height) + clamp(1.75rem, 7svh, 4.75rem));
+  --title-min: calc(var(--header-height) + clamp(1.75rem, 7svh, 4.75rem));
+  /* Script adds --title-shift where the sky has room to spare, so the copy
+     settles midway between the header and the water instead of hugging the top. */
+  --title-top: calc(var(--title-min) + var(--title-shift, 0px));
   position: absolute;
   top: 0;
   left: 0;
@@ -315,7 +318,7 @@
 
 @media (max-width: 760px) {
   .sticky {
-    --title-top: calc(var(--header-height) + 4svh);
+    --title-min: calc(var(--header-height) + 4svh);
   }
 }
 @media (prefers-reduced-motion: reduce) {

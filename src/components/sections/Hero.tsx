@@ -1,4 +1,4 @@
-import { DownloadButton } from '@/components/DownloadButton';
+import { AppStoreBadge } from '@/components/DownloadButton';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { LakeHero } from '@/components/scene/LakeHero';
 import { media } from '@/content/media';
@@ -26,7 +26,7 @@ export function Hero() {
               the things you reach for every day are always one hover away.
             </p>
             <div className={styles.heroActions}>
-              <DownloadButton />
+              <AppStoreBadge />
             </div>
             <p className={`fineprint ${styles.heroFine}`}>
               Free download <span aria-hidden="true">·</span> macOS 26.0 or later{' '}

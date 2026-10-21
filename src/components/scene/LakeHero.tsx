@@ -59,10 +59,16 @@ export function LakeHero({
     let height = 0;
     let water = 0;
     let frame = 0;
+    let shift = 0;
     const measure = () => {
+      water = Math.round(horizon.current * root.offsetHeight);
+      // Spare sky below the copy, split so the gap above the water stays a
+      // little larger than the one below the header.
+      const bottom = words.offsetTop + words.offsetHeight - shift;
+      shift = Math.max(Math.round((water - bottom) * 0.4), 0);
+      root.style.setProperty('--title-shift', `${shift}px`);
       top = space.getBoundingClientRect().top - root.getBoundingClientRect().top;
       height = space.offsetHeight;
-      water = Math.round(horizon.current * root.offsetHeight);
       aboveBox.style.height = `${water}px`;
       underBox.style.top = `${water}px`;
       mirrorBox.style.top = `${water}px`;
@@ -110,6 +116,7 @@ export function LakeHero({
     const observer = new ResizeObserver(relayout);
     observer.observe(root);
     observer.observe(space);
+    observer.observe(words);
     if (!compositor) addEventListener('scroll', request, { passive: true });
     addEventListener('lakelayout', relayout);
     return () => {

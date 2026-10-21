@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { CSSProperties } from 'react';
-import { DownloadButton } from '@/components/DownloadButton';
+import { AppStoreBadge } from '@/components/DownloadButton';
 import { ProBadge } from '@/components/ProBadge';
 import { Disclosure } from '@/components/interactive/Disclosure';
 import { MediaFrame } from '@/components/media/MediaFrame';
@@ -360,7 +360,7 @@ export function Plans() {
               </div>
             </div>
             <div className={styles.planActions}>
-              <DownloadButton />
+              <AppStoreBadge />
               <a className={styles.planLink} href={product.downloadUrl}>
                 Explore Pro <Arrow direction="external" size={16} />
               </a>
@@ -435,7 +435,7 @@ export function Invitation() {
               for a better everyday.
             </h2>
             <p>Your Mac. Your island. Your DynamicLand.</p>
-            <DownloadButton />
+            <AppStoreBadge />
             <p className={styles.inviteFine}>Free download · macOS 26.0 or later</p>
           </div>
         </div>
