@@ -58,8 +58,11 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  opacity: calc((var(--close) - 0.72) * 4);
-  transform: translate3d(0, calc((1 - var(--close)) * 1.25rem), 0);
+  /* Fades in as soon as the lead has gone, while the lid is still coming down. */
+  opacity: calc((var(--close) - 0.3) * 3);
+  /* Hangs behind the open lid (the scene paints over it), so its ends show
+     beside the Mac as it closes and the whole line is revealed once it shuts. */
+  transform: translate3d(0, var(--outro-drop, clamp(5rem, 22svh, 12rem)), 0);
 }
 
 /* ——— The MacBook ———
@@ -123,6 +126,17 @@
     linear-gradient(180deg, #e3e5e9, #c3c6cc 70%, #b2b5bc);
   box-shadow: inset 0 0 0 1px #a9acb3;
   transform: translateZ(calc(-1 * var(--rim))) rotateY(180deg);
+}
+/* Placed at the lid's centre, upright for whoever faces the open lid: seen
+   from the front once it is shut, the leaf points towards the viewer. */
+.logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 0.5px #ffffff80);
 }
 /* The lid's top edge, its thickness: seen head-on once the lid is shut. */
 .rim {
@@ -387,6 +401,10 @@
 }
 
 @media (max-width: 760px) {
+  /* Two lines here: hang less far, so both clear the shut Mac. */
+  .outro {
+    --outro-drop: 11svh;
+  }
   .showcase {
     --w: min(80vw, calc((100svh - 17rem) * 1.12));
   }

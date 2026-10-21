@@ -846,19 +846,6 @@
   align-items: center;
   gap: 0.5rem 1.5rem;
 }
-.planLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 2.75rem;
-  color: var(--purple);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-.planLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
-}
 .planArt {
   position: relative;
   min-height: 26rem;

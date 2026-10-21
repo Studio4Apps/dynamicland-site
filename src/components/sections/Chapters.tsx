@@ -361,9 +361,6 @@ export function Plans() {
             </div>
             <div className={styles.planActions}>
               <AppStoreBadge />
-              <a className={styles.planLink} href={product.downloadUrl}>
-                Explore Pro <Arrow direction="external" size={16} />
-              </a>
             </div>
           </div>
           <div className={styles.planArt}>
