@@ -282,7 +282,7 @@ export function createLake(
     renderer.render(bakeScene, bakeCamera);
     renderer.setRenderTarget(null);
   };
-  bake();
+  // Baked once its shader is built (see the compile step at the end), never mid-setup.
   u.uNoise.value = noiseTarget.texture;
 
   // ——— Sky: gradient, stars, milky way, a crescent moon and two cloud banks ———
@@ -1412,10 +1412,33 @@ export function createLake(
 
   // Build every shader off the main thread where the driver allows it, so the
   // page never stalls while the scene warms up; draw only once all are ready.
-  renderer
-    .compileAsync(scene, camera)
+  // The bake, the ripple step and the post passes never draw inside the scene,
+  // so they are compiled from stand-in quads that share their materials.
+  const quad = new THREE.PlaneGeometry(2, 2);
+  const passes = new THREE.Scene();
+  [
+    composer.copyPass.material,
+    grade.material,
+    ...(bloom.enabled
+      ? [
+          bloom.materialHighPassFilter,
+          ...bloom.separableBlurMaterials,
+          bloom.compositeMaterial,
+          bloom.blendMaterial,
+        ]
+      : []),
+  ].forEach((material) => passes.add(new THREE.Mesh(quad, material)));
+  Promise.all([
+    renderer.compileAsync(scene, camera),
+    renderer.compileAsync(bakeScene, bakeCamera),
+    renderer.compileAsync(simScene, simCamera),
+    renderer.compileAsync(passes, bakeCamera),
+  ])
     .catch(() => {})
     .then(() => {
+      quad.dispose();
+      // A context lost meanwhile bakes again when it is restored.
+      if (!lost) bake();
       compiled = true;
       if (wanted && !document.hidden) start();
       else render(0);

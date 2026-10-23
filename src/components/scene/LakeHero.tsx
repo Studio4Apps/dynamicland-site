@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { whenIdle } from '@/lib/idle';
 import styles from './LakeHero.module.css';
 
 // How far the headline travels for each pixel scrolled while the stage is pinned.
@@ -127,7 +128,10 @@ export function LakeHero({
     };
   }, []);
 
-  // The WebGL scene itself, loaded after first paint.
+  // The WebGL scene itself. Parsing three.js and building the scene costs a
+  // phone the better part of a second on the main thread, so it waits until
+  // the page has loaded and gone idle, and until the hero is on screen. The
+  // poster is the same picture meanwhile.
   useEffect(() => {
     const element = canvas.current;
     const section = sticky.current?.closest('section');
@@ -140,7 +144,20 @@ export function LakeHero({
     // away instead of waiting for slow frames to step it down.
     const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
     const lite = compact || (navigator.hardwareConcurrency || 8) <= 4 || memory <= 4;
-    import('./lake')
+    let cancelIdle = () => {};
+    let begin = () => {};
+    const gate = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      gate.disconnect();
+      begin();
+    });
+    const loaded = () => {
+      cancelIdle = whenIdle(() => gate.observe(section), 3000);
+    };
+    if (document.readyState === 'complete') loaded();
+    else addEventListener('load', loaded, { once: true });
+    new Promise<void>((resolve) => (begin = resolve))
+      .then(() => import('./lake'))
       .then(({ createLake }) => {
         if (disposed) return;
         const scene = createLake(element, {
@@ -182,6 +199,9 @@ export function LakeHero({
       .catch(() => setState('fallback'));
     return () => {
       disposed = true;
+      removeEventListener('load', loaded);
+      cancelIdle();
+      gate.disconnect();
       cleanup();
     };
   }, []);

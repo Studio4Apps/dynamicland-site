@@ -8,7 +8,12 @@ The former Photo 01 frame, caption, and separator have been removed. Hero artwor
 
 The shared footer uses the owner-provided `Footer_Web.png` cloud illustration, exported as 840px and 1448px WebP files (21KB / 44KB). A lazy-loaded decorative picture selects the compact source on phones. A rose-gray fade joins the page above, while a purple shade behind the real HTML links maintains legibility. The original remains outside the deployment folder.
 
-The Pro pricing card uses the owner-provided `PRO_Card.png` as `public/media/pro-card.webp` (1086 × 1448, 57.5KB). The decorative CSS background covers the card without changing its layout; a translucent purple gradient maintains contrast behind the pale rose text and controls. The original remains outside the deployment folder.
+Two stills continue the hero's story on the same lake, under the same violet sky, crescent moon, cloud banks, pine shores, mist and grade, with the same boat and lantern: searching (hero), under way (Pro), arrived (invitation). The island stands for the Dynamic Island the app lives in. `scripts/scenes/stills.ts` builds them in three.js and `node scripts/render-scenes.mjs` renders each at twice its size in headless Chromium, then reduces it to WebP (raw PNGs go to ignored `artifacts/scenes/`).
+
+- “Start free. Go further with Pro” uses `public/media/pro-voyage.webp` (1086 × 1448): later the same night, the boat is under way with its lantern lit and oars in the water, a wake opening behind it, heading for the one warm window of the island far off between the shores. There is no Pro badge over the picture; the Pro plan heading and subscription chip remain.
+- “Make a little room for a better everyday” uses `invite-island-1600.webp` (1600 × 900) on desktop and `invite-island-840.webp` (840 × 1120) on phones: the same island close by, a log cabin with a lit window between two pines, its light on the water. The boat is tied up at a short jetty with its oars shipped and an empty lantern post; its lantern now hangs by the cabin door. The middle of the frame stays open for the copy, which is centred over a purple shade.
+
+The owner-provided `PRO_Card.png` remains as `pro-card.webp` for the MiniLand gallery card, and the separate site footer keeps the owner's cloud artwork (`footer-*.webp`).
 
 All product screenshot slots currently have `src: null`. Their rendered blanks are intentional: no image/video element, request, loading state, play control or invented alt text. The tiny Photo/Video identifiers are hidden from accessibility and search snippets. Current editorial copy stays outside the frames.
 

@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -20,9 +18,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <a className="skipLink" href="#main">
           Skip to content
         </a>
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );

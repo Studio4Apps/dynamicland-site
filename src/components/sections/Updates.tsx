@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { updates, type ReleaseUpdate } from '@/content/updates';
 import styles from './Updates.module.css';
 import { applyImagePalette } from '@/lib/image-palette';
+import { whenIdle } from '@/lib/idle';
 
 // The rail scrolls natively on touch. Arrows and mouse drags move it card by
 // card to exact snap positions, so smooth scrolling and snapping never fight.
@@ -326,6 +326,11 @@ function UpdateCard({ release, onOpen }: { release: ReleaseUpdate; onOpen: () =>
     measure();
     return () => observer.disconnect();
   }, []);
+  // Sampling the palette decodes the image on the main thread, so it waits for an idle moment.
+  const paint = (image: HTMLImageElement) =>
+    whenIdle(() => {
+      if (card.current) applyImagePalette(image, card.current, release.paletteTone);
+    });
   return (
     <button
       ref={card}
@@ -343,16 +348,21 @@ function UpdateCard({ release, onOpen }: { release: ReleaseUpdate; onOpen: () =>
       </span>
       <span className={styles.artwork}>
         {release.image && (
-          <Image
+          // The 4096px original is a 35MB bitmap once decoded; phones take a reduced export.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={release.image}
-            alt=""
-            fill
-            draggable={false}
+            srcSet={release.imageSet}
             sizes="(max-width: 960px) 94vw, 896px"
-            onLoad={(event) => {
-              if (card.current)
-                applyImagePalette(event.currentTarget, card.current, release.paletteTone);
+            alt=""
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            ref={(image) => {
+              // Loaded before hydration: no load event will follow.
+              if (image?.complete && image.naturalWidth) paint(image);
             }}
+            onLoad={(event) => paint(event.currentTarget)}
           />
         )}
       </span>

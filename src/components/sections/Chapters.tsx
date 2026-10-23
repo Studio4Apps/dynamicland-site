@@ -157,7 +157,7 @@ export function MusicStory() {
           close while the rest of your day carries on, with synced lyrics and richer artwork in Pro.
         </p>
         <figure className={styles.musicMedia} data-reveal="80">
-          <MediaFrame id="music" dark />
+          <MediaFrame id="music" />
           <figcaption>
             <span>Apple Music</span>
             <span>Spotify</span>
@@ -184,9 +184,19 @@ export function MusicStory() {
 }
 
 const homeFigures: { glyph: GlyphName; value: number; unit: string; text: string }[] = [
-  { glyph: 'widgets', value: 11, unit: 'widgets', text: 'to choose from, Calendar to Color Picker.' },
+  {
+    glyph: 'widgets',
+    value: 11,
+    unit: 'widgets',
+    text: 'to choose from, Calendar to Color Picker.',
+  },
   { glyph: 'hover', value: 1, unit: 'hover', text: 'to open your Home, then back to work.' },
-  { glyph: 'window', value: 0, unit: 'new windows', text: 'Everything stays at the top of your screen.' },
+  {
+    glyph: 'window',
+    value: 0,
+    unit: 'new windows',
+    text: 'Everything stays at the top of your screen.',
+  },
 ];
 
 export function HomeSpotlight() {
@@ -205,12 +215,7 @@ export function HomeSpotlight() {
           Your next meeting. The weather outside. The song on repeat. Bring the widgets you reach
           for into one personal space, then add, resize, and arrange them around your day.
         </SplitHeading>
-        <div
-          className={styles.unfold}
-          data-scroll
-          data-scroll-start="1"
-          data-scroll-end="0.3"
-        >
+        <div className={styles.unfold} data-scroll data-scroll-start="1" data-scroll-end="0.3">
           <MediaFrame id="home" configuration={{ ...media.home, ratio: '16 / 8.5' }} />
         </div>
         <dl className={styles.figures} data-reveal-group="120">
@@ -261,7 +266,9 @@ export function Journey() {
           <h2 id="journey-title" data-reveal>
             How DynamicLand fits your day.
           </h2>
-          <p data-reveal="100">No setup marathon. Three steps, and your notch starts working for you.</p>
+          <p data-reveal="100">
+            No setup marathon. Three steps, and your notch starts working for you.
+          </p>
         </div>
         <div
           className={styles.route}
@@ -363,16 +370,13 @@ export function Plans() {
               <AppStoreBadge />
             </div>
           </div>
-          <div className={styles.planArt}>
+          <div className={styles.planArt} data-header-tone="dark">
             <Image
-              src="/media/pro-card.webp"
+              src="/media/pro-voyage.webp"
               alt=""
               fill
-              sizes="(max-width: 760px) 100vw, 40vw"
+              sizes="(max-width: 960px) 100vw, 40vw"
             />
-            <span className={styles.planBadge}>
-              <ProBadge large />
-            </span>
             <span className={styles.chip}>
               <Glyph name="spark" size={14} /> Monthly or yearly
             </span>
@@ -419,10 +423,10 @@ export function Invitation() {
   return (
     <section className={styles.invitation} aria-labelledby="closing-title">
       <div className="container">
-        <div className={styles.inviteCard} data-reveal>
+        <div className={styles.inviteCard} data-reveal data-header-tone="dark">
           <picture className={styles.inviteArt} aria-hidden="true">
-            <source media="(max-width: 760px)" srcSet="/media/footer-840.webp" />
-            <Image src="/media/footer-1448.webp" alt="" fill sizes="100vw" unoptimized />
+            <source media="(max-width: 760px)" srcSet="/media/invite-island-840.webp" />
+            <Image src="/media/invite-island-1600.webp" alt="" fill sizes="100vw" unoptimized />
           </picture>
           <div className={styles.inviteCopy}>
             <Image src={product.logo} width={64} height={64} alt="" unoptimized />

@@ -101,12 +101,39 @@ export function Choreography() {
     pending.forEach((element) => observer.observe(element));
     cleanups.push(() => observer.disconnect());
 
+    // A section well out of view is marked asleep, and its looping decoration
+    // pauses: an endless animation otherwise restyles (and, for the notch
+    // mock-up, lays out) the page on every frame of the visit.
+    const sleeper = new IntersectionObserver(
+      (entries) =>
+        entries.forEach(({ target, isIntersecting }) =>
+          (target as HTMLElement).toggleAttribute('data-asleep', !isIntersecting),
+        ),
+      { rootMargin: '25% 0px' },
+    );
+    document.querySelectorAll('main > section').forEach((section) => sleeper.observe(section));
+    cleanups.push(() => {
+      sleeper.disconnect();
+      document
+        .querySelectorAll('[data-asleep]')
+        .forEach((section) => section.removeAttribute('data-asleep'));
+    });
+
     // Scroll-linked progress. --p is 0 when the element's top meets
     // data-scroll-start (fraction of the viewport, default 1 = bottom edge)
     // and 1 when it reaches data-scroll-end (default 0 = top edge).
     const linked = Array.from(document.querySelectorAll<HTMLElement>('[data-scroll]'));
     const bar = document.querySelector<HTMLElement>('[data-scroll-meter]');
+    // A custom property restyles the whole subtree, so it is only written when it changes:
+    // anything resting above or below its range stays untouched while the page scrolls.
+    const written = new Map<HTMLElement, string>();
+    const write = (element: HTMLElement, value: string) => {
+      if (written.get(element) === value) return;
+      written.set(element, value);
+      element.style.setProperty('--p', value);
+    };
     let queued = 0;
+    let total = -1;
     const update = () => {
       queued = 0;
       const height = innerHeight;
@@ -115,22 +142,30 @@ export function Choreography() {
         const end = Number(element.dataset.scrollEnd ?? 0) * height;
         const top = element.getBoundingClientRect().top;
         const p = Math.min(1, Math.max(0, (start - top) / (start - end || 1)));
-        element.style.setProperty('--p', p.toFixed(4));
+        write(element, p.toFixed(4));
       });
       if (bar) {
-        const total = root.scrollHeight - height;
-        bar.style.setProperty('--p', total > 0 ? (scrollY / total).toFixed(4) : '0');
+        // Read only after a resize, so a scroll frame never waits on layout for it.
+        if (total < 0) total = root.scrollHeight - height;
+        write(bar, total > 0 ? (scrollY / total).toFixed(4) : '0');
       }
     };
     const schedule = () => {
       if (!queued) queued = requestAnimationFrame(update);
     };
+    const resize = () => {
+      total = -1;
+      schedule();
+    };
     update();
+    const pageSize = new ResizeObserver(resize);
+    pageSize.observe(document.body);
     addEventListener('scroll', schedule, { passive: true });
-    addEventListener('resize', schedule, { passive: true });
+    addEventListener('resize', resize, { passive: true });
     cleanups.push(() => {
+      pageSize.disconnect();
       removeEventListener('scroll', schedule);
-      removeEventListener('resize', schedule);
+      removeEventListener('resize', resize);
       cancelAnimationFrame(queued);
     });
 

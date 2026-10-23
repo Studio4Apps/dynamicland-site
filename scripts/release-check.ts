@@ -42,8 +42,8 @@ async function main() {
     )
       issues.push(`Unexpected public file: ${relative}`);
   }
-  const privacy = readFileSync(resolve('src/app/privacy/page.tsx'), 'utf8');
-  const terms = readFileSync(resolve('src/app/terms/page.tsx'), 'utf8');
+  const privacy = readFileSync(resolve('src/app/(site)/privacy/page.tsx'), 'utf8');
+  const terms = readFileSync(resolve('src/app/(site)/terms/page.tsx'), 'utf8');
   if (
     privacy.includes('data-legal-status="pending"') ||
     terms.includes('data-legal-status="pending"')

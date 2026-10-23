@@ -13,7 +13,9 @@
   display: grid;
   place-items: center;
   height: 100svh;
-  padding-top: var(--header-height);
+  /* Clear the floating header on both sides so the statement sits at the
+     screen's true centre rather than the centre of what is below the header. */
+  padding-block: var(--header-height);
 }
 .statement {
   font-family: var(--font-display);
@@ -141,6 +143,11 @@
 .island[data-state='open'] .wave span {
   animation: play 420ms ease-in-out infinite alternate;
   animation-delay: calc(var(--bar) * -0.13s);
+}
+/* Out of view (Choreography marks the section asleep), the loop holds still. */
+:global([data-asleep]) .wave span,
+:global([data-asleep]) .island .wave span {
+  animation-play-state: paused;
 }
 @keyframes breathe {
   from {

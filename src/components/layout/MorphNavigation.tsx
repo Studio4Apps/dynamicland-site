@@ -3,6 +3,8 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { createMotionScope, springProgress } from '@/lib/motion';
 import { product } from '@/content/product';
+import { signInPath } from '@/lib/cloud/paths';
+import { scrollToSection, sectionContentTop } from '@/lib/scroll';
 import styles from './Layout.module.css';
 
 export const navigationLinks = [
@@ -19,9 +21,10 @@ export function MorphNavigation() {
     const nav = ref.current;
     if (!nav) return;
     const indicator = nav.querySelector<HTMLElement>('[data-nav-indicator]')!;
-    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a:not([data-nav-download])'));
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a'));
     const abort = new AbortController();
     let selected = pathname === '/support' ? 3 : 0;
+    let applied = -1;
     let preview: number | null = null;
     let placed = false;
     let shown = -1;
@@ -79,7 +82,9 @@ export function MorphNavigation() {
     };
     const currentSection = () => {
       frame = 0;
-      const position = scrollY + Math.min(innerHeight * 0.28, 220);
+      // A section is current once its content reaches mid-screen, which is
+      // also where a nav jump centres it.
+      const position = scrollY + innerHeight / 2;
       selected =
         navigating !== null
           ? navigating
@@ -92,6 +97,9 @@ export function MorphNavigation() {
                 : position >= featureTop
                   ? 1
                   : 0;
+      // Scrolling within a section changes nothing: no attribute writes, no layout reads.
+      if (selected === applied && (preview !== null || !placed || shown === selected)) return;
+      applied = selected;
       links.forEach((link, i) => {
         if (i === selected && (pathname === '/' || pathname === '/support'))
           link.setAttribute('aria-current', pathname === '/' ? 'location' : 'page');
@@ -100,10 +108,12 @@ export function MorphNavigation() {
       if (preview === null) move(selected);
     };
     const measure = () => {
-      featureTop =
-        (document.getElementById('features')?.getBoundingClientRect().top ?? Infinity) + scrollY;
-      pricingTop =
-        (document.getElementById('pricing')?.getBoundingClientRect().top ?? Infinity) + scrollY;
+      const top = (id: string) => {
+        const section = document.getElementById(id);
+        return section ? sectionContentTop(section) : Infinity;
+      };
+      featureTop = top('features');
+      pricingTop = top('pricing');
       currentSection();
       move(preview ?? selected, true);
     };
@@ -129,10 +139,7 @@ export function MorphNavigation() {
           preview = null;
           history.pushState(null, '', hash);
           currentSection();
-          target.scrollIntoView({
-            behavior: scope.reduced.matches ? 'auto' : 'smooth',
-            block: 'start',
-          });
+          scrollToSection(target, scope.reduced.matches ? 'auto' : 'smooth');
           clearTimeout(scrollSettle);
           scrollSettle = window.setTimeout(
             () => {
@@ -161,14 +168,6 @@ export function MorphNavigation() {
         { signal: abort.signal },
       );
     });
-    nav.querySelector('[data-nav-download]')?.addEventListener(
-      'pointerenter',
-      () => {
-        preview = null;
-        move(selected);
-      },
-      { signal: abort.signal },
-    );
     nav.addEventListener(
       'pointerleave',
       () => {
@@ -206,6 +205,12 @@ export function MorphNavigation() {
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null;
     observer?.observe(document.body);
     measure();
+    // Arriving from another page (/#pricing) the browser only aligns the
+    // section's padded top; centre it the way an in-page jump would.
+    const arrival = links.find((link, i) => i < 3 && link.hash === location.hash);
+    const arrivalTarget =
+      pathname === '/' && arrival ? document.querySelector<HTMLElement>(arrival.hash) : null;
+    if (arrivalTarget) scrollToSection(arrivalTarget, 'auto');
     return () => {
       abort.abort();
       observer?.disconnect();
@@ -222,9 +227,20 @@ export function MorphNavigation() {
           {link.label}
         </a>
       ))}
-      <a href={product.downloadUrl} className={styles.navDownload} data-nav-download>
+    </nav>
+  );
+}
+
+/** Account and download actions, in their own glass at the end of the header. */
+export function NavigationActions() {
+  return (
+    <div className={styles.navActions}>
+      <a href={signInPath} className={styles.navSignIn}>
+        Sign in
+      </a>
+      <a href={product.downloadUrl} className={styles.navDownload}>
         Download
       </a>
-    </nav>
+    </div>
   );
 }

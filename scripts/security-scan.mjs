@@ -19,7 +19,7 @@ for (const path of source.filter((p) => /\.(tsx?|css)$/.test(p))) {
   const code = await readFile(path, 'utf8');
   if (/\beval\s*\(|new\s+Function\s*\(|javascript\s*:/i.test(code))
     findings.push(`${path}: unsafe authored execution pattern`);
-  if (code.includes('dangerouslySetInnerHTML') && !path.endsWith('app/page.tsx'))
+  if (code.includes('dangerouslySetInnerHTML') && !path.endsWith('app/(site)/page.tsx'))
     findings.push(`${path}: unexpected raw HTML sink`);
   if (
     /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|AKIA[A-Z0-9]{16}|ghp_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9]{32,}/.test(

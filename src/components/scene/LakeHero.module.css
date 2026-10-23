@@ -215,6 +215,10 @@
 .waver {
   animation: waver 5.5s ease-in-out infinite alternate;
 }
+/* Out of view (Choreography marks the section asleep), the loop holds still. */
+:global([data-asleep]) .waver {
+  animation-play-state: paused;
+}
 @keyframes waver {
   0% {
     transform: skewX(-1.2deg) scaleX(1.006);

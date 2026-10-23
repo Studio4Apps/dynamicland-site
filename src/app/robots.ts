@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
   // Previews stay crawlable so crawlers can see the noindex response; access protection is a host responsibility.
   return {
     rules: [
-      { userAgent: '*', allow: '/' },
+      { userAgent: '*', allow: '/', disallow: '/cloud' },
       ...(training === 'block'
         ? [
             {

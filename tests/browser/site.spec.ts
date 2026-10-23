@@ -131,7 +131,9 @@ test('routes, real destinations, hero image, empty product media and CSP', async
   expect(mediaRequests.length).toBeGreaterThan(0);
   expect(
     mediaRequests.every((url) =>
-      /\/media\/(lake-(960|1600|2400|portrait-780)|footer-(840|1448)|pro-card)\.webp$/.test(url),
+      /\/media\/(?:(?:lake-(960|1600|2400|portrait-780)|footer-(840|1448)|pro-card|pro-voyage|invite-island-(840|1600))\.webp|widgets\/(battery|calendar|color-picker|music|photo|time|timer|voice-memo|weather)\.png)$/.test(
+        url,
+      ),
     ),
   ).toBe(true);
   const one = await request.get('/'),
