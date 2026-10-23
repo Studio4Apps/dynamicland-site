@@ -102,18 +102,12 @@ export function applyImagePalette(image: HTMLImageElement, target: HTMLElement, 
       if (!context) return;
       // The central artwork communicates the release identity; surrounding bento
       // tiles contain unrelated product/UI colors. Fall back to the whole image
-      // for artwork whose center has no chromatic pixels.
-      context.drawImage(
-        image,
-        image.naturalWidth * 0.23,
-        image.naturalHeight * 0.26,
-        image.naturalWidth * 0.54,
-        image.naturalHeight * 0.47,
-        0,
-        0,
-        canvas.width,
-        canvas.height,
-      );
+      // for artwork whose center has no chromatic pixels. The crop is placed by
+      // drawing the whole image enlarged, not by source pixels: an srcset image
+      // reports a density-corrected natural size that a source crop misreads.
+      const width = canvas.width / 0.54;
+      const height = canvas.height / 0.47;
+      context.drawImage(image, -0.23 * width, -0.26 * height, width, height);
       palette = extractPalette(context.getImageData(0, 0, canvas.width, canvas.height).data);
       if (!palette.length) {
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
