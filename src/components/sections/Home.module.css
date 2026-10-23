@@ -377,9 +377,9 @@
   scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
-/* Swiped by hand on phones, the row rests on a whole tile. */
+/* Swiped by hand on phones, the row rests on a whole tile, unless it loops. */
 @media (max-width: 760px) {
-  .railViewport {
+  .railViewport:not([data-loop]) {
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gutter);
   }
@@ -394,6 +394,9 @@
   margin: 0;
   padding: 0 max(var(--gutter), calc((100vw - var(--content)) / 2));
   list-style: none;
+}
+.railViewport[data-loop] .railTrack {
+  will-change: transform;
 }
 .railTrack li {
   width: clamp(14rem, 21vw, 18.5rem);
@@ -437,15 +440,6 @@
   .railTrack li:hover img {
     transform: translateY(-6px) rotate(-4deg) scale(1.06);
     filter: drop-shadow(0 26px 30px #2a175a38);
-  }
-}
-@media (min-width: 761px) {
-  :global([data-choreo='live']) .railViewport {
-    overflow: hidden;
-  }
-  :global([data-choreo='live']) .railTrack {
-    transform: translateX(calc(var(--p, 0) * -1 * var(--travel, 0px)));
-    will-change: transform;
   }
 }
 
