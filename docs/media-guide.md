@@ -31,9 +31,6 @@ All product screenshot slots currently have `src: null`. Their rendered blanks a
 | clipboard               | Photo 09             | Large everyday card                     | 16:10            |
 | tray                    | Photo 10             | File Tray card                          | 1:1              |
 | tools                   | Photo 11             | Timer / Voice Memos / Color Picker card | 1:1              |
-| custom-notch            | Photo 12             | Notch selector preview                  | 4:3              |
-| custom-pill             | Photo 13             | Pill selector preview                   | 4:3              |
-| custom-glass            | Photo 14             | Liquid Glass selector preview           | 4:3              |
 
 Utility media equalizes within the desktop grid and adapts on compact layouts. Stage geometry is independent of the actual asset dimensions. Start with `contain` to preserve app-interface legibility; use `cover` only after reviewing the crop at every breakpoint.
 

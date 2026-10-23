@@ -237,24 +237,24 @@ export function HomeSpotlight() {
   );
 }
 
-const steps: { glyph: GlyphName; title: string; text: string; scene: string }[] = [
+// Each step shows the real thing it asks for, peeking up from the bottom of
+// its card: the store listing, the island open under the cursor, and the
+// settings that shape it. Still pictures; nothing here moves on its own.
+const steps = [
   {
-    glyph: 'download',
     title: 'Download it once.',
     text: 'Free from the Mac App Store, for macOS 26.0 or later.',
-    scene: 'store',
+    scene: <StoreScene />,
   },
   {
-    glyph: 'hover',
     title: 'Hover your notch.',
     text: 'DynamicLand opens right where you look, then gets out of the way.',
-    scene: 'open',
+    scene: <HoverScene />,
   },
   {
-    glyph: 'sliders',
     title: 'Make it yours.',
     text: 'Choose your widgets, a style, and how the island behaves.',
-    scene: 'tune',
+    scene: <SettingsScene />,
   },
 ];
 
@@ -262,61 +262,149 @@ export function Journey() {
   return (
     <section id="how" className={styles.journey} aria-labelledby="journey-title">
       <div className="container">
-        <div className={styles.journeyHeading}>
-          <h2 id="journey-title" data-reveal>
-            How DynamicLand fits your day.
-          </h2>
-          <p data-reveal="100">
-            No setup marathon. Three steps, and your notch starts working for you.
-          </p>
-        </div>
-        <div
-          className={styles.route}
-          data-scroll
-          data-scroll-start="0.9"
-          data-scroll-end="0.35"
-          aria-hidden="true"
-        >
-          <span className={styles.routeTrack} />
-          <span className={styles.routeIsland}>
-            <i />
-          </span>
-        </div>
-        <ol className={styles.steps} data-reveal-group="140">
+        <SplitHeading id="journey-title" title="How DynamicLand fits your day.">
+          No setup marathon. Three steps, and your notch starts working for you.
+        </SplitHeading>
+        <ol className={styles.steps}>
           {steps.map((step, i) => (
-            <li key={step.title}>
-              <div className={styles.scene} data-scene={step.scene} aria-hidden="true">
-                <span className={styles.stepIndex}>0{i + 1}</span>
-                <span className={styles.screen}>
-                  <span className={styles.screenNotch} />
-                  {step.scene === 'store' && <span className={styles.storeBadge}>Get</span>}
-                  {step.scene === 'open' && (
-                    <span className={styles.openIsland}>
-                      <i />
-                      <i />
-                      <i />
-                    </span>
-                  )}
-                  {step.scene === 'tune' && (
-                    <span className={styles.tuneRows}>
-                      <i />
-                      <i />
-                      <i />
-                    </span>
-                  )}
+            <li key={step.title} className={styles.step}>
+              <div className={styles.stepCopy}>
+                <span className={styles.stepLabel} aria-hidden="true">
+                  Step {i + 1}
                 </span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
               </div>
-              <span className={styles.stepGlyph} data-draw>
-                <Glyph name={step.glyph} size={22} />
-              </span>
-              <p>
-                <strong>{step.title}</strong> {step.text}
-              </p>
+              {step.scene}
             </li>
           ))}
         </ol>
       </div>
     </section>
+  );
+}
+
+function WindowBar({ title }: { title?: string }) {
+  return (
+    <span className={styles.windowBar} aria-hidden="true">
+      <i />
+      <i />
+      <i />
+      {title && <b>{title}</b>}
+    </span>
+  );
+}
+
+// The listing is real content, and its Get button is the real download link.
+function StoreScene() {
+  return (
+    <div className={styles.stepScene}>
+      <div className={styles.window}>
+        <WindowBar />
+        <div className={styles.listing}>
+          <Image src={product.logo} width={56} height={56} alt="" unoptimized />
+          <span>
+            <strong>{product.name}</strong>
+            <span>{product.publisher}</span>
+          </span>
+          <a
+            href={product.downloadUrl}
+            className={styles.get}
+            aria-label="Get DynamicLand on the Mac App Store"
+          >
+            Get
+          </a>
+        </div>
+        <dl className={styles.facts}>
+          <div>
+            <dt>Price</dt>
+            <dd>Free</dd>
+          </div>
+          <div>
+            <dt>Requires</dt>
+            <dd>macOS 26</dd>
+          </div>
+          <div>
+            <dt>Pro</dt>
+            <dd>Optional</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  );
+}
+
+const homeWidgets = ['calendar', 'weather', 'music'] as const;
+
+function HoverScene() {
+  return (
+    <div className={styles.stepScene} aria-hidden="true">
+      <div className={styles.display}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.wallpaper}
+          src="/media/lake-960.webp"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <span className={styles.menubar}>
+          <b>Music</b>
+          <span className={styles.clock}>9:41</span>
+        </span>
+        <span className={styles.hoverIsland}>
+          {homeWidgets.map((name) => (
+            <Image
+              key={name}
+              src={`/media/widgets/${name}.png`}
+              width={160}
+              height={160}
+              alt=""
+              unoptimized
+            />
+          ))}
+        </span>
+        <svg className={styles.cursor} viewBox="0 0 14 21" aria-hidden="true">
+          <path d="M1 1v16.5l4.2-4 2.9 6.6 2.7-1.2-2.9-6.5H13.6z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function SettingsScene() {
+  return (
+    <div className={styles.stepScene} aria-hidden="true">
+      <div className={styles.window}>
+        <WindowBar title="Appearance" />
+        <div className={styles.settings}>
+          <span>
+            Style
+            <span className={styles.segmented}>
+              <b>Notch</b>
+              <span>Pill</span>
+            </span>
+          </span>
+          <span>
+            Theme
+            <span className={styles.popup}>
+              Obsidian Glass
+              <svg viewBox="0 0 8 12">
+                <path d="M1.5 4.5 4 2l2.5 2.5M1.5 7.5 4 10l2.5-2.5" />
+              </svg>
+            </span>
+          </span>
+          <span>
+            Hide in full screen
+            <span className={styles.toggle} />
+          </span>
+          <span>
+            Size
+            <span className={styles.slider} />
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
 

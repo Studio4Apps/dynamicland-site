@@ -84,7 +84,6 @@
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 .split h2,
-.journeyHeading h2,
 .questionsHead h2 {
   max-width: 15em;
   font-family: var(--font-display);
@@ -135,28 +134,23 @@
 }
 
 /* ——— Colour tones shared by tiles ——— */
-.tile[data-tone='violet'],
-.lookTile[data-tone='violet'] {
+.tile[data-tone='violet'] {
   background: linear-gradient(160deg, #8f45ff, #6a1fe0);
   color: #fff;
 }
-.tile[data-tone='midnight'],
-.lookTile[data-tone='midnight'] {
+.tile[data-tone='midnight'] {
   background: linear-gradient(160deg, #241645, #160d2e);
   color: #fff;
 }
-.tile[data-tone='sun'],
-.lookTile[data-tone='sun'] {
+.tile[data-tone='sun'] {
   background: linear-gradient(160deg, #ffd45c, #f5b72e);
   color: #2b1b00;
 }
-.tile[data-tone='ocean'],
-.lookTile[data-tone='ocean'] {
+.tile[data-tone='ocean'] {
   background: linear-gradient(160deg, #335b86, #213e60);
   color: #fff;
 }
-.tile[data-tone='berry'],
-.lookTile[data-tone='berry'] {
+.tile[data-tone='berry'] {
   background: linear-gradient(160deg, #4d1c3f, #2f0f27);
   color: #fff;
 }
@@ -491,62 +485,6 @@
 }
 
 /* ——— Journey ——— */
-.journeyHeading p {
-  margin-top: 0.75rem;
-  font-size: 1.0625rem;
-}
-.route {
-  position: relative;
-  height: 2.75rem;
-  margin: clamp(2rem, 4vw, 3rem) 0 1.5rem;
-}
-.routeTrack {
-  position: absolute;
-  inset: 50% 0 auto;
-  height: 2px;
-  background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
-}
-.routeTrack::after {
-  content: '';
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: calc(var(--p, 1) * 100%);
-  background: linear-gradient(90deg, var(--brand-start), var(--brand-end));
-}
-/* The island travels the route and opens a little more with every step. */
-.routeIsland {
-  --w: calc(3rem + var(--p, 1) * 4.5rem);
-  position: absolute;
-  top: 50%;
-  left: calc(var(--p, 1) * (100% - var(--w)));
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: var(--w);
-  height: calc(1.5rem + var(--p, 1) * 0.6rem);
-  padding-inline: 0.6rem;
-  border-radius: 2rem;
-  background: #000;
-  box-shadow: 0 8px 24px #2a175a33;
-  transform: translateY(-50%);
-}
-.routeIsland i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: #4fd98a;
-  box-shadow: 0 0 10px #4fd98a;
-  animation: pulse 1.8s ease-in-out infinite;
-}
-/* Out of view (Choreography marks the section asleep), the loop holds still. */
-:global([data-asleep]) .routeIsland i {
-  animation-play-state: paused;
-}
-@keyframes pulse {
-  50% {
-    opacity: 0.4;
-  }
-}
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -555,240 +493,702 @@
   padding: 0;
   list-style: none;
 }
-.steps p {
+.step {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5rem;
+  background: var(--surface);
+  overflow: hidden;
+}
+.stepCopy {
+  padding: 1.75rem 1.75rem 2.25rem;
+}
+.stepLabel {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--violet);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.stepCopy h3 {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.stepCopy p {
   max-width: 21rem;
+  margin-top: 0.5rem;
   font-size: 0.9375rem;
   line-height: 1.5;
 }
-.steps strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-.stepGlyph {
-  display: block;
-  margin: 1.25rem 0 0.6rem;
-  color: var(--violet);
-}
-.scene {
+/* A window or a screen rising from the card's lower edge, cut off by it. */
+.stepScene {
   position: relative;
-  aspect-ratio: 4 / 3;
-  border-radius: 1.25rem;
+  flex: none;
+  height: 14.5rem;
+  margin-top: auto;
+}
+.window,
+.display {
+  position: absolute;
+  inset: 0 1.5rem -1.5rem;
   overflow: hidden;
 }
-.scene[data-scene='store'] {
-  background: linear-gradient(160deg, #f1e8ff, #d8c5ff);
+.window {
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px #1d1d1f0f,
+    0 14px 34px #1d1d1f12;
 }
-.scene[data-scene='open'] {
-  background: linear-gradient(165deg, #4a2bb8, #b45bd8 120%);
-}
-.scene[data-scene='tune'] {
-  background: linear-gradient(160deg, #fff1e3, #ffd9c2);
-}
-.stepIndex {
-  position: absolute;
-  z-index: 2;
-  top: 0.9rem;
-  left: 0.9rem;
-  padding: 0.25rem 0.55rem;
-  border-radius: 1rem;
-  background: #ffffffd9;
-  color: var(--ink);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-.screen {
-  position: absolute;
-  inset: 24% 13% -6%;
-  border: 0.4rem solid #1b1b1f;
-  border-bottom: 0;
-  border-radius: 0.9rem 0.9rem 0 0;
-  background: #ffffff8c;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-.screenNotch,
-.openIsland {
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  translate: -50% 0;
-  background: #1b1b1f;
-}
-.screenNotch {
-  width: 24%;
-  height: 0.9rem;
-  border-radius: 0 0 0.45rem 0.45rem;
-}
-.storeBadge {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -40%;
-  padding: 0.4rem 1.1rem;
-  border-radius: 2rem;
-  background: var(--violet);
-  color: #fff;
-  font-size: 0.8125rem;
-  font-weight: 650;
-  box-shadow: 0 10px 24px #7a2df04d;
-}
-.openIsland {
-  z-index: 1;
+.windowBar {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  width: 66%;
-  height: 42%;
-  border-radius: 0 0 1.1rem 1.1rem;
-  background: #000;
-  overflow: hidden;
-  transition:
-    width 1100ms cubic-bezier(0.34, 1.35, 0.5, 1) 550ms,
-    height 1100ms cubic-bezier(0.34, 1.35, 0.5, 1) 550ms;
+  gap: 0.4rem;
+  height: 2.125rem;
+  padding-inline: 0.875rem;
+  border-bottom: 1px solid #ececf0;
 }
-.openIsland i {
-  width: 22%;
-  aspect-ratio: 1;
-  border-radius: 22%;
-  background: linear-gradient(160deg, #ff8a5c, #f5478c);
-  transition: opacity 500ms ease 1100ms;
-}
-.openIsland i:nth-child(2) {
-  background: linear-gradient(160deg, #6dd3ff, #3a7bff);
-}
-.openIsland i:nth-child(3) {
-  background: linear-gradient(160deg, #ffd45c, #ff9a3d);
-}
-.steps li[data-state='waiting'] .openIsland {
-  width: 24%;
-  height: 0.9rem;
-}
-.steps li[data-state='waiting'] .openIsland i {
-  opacity: 0;
-}
-.tuneRows {
-  position: absolute;
-  inset: 26% 16% auto;
-  display: grid;
-  gap: 0.8rem;
-}
-.tuneRows i {
-  position: relative;
-  height: 0.35rem;
-  border-radius: 1rem;
-  background: #1b1b1f26;
-}
-.tuneRows i::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: var(--knob, 30%);
-  width: 0.9rem;
-  height: 0.9rem;
+.windowBar i {
+  width: 0.625rem;
+  height: 0.625rem;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px #0003;
-  translate: -50% -50%;
-  transition: left 1200ms var(--rise) 600ms;
+  background: #ff5f57;
 }
-.tuneRows i:nth-child(1) {
-  --knob: 72%;
+.windowBar i:nth-child(2) {
+  background: #febc2e;
 }
-.tuneRows i:nth-child(2) {
-  --knob: 38%;
+.windowBar i:nth-child(3) {
+  background: #28c840;
 }
-.tuneRows i:nth-child(3) {
-  --knob: 58%;
-}
-.steps li[data-state='waiting'] .tuneRows i::after {
-  left: 10%;
-}
-
-/* ——— Appearance ——— */
-.stageFrame {
-  position: relative;
-  display: grid;
-}
-.stageLayer {
-  grid-area: 1 / 1;
-  opacity: 0;
-  transform: scale(1.025);
-  transition:
-    opacity 600ms ease,
-    transform 1000ms var(--rise);
-}
-.stageLayer[data-active] {
-  opacity: 1;
-  transform: none;
-}
-.stageLayer > div {
-  border: 0;
-  border-radius: 1.5rem;
-  background: var(--surface);
-}
-.lookGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2rem 1rem;
-  margin-top: 1rem;
-}
-.lookTile {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  aspect-ratio: 2.2;
-  padding: 1.25rem 1.35rem;
-  border: 0;
-  border-radius: 1.25rem;
-  text-align: left;
-  opacity: 0.62;
-  filter: saturate(0.7);
-  transition:
-    opacity 300ms ease,
-    filter 300ms ease,
-    transform 600ms var(--rise),
-    box-shadow 300ms ease;
-}
-.lookTile[aria-checked='true'] {
-  opacity: 1;
-  filter: none;
-  box-shadow:
-    0 0 0 3px var(--canvas),
-    0 0 0 5px var(--violet);
-}
-.lookTile:focus-visible {
-  outline-offset: 7px;
-}
-.lookName {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
+.windowBar b {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  color: var(--ink);
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.04em;
 }
-.look .caption {
-  margin-top: 0.9rem;
+.listing {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.25rem 1.125rem 1.125rem;
 }
-.tag {
-  display: inline-block;
-  margin-top: 0.75rem;
-  padding: 0.25rem 0.6rem;
+.listing img {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.listing strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.listing > span > span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+.get {
+  padding: 0.375rem 1.125rem;
   border-radius: 2rem;
   background: #efe6ff;
   color: #5b17c4;
-  font-size: 0.6875rem;
-  font-weight: 650;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  transition:
+    background 160ms ease,
+    transform 250ms var(--motion-settle);
 }
-@media (hover: hover) and (pointer: fine) {
-  .lookTile:hover {
+.get:hover {
+  background: #e3d3ff;
+}
+.get:active {
+  transform: scale(0.96);
+  transition-duration: 120ms;
+}
+.facts {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  margin: 0 1.125rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid #ececf0;
+}
+.facts div + div {
+  padding-left: 0.75rem;
+  border-left: 1px solid #ececf0;
+}
+.facts dt {
+  color: var(--muted);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.facts dd {
+  margin: 0.2rem 0 0;
+  white-space: nowrap;
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+/* The top of a MacBook display: bezel, menu bar, and the island opened by
+   the pointer resting on the notch. */
+.display {
+  border: 0.375rem solid #121215;
+  border-bottom: 0;
+  border-radius: 1.125rem 1.125rem 0 0;
+  background: #24154f;
+  box-shadow: 0 14px 34px #1d1d1f1f;
+}
+.display .wallpaper {
+  width: 210%;
+  left: -96%;
+  top: -18%;
+}
+.menubar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 1.375rem;
+  padding-inline: 0.75rem;
+  background: #120a2a59;
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.menubar b,
+.stageMenubar b {
+  font-weight: 700;
+}
+.clock {
+  margin-left: auto;
+}
+/* An island welded to the top edge: concave fillets flare into the bezel. */
+.hoverIsland::before,
+.hoverIsland::after,
+.island[data-style='notch']::before,
+.island[data-style='notch']::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: var(--flare);
+  height: var(--flare);
+}
+.hoverIsland::before,
+.island[data-style='notch']::before {
+  right: 100%;
+  background: radial-gradient(circle at 0 100%, #0000 calc(var(--flare) - 0.5px), #000 var(--flare));
+}
+.hoverIsland::after,
+.island[data-style='notch']::after {
+  left: 100%;
+  background: radial-gradient(
+    circle at 100% 100%,
+    #0000 calc(var(--flare) - 0.5px),
+    #000 var(--flare)
+  );
+}
+.hoverIsland {
+  --flare: 0.625rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.625rem;
+  width: min(15rem, calc(100% - 6.5rem));
+  height: 6.25rem;
+  padding: 0 1rem 1rem;
+  border-radius: 0 0 1.5rem 1.5rem;
+  background: #000;
+  box-shadow: 0 12px 30px #0a052066;
+}
+.hoverIsland img {
+  width: 3rem;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 1;
+}
+.cursor {
+  position: absolute;
+  top: 0.7rem;
+  left: calc(50% + 3.1rem);
+  width: 0.875rem;
+  height: auto;
+  overflow: visible;
+  fill: #000;
+  stroke: #fff;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 3px #0006);
+}
+.settings {
+  display: grid;
+  margin: 0.875rem;
+  padding-inline: 0.875rem;
+  border-radius: 0.625rem;
+  background: var(--surface);
+}
+.settings > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.5rem;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.settings > span + span {
+  border-top: 1px solid #e3e3e8;
+}
+.segmented {
+  display: flex;
+  padding: 2px;
+  border-radius: 0.4375rem;
+  background: #e3e3e8;
+  font-size: 0.6875rem;
+}
+.segmented > * {
+  padding: 0.1875rem 0.625rem;
+  border-radius: 0.3125rem;
+}
+.segmented b {
+  background: #fff;
+  box-shadow: 0 1px 2px #0000001f;
+  font-weight: 600;
+}
+.segmented span {
+  color: #515154;
+}
+.popup {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  background: #fff;
+  box-shadow:
+    0 0 0 0.5px #0000001f,
+    0 1px 2px #00000014;
+  font-size: 0.6875rem;
+}
+.popup svg {
+  width: 0.4rem;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.toggle {
+  position: relative;
+  width: 1.75rem;
+  height: 1rem;
+  border-radius: 1rem;
+  background: var(--violet);
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: calc(1rem - 4px);
+  height: calc(1rem - 4px);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px #0003;
+}
+.slider {
+  position: relative;
+  width: 6.5rem;
+  height: 0.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, var(--violet) 62%, #d9d9de 62%);
+}
+.slider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 62%;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 0.5px #0000002e,
+    0 1px 3px #00000033;
+  translate: -50% -50%;
+}
+
+/* ——— Appearance ——— */
+/* Framed the way a product page frames one choice: a centred headline, one
+   large screen, the control under it and a caption that answers it. */
+.appearanceHead {
+  max-width: 46rem;
+  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+}
+.appearanceHead h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.04em;
+}
+.appearanceHead p {
+  max-width: 40rem;
+  margin: 1.25rem auto 0;
+  font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+  line-height: 1.45;
+}
+.appearanceHead strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+/* The top of a MacBook display, magnified: bezel down both sides, the picture
+   cut off by the tile's lower edge. Everything on the screen is sized in --u,
+   a fraction of its width, so the picture scales as one. */
+.screenStage {
+  --bezel: clamp(0.4rem, 0.9vw, 0.75rem);
+  padding: var(--bezel) var(--bezel) 0;
+  border-radius: 1.75rem;
+  background: #0b0b0d;
+  overflow: hidden;
+}
+.screen {
+  --u: 0.74cqw;
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 16 / 8.6;
+  border-radius: calc(1.75rem - var(--bezel)) calc(1.75rem - var(--bezel)) 0 0;
+  background: #24154f;
+  overflow: hidden;
+  isolation: isolate;
+}
+.wallpaper {
+  position: absolute;
+  max-width: none;
+  height: auto;
+}
+/* Framed so the moon sits at the island's right edge: half beside it, half
+   seen through it when the island is glass. */
+.screen .wallpaper {
+  width: 142%;
+  left: -42%;
+  top: -21%;
+}
+.stageMenubar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 2.4);
+  height: calc(var(--u) * 3.6);
+  padding-inline: calc(var(--u) * 2.8);
+  background: #120a2a4d;
+  -webkit-backdrop-filter: blur(calc(var(--u) * 3));
+  backdrop-filter: blur(calc(var(--u) * 3));
+  color: #fff;
+  font-size: calc(var(--u) * 1.5);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.8);
+  margin-left: auto;
+}
+.status svg {
+  width: auto;
+  height: calc(var(--u) * 1.5);
+  fill: currentColor;
+}
+/* One island per style, overlapping. CSS holds the resting state; IslandPicker
+   fades the last one out as the chosen one settles in. */
+.island {
+  --flare: calc(var(--u) * 1.6);
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  display: grid;
+  gap: calc(var(--u) * 2.2);
+  width: calc(var(--u) * 58);
+  margin-inline: auto;
+  padding: calc(var(--u) * 3) calc(var(--u) * 3.4);
+  background: #000;
+  color: #fff;
+  transform-origin: 50% 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.012);
+}
+.studio:has(input[value='notch']:checked) .island[data-style='notch'],
+.studio:has(input[value='pill']:checked) .island[data-style='pill'],
+.studio:has(input[value='glass']:checked) .island[data-style='glass'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+@supports not selector(:has(*)) {
+  .island[data-style='notch'] {
     opacity: 1;
-    filter: none;
-    transform: translateY(-3px);
+    visibility: visible;
+    transform: none;
   }
+  .styleCaption[data-style='notch'] {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/* Dynamic Notch hangs from the top edge; its upper band is the camera's. */
+.island[data-style='notch'] {
+  padding-top: calc(var(--u) * 5.4);
+  border-radius: 0 0 calc(var(--u) * 5) calc(var(--u) * 5);
+}
+/* Dynamic Pill and Liquid Glass float just below the edge, rounded all round. */
+.island[data-style='pill'],
+.island[data-style='glass'] {
+  top: calc(var(--u) * 1.2);
+  border-radius: calc(var(--u) * 5.6);
+  box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #0a041e66;
+}
+.island[data-style='glass'] {
+  background: linear-gradient(160deg, #ffffff2e, #ffffff0d 45%, #ffffff1f);
+  -webkit-backdrop-filter: blur(calc(var(--u) * 1.4)) saturate(1.25) brightness(1.08);
+  backdrop-filter: blur(calc(var(--u) * 1.4)) saturate(1.25) brightness(1.08);
+  box-shadow:
+    inset 0 0 0 1px #ffffff2e,
+    inset 1px 1.5px 0 #ffffffa6,
+    inset -1px -1px 0 #ffffff40,
+    inset 0 0 calc(var(--u) * 3) #ffffff14,
+    0 calc(var(--u) * 1.4) calc(var(--u) * 4) #0a041e4d;
+  text-shadow: 0 1px 2px #0a041e40;
+}
+.playerHead {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.8);
+}
+.artwork {
+  flex: none;
+  width: calc(var(--u) * 9);
+  height: calc(var(--u) * 9);
+  border-radius: calc(var(--u) * 1.8);
+  object-fit: cover;
+  object-position: 50% 42%;
+}
+.track {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: calc(var(--u) * 0.3);
+  line-height: 1.2;
+}
+.track b {
+  font-size: calc(var(--u) * 2);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.track span {
+  color: #ffffffa6;
+  font-size: calc(var(--u) * 1.7);
+}
+.wave {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.45);
+  height: calc(var(--u) * 3.2);
+}
+.wave i {
+  width: calc(var(--u) * 0.55);
+  height: 55%;
+  border-radius: 1rem;
+  background: linear-gradient(#ffd27a, #ff8a3d);
+}
+.wave i:nth-child(1) {
+  height: 40%;
+}
+.wave i:nth-child(2) {
+  height: 85%;
+}
+.wave i:nth-child(4) {
+  height: 100%;
+}
+.wave i:nth-child(5) {
+  height: 65%;
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.4);
+  color: #ffffff99;
+  font-size: calc(var(--u) * 1.35);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.progress i {
+  flex: 1;
+  height: calc(var(--u) * 0.6);
+  border-radius: 1rem;
+  background: linear-gradient(90deg, #fff 36%, #ffffff38 36%);
+}
+.transport {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(var(--u) * 6);
+}
+.transport svg {
+  width: calc(var(--u) * 3.2);
+  height: auto;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.transport svg:nth-child(2) {
+  width: calc(var(--u) * 3.6);
+}
+
+/* A segmented control: a platter, and an indicator that slides under the
+   chosen segment. The segments share one width, so the indicator travels by
+   exactly its own. */
+.styleSwitch {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: max-content;
+  min-width: 0;
+  margin: 1.75rem auto 0;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: #e8e8ed;
+}
+.switchIndicator {
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  width: calc((100% - 0.5rem) / 3);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0000000f,
+    0 3px 10px #0000000d;
+  transition: transform 480ms var(--motion-settle);
+}
+.studio:has(input[value='pill']:checked) .switchIndicator {
+  transform: translateX(100%);
+}
+.studio:has(input[value='glass']:checked) .switchIndicator {
+  transform: translateX(200%);
+}
+.styleSwitch label {
+  position: relative;
+  display: block;
+  height: 2.25rem;
+  padding-inline: 1.125rem;
+  border-radius: 999px;
+  color: #515154;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 2.25rem;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+/* The native radio covers its segment, so clicks, focus and arrow keys stay its own. */
+.styleSwitch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.styleSwitch label:has(input:checked),
+.styleSwitch label:hover {
+  color: var(--ink);
+}
+.styleSwitch label:has(input:focus-visible) {
+  outline: 3px solid var(--purple);
+  outline-offset: 2px;
+}
+/* The captions share one cell, so the space never changes height. */
+.styleCaptions {
+  display: grid;
+  max-width: 36rem;
+  margin: 2rem auto 0;
+  text-align: center;
+}
+.styleCaption {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 200ms ease,
+    visibility 0s linear 200ms;
+}
+.studio:has(input[value='notch']:checked) .styleCaption[data-style='notch'],
+.studio:has(input[value='pill']:checked) .styleCaption[data-style='pill'],
+.studio:has(input[value='glass']:checked) .styleCaption[data-style='glass'] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 320ms ease 80ms,
+    visibility 0s;
+}
+.styleCaption h3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.styleCaption p {
+  margin-top: 0.375rem;
+  font-size: 1.0625rem;
+  line-height: 1.47;
+}
+.free {
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.375rem;
+  background: #ececf0;
+  color: #515154;
+  font-family: var(--font-text);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ——— Plans ——— */
@@ -1046,20 +1446,50 @@
     min-height: 20rem;
     order: -1;
   }
+  /* One step per row: its words beside the window rising into the card. */
+  .steps {
+    grid-template-columns: 1fr;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+  .stepCopy {
+    align-self: center;
+  }
+  .stepScene {
+    height: auto;
+    min-height: 13rem;
+    margin-top: 1.75rem;
+  }
+  .screen {
+    --u: 0.95cqw;
+    aspect-ratio: 16 / 10;
+  }
+  /* The wider island would cover the last menus, as the notch hides them. */
+  .stageMenubar > :is(:nth-child(4), :nth-child(5)) {
+    display: none;
+  }
 }
 @media (max-width: 760px) {
   .heroIntro > p:first-child {
     font-size: 0.9375rem;
   }
-  .steps,
-  .lookGrid,
   .figures {
     grid-template-columns: 1fr;
   }
-  .lookTile {
-    aspect-ratio: 3;
+  /* A closer crop on phones, so the island stays legible. */
+  .screen {
+    --u: 1.6cqw;
+    aspect-ratio: 1 / 0.86;
   }
-  .route {
+  .screen .wallpaper {
+    width: 260%;
+    left: -118%;
+    top: -16%;
+  }
+  /* The island spans the bar here, as it would hide its items. */
+  .stageMenubar > * {
     display: none;
   }
 }
@@ -1074,6 +1504,28 @@
   .planColumns {
     grid-template-columns: 1fr;
   }
+  .step {
+    display: flex;
+  }
+  .stepCopy {
+    align-self: auto;
+  }
+  .stepScene {
+    height: 13.5rem;
+    margin-top: auto;
+  }
+  /* Phones name each style by its second word; readers still hear both. */
+  .switchFirst {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .styleSwitch label {
+    padding-inline: 1.375rem;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .unfold,
@@ -1085,6 +1537,9 @@
   }
   .hero {
     height: auto;
+  }
+  .island {
+    transform: none;
   }
   .heroSheen {
     background-position: 0 0;

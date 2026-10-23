@@ -67,7 +67,6 @@ export const customizations = [
     title: 'Dynamic Notch',
     description:
       'Keep your island at the top of your screen. Adjust its size and position to fit the way you work.',
-    slot: 'custom-notch',
     pro: false,
   },
   {
@@ -75,7 +74,6 @@ export const customizations = [
     title: 'Dynamic Pill',
     description:
       'Choose a floating pill layout for a different look, with the same quick access to your everyday tools.',
-    slot: 'custom-pill',
     pro: true,
   },
   {
@@ -83,7 +81,6 @@ export const customizations = [
     title: 'Liquid Glass',
     description:
       'Give your island a translucent finish. Switch themes and choose the look that suits your desktop.',
-    slot: 'custom-glass',
     pro: true,
   },
 ] as const;
