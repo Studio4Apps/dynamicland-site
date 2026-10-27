@@ -12,6 +12,7 @@ import {
 import { product } from '@/content/product';
 import {
   activityLimit,
+  clipLand,
   formatBytes,
   maxBatchFiles,
   noticeLimit,
@@ -28,6 +29,7 @@ import {
   sanitizeName,
   uniqueName,
 } from '@/lib/cloud/files';
+import type { Clip } from '@/lib/cloud/clips';
 import { descendants, itemsFor, liveItems } from '@/lib/cloud/library';
 import type {
   CloudItem,
@@ -42,6 +44,7 @@ import { FileGlyph } from './FileGlyph';
 import { MenuButton, Dialog } from './Overlay';
 import { Sidebar } from './Sidebar';
 import { Browser } from './Browser';
+import { ClipLand } from './ClipLand';
 import { Details, NotificationPanel, Toasts, UploadTray } from './Panels';
 import { PdfView } from './PdfView';
 import { ShareDialog } from './ShareDialog';
@@ -69,9 +72,17 @@ export interface CloudAppProps {
   now: string;
   initialItems: CloudItem[];
   initialNotices: Notice[];
+  initialClips: Clip[];
 }
 
-export function CloudApp({ user, demo, now, initialItems, initialNotices }: CloudAppProps) {
+export function CloudApp({
+  user,
+  demo,
+  now,
+  initialItems,
+  initialNotices,
+  initialClips,
+}: CloudAppProps) {
   // Dates and preferences depend on the viewer's clock, zone and browser, so the library renders after hydration.
   const mounted = useSyncExternalStore(
     subscribeNever,
@@ -83,6 +94,9 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
   );
   const [items, setItems] = useState(initialItems);
   const [notices, setNotices] = useState(initialNotices);
+  const [clips, setClips] = useState(initialClips);
+  // An account setting the Mac and the web share; the server will store it with the account.
+  const [clipKeep, setClipKeep] = useState<number>(clipLand.defaultKeep);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [activity, setActivity] = useState<Activity[]>(() => [
@@ -643,9 +657,10 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
 
   // ——— Drag and drop from the desktop ———
   const hasFiles = (event: DragEvent) => Array.from(event.dataTransfer.types).includes('Files');
+  const noDrop = locked || section === 'deleted' || section === 'clipland';
   const dropHandlers = {
     onDragEnter: (event: DragEvent) => {
-      if (!hasFiles(event) || locked || section === 'deleted') return;
+      if (!hasFiles(event) || noDrop) return;
       event.preventDefault();
       dragDepth.current += 1;
       setDragging(true);
@@ -653,7 +668,7 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
     onDragOver: (event: DragEvent) => {
       if (!hasFiles(event)) return;
       event.preventDefault();
-      event.dataTransfer.dropEffect = section === 'deleted' || locked ? 'none' : 'copy';
+      event.dataTransfer.dropEffect = noDrop ? 'none' : 'copy';
     },
     onDragLeave: (event: DragEvent) => {
       if (!hasFiles(event)) return;
@@ -665,7 +680,7 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
       event.preventDefault();
       dragDepth.current = 0;
       setDragging(false);
-      if (section === 'deleted' || locked) return;
+      if (noDrop) return;
       startUpload(Array.from(event.dataTransfer.files));
     },
   };
@@ -799,9 +814,27 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
           level={level}
           onStorage={actions.showStorage}
           onDropFiles={(id, picked) => startUpload(picked, id)}
+          clipCount={clips.length}
         />
         <main id="main" className={styles.main} aria-busy={!mounted}>
-          {mounted ? (
+          {!mounted ? (
+            <div className={styles.loading} role="status">
+              <span className={styles.spinner} aria-hidden="true" />
+              <span>Opening CloudLand…</span>
+            </div>
+          ) : section === 'clipland' ? (
+            <ClipLand
+              clips={clips}
+              onClips={setClips}
+              keep={clipKeep}
+              onKeep={setClipKeep}
+              now={clock}
+              demo={demo}
+              hidePreviews={preferences.hidePreviews}
+              searchRef={searchInput}
+              onToast={toast}
+            />
+          ) : (
             <Browser
               items={items}
               visible={visible}
@@ -823,14 +856,9 @@ export function CloudApp({ user, demo, now, initialItems, initialNotices }: Clou
               onToggleDetails={() => setDetailsOpen((value) => !value)}
               detailsOpen={detailsOpen}
             />
-          ) : (
-            <div className={styles.loading} role="status">
-              <span className={styles.spinner} aria-hidden="true" />
-              <span>Opening CloudLand…</span>
-            </div>
           )}
         </main>
-        {detailsOpen && mounted && (
+        {detailsOpen && mounted && section !== 'clipland' && (
           <Details
             items={items}
             selected={selected}

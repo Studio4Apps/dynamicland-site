@@ -24,6 +24,17 @@
   --glyph-fold: #f2f2f5;
   --glyph-edge: #d2d2d7;
   --glyph-line: #d8d8de;
+  --clip-card: #fff;
+  --clip-ring: rgb(0 0 0 / 7%);
+  --clip-shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 10px 24px -14px rgb(0 0 0 / 30%);
+  --clip-strong: #1d1d1f;
+  --clip-text: rgb(29 29 31 / 86%);
+  --clip-faint: rgb(29 29 31 / 46%);
+  --clip-check-a: #f0f0f3;
+  --clip-check-b: #fafafb;
+  --clip-button: rgb(0 0 0 / 5%);
+  --clip-button-ring: rgb(0 0 0 / 8%);
+  --clip-button-ink: rgb(29 29 31 / 60%);
   color-scheme: light;
   position: fixed;
   inset: 0;
@@ -59,6 +70,17 @@
   --glyph-fold: #dcdce1;
   --glyph-edge: #ffffff00;
   --glyph-line: #c7c7cc;
+  --clip-card: #121214;
+  --clip-ring: rgb(255 255 255 / 10%);
+  --clip-shadow: 0 12px 28px -12px rgb(0 0 0 / 75%);
+  --clip-strong: rgb(255 255 255 / 92%);
+  --clip-text: rgb(255 255 255 / 84%);
+  --clip-faint: rgb(255 255 255 / 43%);
+  --clip-check-a: rgb(255 255 255 / 4.5%);
+  --clip-check-b: rgb(255 255 255 / 1.5%);
+  --clip-button: rgb(0 0 0 / 26%);
+  --clip-button-ring: rgb(255 255 255 / 22%);
+  --clip-button-ink: rgb(255 255 255 / 74%);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
@@ -87,6 +109,17 @@
     --glyph-fold: #dcdce1;
     --glyph-edge: #ffffff00;
     --glyph-line: #c7c7cc;
+    --clip-card: #121214;
+    --clip-ring: rgb(255 255 255 / 10%);
+    --clip-shadow: 0 12px 28px -12px rgb(0 0 0 / 75%);
+    --clip-strong: rgb(255 255 255 / 92%);
+    --clip-text: rgb(255 255 255 / 84%);
+    --clip-faint: rgb(255 255 255 / 43%);
+    --clip-check-a: rgb(255 255 255 / 4.5%);
+    --clip-check-b: rgb(255 255 255 / 1.5%);
+    --clip-button: rgb(0 0 0 / 26%);
+    --clip-button-ring: rgb(255 255 255 / 22%);
+    --clip-button-ink: rgb(255 255 255 / 74%);
     color-scheme: dark;
   }
 }
@@ -1027,7 +1060,7 @@
 .menu button > svg:first-child {
   color: var(--c-accent-ink);
 }
-.menu button > span:nth-of-type(1) {
+.menu button > span:not(.menuGap) {
   flex: 1;
 }
 .menu button:hover:not(:disabled),

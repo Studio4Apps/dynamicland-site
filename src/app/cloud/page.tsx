@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { CloudApp } from '@/components/cloud/CloudApp';
 import { getCloudSession } from '@/lib/cloud/session';
-import { demoLibrary } from '@/lib/cloud/demo';
+import { demoClips, demoLibrary } from '@/lib/cloud/demo';
 import { signInPath } from '@/lib/cloud/policy';
 
 export const metadata = { title: { absolute: 'CloudLand' } };
@@ -17,6 +17,7 @@ export default async function CloudPage() {
       now={now}
       initialItems={library.items}
       initialNotices={library.notices}
+      initialClips={session.demo ? demoClips(now) : []}
     />
   );
 }

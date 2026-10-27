@@ -26,6 +26,7 @@ export function Sidebar({
   level,
   onStorage,
   onDropFiles,
+  clipCount,
 }: {
   open: boolean;
   onClose: () => void;
@@ -38,6 +39,7 @@ export function Sidebar({
   level: 'ok' | 'warning' | 'critical' | 'full';
   onStorage: () => void;
   onDropFiles: (folderId: string, files: File[]) => void;
+  clipCount: number;
 }) {
   const [target, setTarget] = useState<string | null>(null);
   const favorites = liveItems(items).filter((item) => item.category === 'folder' && item.starred);
@@ -70,6 +72,20 @@ export function Sidebar({
               </button>
             </li>
           ))}
+        </ul>
+        <h2 className={styles.navHeading}>DynamicLand</h2>
+        <ul className={styles.navList}>
+          <li>
+            <button
+              type="button"
+              aria-current={section === 'clipland' ? 'page' : undefined}
+              onClick={() => onNavigate('clipland')}
+            >
+              <Icon name="clipboard" size={19} />
+              <span>ClipLand</span>
+              {clipCount > 0 && <span className={styles.count}>{clipCount}</span>}
+            </button>
+          </li>
         </ul>
         <h2 className={styles.navHeading}>Favorites</h2>
         <ul className={styles.navList}>

@@ -9,10 +9,19 @@ import {
   expiryLabels,
   quickViewKind,
 } from '../../src/lib/cloud/files';
-import { formatBytes, plan, storageLevel } from '../../src/lib/cloud/limits';
+import { clipLand, formatBytes, plan, storageLevel } from '../../src/lib/cloud/limits';
 import { cloudDemoEnabled, isCloudPath } from '../../src/lib/cloud/policy';
 import { liveItems } from '../../src/lib/cloud/library';
-import { demoLibrary } from '../../src/lib/cloud/demo';
+import { demoClips, demoLibrary } from '../../src/lib/cloud/demo';
+import {
+  clipAge,
+  clipDetail,
+  clipTone,
+  keepRecent,
+  visibleClips,
+  webLink,
+  type Clip,
+} from '../../src/lib/cloud/clips';
 
 const char = (code: number) => String.fromCharCode(code);
 
@@ -108,5 +117,54 @@ test('items inside a deleted folder are hidden from live views', () => {
   assert.equal(
     liveItems(trashed).some((item) => item.parentId === documents.id),
     false,
+  );
+});
+
+const nowIso = '2026-10-24T12:00:00.000Z';
+test('ClipLand keeps the most recent clips and every pinned one', () => {
+  const clips = demoClips(nowIso);
+  const kept = keepRecent(clips, 5);
+  assert.equal(kept.filter((clip) => !clip.pinned).length, 5);
+  assert.equal(kept.filter((clip) => clip.pinned).length, 2);
+  // Newest first, and the trimmed ones are the oldest unpinned clips.
+  assert.deepEqual(
+    kept.map((clip) => clip.copiedAt),
+    [...kept.map((clip) => clip.copiedAt)].sort().reverse(),
+  );
+  assert.equal(
+    kept.some((clip) => clip.text === 'node scripts/render-scenes.mjs'),
+    false,
+  );
+  assert.ok(Math.max(...clipLand.keepChoices) === clipLand.defaultKeep);
+});
+test('ClipLand filters and search match the Mac shelf', () => {
+  const clips = demoClips(nowIso);
+  assert.equal(visibleClips(clips, 'links', '').length, 2);
+  assert.equal(visibleClips(clips, 'pinned', '').length, 2);
+  assert.ok(visibleClips(clips, 'all', 'XCODE').every((clip) => clip.source?.name === 'Xcode'));
+  assert.equal(visibleClips(clips, 'colors', 'cabin').length, 0);
+});
+test('clip headers stay readable and only web links open', () => {
+  const clip = (color: string): Clip => ({
+    id: 'c',
+    kind: 'text',
+    text: 'hi',
+    pinned: false,
+    copiedAt: nowIso,
+    source: { name: 'App', bundleId: 'a', color },
+  });
+  // White is dimmed like on the Mac and gets dark text; a deep blue keeps white text.
+  assert.deepEqual(clipTone(clip('#ffffff')), { color: '#b8b8b8', ink: 'dark' });
+  assert.deepEqual(clipTone(clip('#1e7cf2')), { color: '#1e7cf2', ink: 'light' });
+  // A malformed colour falls back to the kind's own.
+  assert.equal(clipTone(clip('url(https://x)')).color, '#2e85f5');
+  assert.equal(webLink('javascript:alert(1)'), null);
+  assert.equal(webLink('file:///etc/passwd'), null);
+  assert.equal(webLink('https://example.com/a')?.hostname, 'example.com');
+  assert.equal(clipAge('2026-10-24T11:59:30.000Z', Date.parse(nowIso)), 'now');
+  assert.equal(clipAge('2026-10-24T11:00:00.000Z', Date.parse(nowIso)), '1 hour ago');
+  assert.equal(
+    clipDetail({ ...clip('#000000'), kind: 'color', text: '#7811DE' }),
+    'RGB 120 17 222',
   );
 });

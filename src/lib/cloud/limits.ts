@@ -22,6 +22,26 @@ export const activityLimit = 50;
 export const noticeLimit = 50;
 export const autoLockChoices = [5, 15, 30, 60] as const;
 
+/**
+ * ClipLand, the copies synced from DynamicLand's clipboard. Proposed limits (backend doc,
+ * section 6): clips don't count towards the storage quota because a history is bounded.
+ */
+export const clipLand = {
+  /** How many recent clips to keep. Pinned clips are kept on top of this, as on the Mac. */
+  keepChoices: [5, 10, 20, 30] as const,
+  defaultKeep: 30,
+  maxPinned: 10,
+  /** Text up to this size travels with the clip row; longer text goes to R2 like a picture. */
+  inlineTextBytes: 32_000,
+  /** The Mac app's own cap for a text clip. */
+  maxTextBytes: 512_000,
+  /** Pictures above this are scaled down on the Mac before upload. */
+  maxImageBytes: 5_000_000,
+  thumbnailPixels: 520,
+  /** Unpinned clips older than this are removed by the daily job. */
+  retentionDays: 7,
+} as const;
+
 export function storageLevel(used: number, quota: number): 'ok' | 'warning' | 'critical' | 'full' {
   const ratio = quota > 0 ? used / quota : 1;
   if (ratio >= 1) return 'full';

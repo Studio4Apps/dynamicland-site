@@ -1,3 +1,4 @@
+import type { Clip, ClipSource } from './clips';
 import { categorize } from './files';
 import type { CloudItem, Notice, ShareSettings } from './types';
 
@@ -100,4 +101,98 @@ export function demoLibrary(nowIso: string): { items: CloudItem[]; notices: Noti
     },
   ];
   return { items, notices };
+}
+
+const apps = {
+  safari: { name: 'Safari', bundleId: 'com.apple.Safari', color: '#1e7cf2' },
+  notes: { name: 'Notes', bundleId: 'com.apple.Notes', color: '#e3a90f' },
+  photos: { name: 'Photos', bundleId: 'com.apple.Photos', color: '#f28a0c' },
+  pages: { name: 'Pages', bundleId: 'com.apple.iWork.Pages', color: '#f5820d' },
+  dynamicland: { name: 'DynamicLand', bundleId: 'Amro.DynamicLand', color: '#7811de' },
+  xcode: { name: 'Xcode', bundleId: 'com.apple.dt.Xcode', color: '#1b6fe0' },
+  finder: { name: 'Finder', bundleId: 'com.apple.finder', color: '#2f8ff0' },
+  messages: { name: 'Messages', bundleId: 'com.apple.MobileSMS', color: '#2fb64f' },
+  mail: { name: 'Mail', bundleId: 'com.apple.mail', color: '#1a7ff0' },
+  terminal: { name: 'Terminal', bundleId: 'com.apple.Terminal', color: '#3a3a3c' },
+} satisfies Record<string, ClipSource>;
+
+/** Sample ClipLand history for local builds: one of each kind, the way the Mac would sync them. */
+export function demoClips(nowIso: string): Clip[] {
+  const now = Date.parse(nowIso);
+  const ago = (minutes: number) => new Date(now - minutes * 60_000).toISOString();
+  let n = 0;
+  const clip = (
+    minutes: number,
+    fields: Omit<Clip, 'id' | 'copiedAt' | 'pinned'>,
+    pinned = false,
+  ) => ({
+    id: `clip-${++n}`,
+    copiedAt: ago(minutes),
+    pinned,
+    ...fields,
+  });
+  return [
+    clip(0.4, {
+      kind: 'url',
+      text: 'https://developer.apple.com/design/human-interface-guidelines/',
+      title: 'Human Interface Guidelines',
+      source: apps.safari,
+    }),
+    clip(3, {
+      kind: 'text',
+      text: 'Pick-up: Jetty 4, North Shore\nThe boat leaves at 6:30 pm.\nBring the lantern from the cabin porch.',
+      source: apps.notes,
+    }),
+    clip(125, {
+      kind: 'image',
+      text: '',
+      image: { src: '/media/invite-island-840.webp', width: 840, height: 1120 },
+      source: apps.photos,
+    }),
+    clip(370, {
+      kind: 'richText',
+      text: 'Make a little room for a better everyday. DynamicLand turns the notch into a calm place for the things you reach for most: music, timers, files and the last thing you copied.',
+      source: apps.pages,
+    }),
+    clip(1_300, { kind: 'color', text: '#7811DE', source: apps.dynamicland }),
+    clip(1_500, {
+      kind: 'code',
+      text: 'struct ClipCard: View {\n    let clip: Clip\n\n    var body: some View {\n        Text(clip.title)\n            .font(.headline)\n    }\n}',
+      source: apps.xcode,
+    }),
+    clip(4_400, {
+      kind: 'file',
+      text: 'Mac backup.zip',
+      title: 'Mac backup.zip',
+      files: [{ name: 'Mac backup.zip', size: 980 * MB }],
+      source: apps.finder,
+    }),
+    clip(4_500, {
+      kind: 'text',
+      text: 'Saw the lake at dusk from the jetty, and the cabin light was already on. Send me the photos when you’re back?',
+      source: apps.messages,
+    }),
+    clip(
+      5_900,
+      {
+        kind: 'image',
+        text: '',
+        image: { src: '/media/pro-voyage.webp', width: 1086, height: 1448 },
+        source: apps.safari,
+      },
+      true,
+    ),
+    clip(
+      7_300,
+      {
+        kind: 'url',
+        text: 'https://apps.apple.com/app/id6785289988',
+        title: 'DynamicLand on the Mac App Store',
+        source: apps.mail,
+      },
+      true,
+    ),
+    clip(8_200, { kind: 'color', text: '#27F54D', source: apps.safari }),
+    clip(8_600, { kind: 'code', text: 'node scripts/render-scenes.mjs', source: apps.terminal }),
+  ];
 }

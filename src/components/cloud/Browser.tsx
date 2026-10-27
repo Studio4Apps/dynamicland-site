@@ -11,7 +11,7 @@ import {
   type SortKey,
 } from '@/lib/cloud/library';
 import { extensionOf } from '@/lib/cloud/files';
-import type { CloudItem, Section } from '@/lib/cloud/types';
+import type { CloudItem, FileSection } from '@/lib/cloud/types';
 import { FileGlyph, kindLabel } from './FileGlyph';
 import { Icon, type IconName } from './Icons';
 import { ContextMenu, MenuButton, type MenuItems } from './Overlay';
@@ -37,7 +37,7 @@ export interface BrowserActions {
   showStorage: () => void;
 }
 
-const titles: Record<Section, { label: string; icon: IconName }> = {
+const titles: Record<FileSection, { label: string; icon: IconName }> = {
   recents: { label: 'Recents', icon: 'clock' },
   browse: { label: 'Browse', icon: 'folder' },
   shared: { label: 'Shared', icon: 'people' },
@@ -77,7 +77,7 @@ export function Browser({
 }: {
   items: CloudItem[];
   visible: CloudItem[];
-  section: Section;
+  section: FileSection;
   folder?: CloudItem;
   query: string;
   onQuery: (value: string) => void;
@@ -716,7 +716,7 @@ function Empty({
   inFolder,
   actions,
 }: {
-  section: Section;
+  section: FileSection;
   query: string;
   inFolder: boolean;
   actions: BrowserActions;

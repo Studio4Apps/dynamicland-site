@@ -17,7 +17,13 @@ const tints: Record<FileCategory, string> = {
 };
 
 /** A drawn stand-in for a thumbnail. Real previews only ever come from files chosen in this tab. */
-export function FileGlyph({ item, size = 'large' }: { item: CloudItem; size?: 'large' | 'small' }) {
+export function FileGlyph({
+  item,
+  size = 'large',
+}: {
+  item: Pick<CloudItem, 'name' | 'category' | 'localUrl'>;
+  size?: 'large' | 'small';
+}) {
   const tint = tints[item.category];
   const small = size === 'small';
   if (item.category === 'image' && item.localUrl)

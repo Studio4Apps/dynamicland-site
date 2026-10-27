@@ -79,6 +79,8 @@ export function itemsFor(
       return live.filter((item) => item.starred);
     case 'deleted':
       return items.filter((item) => item.deletedAt);
+    case 'clipland':
+      return [];
   }
 }
 

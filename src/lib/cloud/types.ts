@@ -46,4 +46,6 @@ export interface Notice {
   at: string;
   read: boolean;
 }
-export type Section = 'recents' | 'browse' | 'shared' | 'starred' | 'deleted';
+export type Section = 'recents' | 'browse' | 'shared' | 'starred' | 'deleted' | 'clipland';
+/** The sections that list files; ClipLand has its own view. */
+export type FileSection = Exclude<Section, 'clipland'>;
