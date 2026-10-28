@@ -63,10 +63,6 @@
   background: var(--surface);
   border-radius: var(--radius);
 }
-.notice {
-  border-left: 2px solid #caa3ed;
-  padding-left: 1.25rem;
-}
 @media (max-width: 600px) {
   .page {
     padding-block: 2rem 4rem;
