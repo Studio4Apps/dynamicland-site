@@ -14,6 +14,9 @@ export const navigationLinks = [
   { href: '/support', label: 'Support' },
 ];
 
+// Privacy and Terms sit with Support, as they do under “Here to help” in the footer.
+const supportPaths = ['/support', '/privacy', '/terms'];
+
 export function MorphNavigation() {
   const ref = useRef<HTMLElement>(null);
   const pathname = usePathname();
@@ -23,7 +26,7 @@ export function MorphNavigation() {
     const indicator = nav.querySelector<HTMLElement>('[data-nav-indicator]')!;
     const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a'));
     const abort = new AbortController();
-    let selected = pathname === '/support' ? 3 : 0;
+    let selected = supportPaths.includes(pathname) ? 3 : 0;
     let applied = -1;
     let preview: number | null = null;
     let placed = false;
@@ -88,7 +91,7 @@ export function MorphNavigation() {
       selected =
         navigating !== null
           ? navigating
-          : pathname === '/support'
+          : supportPaths.includes(pathname)
             ? 3
             : pathname !== '/'
               ? 0
