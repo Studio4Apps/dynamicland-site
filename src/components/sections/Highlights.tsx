@@ -26,7 +26,7 @@ export function Highlights() {
           content: (
             <>
               <MediaFrame id={item.slot} />
-              <div className={galleryStyles.highlightCopy} data-gallery-caption>
+              <div className={galleryStyles.highlightCopy}>
                 <span className="eyebrow">{item.tag}</span>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>

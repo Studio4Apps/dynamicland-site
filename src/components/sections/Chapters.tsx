@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import type { CSSProperties } from 'react';
 import { AppStoreBadge } from '@/components/DownloadButton';
 import { ProBadge } from '@/components/ProBadge';
 import { Disclosure } from '@/components/interactive/Disclosure';
@@ -16,8 +15,6 @@ type Capability = {
   label: string;
   text: string;
   tone: string;
-  glyph?: GlyphName;
-  figure?: { value: number; unit: string };
   image?: string;
 };
 const capabilities: Capability[] = [
@@ -26,15 +23,12 @@ const capabilities: Capability[] = [
     label: 'Home.',
     text: 'Calendar, weather, battery, photos, and more, arranged around your day.',
     tone: 'violet',
-    glyph: 'widgets',
   },
   {
     title: 'Keep the music playing.',
     label: 'Now Playing.',
     text: 'Pause, skip, and switch outputs for Apple Music and Spotify without leaving your work.',
     tone: 'midnight',
-    glyph: 'music',
-    figure: { value: 2, unit: 'apps' },
   },
   {
     title: 'Life moves. Stay in the loop.',
@@ -48,22 +42,18 @@ const capabilities: Capability[] = [
     label: 'Clipboard.',
     text: 'Return to your history, preview an item, and copy it again. Pin the things you reuse.',
     tone: 'sun',
-    glyph: 'clipboard',
   },
   {
     title: 'A place to drop it.',
     label: 'File Tray.',
     text: 'Drag files to the notch, keep them in the tray, and drag them out when you need them.',
     tone: 'ocean',
-    glyph: 'tray',
   },
   {
     title: 'Catch the moment.',
     label: 'Tools.',
     text: 'Set a timer, record a voice memo, or pick any color straight from your screen.',
     tone: 'berry',
-    glyph: 'timer',
-    figure: { value: 3, unit: 'tools' },
   },
 ];
 
@@ -78,23 +68,11 @@ export function Capabilities() {
         <div className={styles.capabilityGrid} data-reveal-group="110">
           {capabilities.map((item) => (
             <article key={item.label} className={styles.capability}>
-              <div className={styles.tile} data-tone={item.tone} data-draw>
+              <div className={styles.tile} data-tone={item.tone}>
                 {item.image && (
                   <Image src={item.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" />
                 )}
                 <h3>{item.title}</h3>
-                {item.glyph && (
-                  <span className={item.figure ? styles.tileGlyphSmall : styles.tileGlyph}>
-                    <Glyph name={item.glyph} size={item.figure ? 28 : 64} />
-                  </span>
-                )}
-                {item.figure && (
-                  <p className={styles.tileFigure}>
-                    <span data-count={item.figure.value}>{item.figure.value}</span>
-                    <small>{item.figure.unit}</small>
-                  </p>
-                )}
-                {item.image && <MiniBubbles />}
               </div>
               <p className={styles.caption}>
                 <strong>{item.label}</strong> {item.text}
@@ -104,20 +82,6 @@ export function Capabilities() {
         </div>
       </div>
     </section>
-  );
-}
-
-// Three live activities, the way MiniLand keeps them beside the notch.
-function MiniBubbles() {
-  return (
-    <span className={styles.bubbles} aria-hidden="true">
-      <span className={styles.notchPill} />
-      {['timer', 'wave', 'download'].map((name, i) => (
-        <span key={name} className={styles.bubble} style={{ '--b': i } as CSSProperties}>
-          <Glyph name={name as GlyphName} size={16} />
-        </span>
-      ))}
-    </span>
   );
 }
 

@@ -47,7 +47,6 @@ export function createGalleryController(
   let measuredWidth = 0,
     measuredScrollWidth = 0;
   let previousState: GalleryState | undefined;
-  let captionAnimation: Animation | undefined;
   let travel: {
     from: number;
     to: number;
@@ -111,20 +110,7 @@ export function createGalleryController(
 
   function render() {
     if (!targets.length || needsMeasure) return;
-    const selected = nearest();
-    if (selected !== current) {
-      current = selected;
-      captionAnimation?.cancel();
-      const caption = cards[current]?.querySelector<HTMLElement>('[data-gallery-caption]');
-      if (caption?.animate && !reduced.matches && !document.hidden)
-        captionAnimation = caption.animate(
-          [
-            { opacity: 0.6, transform: 'translateY(6px)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 420, easing: 'cubic-bezier(.22,.68,0,1)' },
-        );
-    }
+    current = nearest();
     // Position weights sum to one: the capsule and playback button never move.
     let lower = 0;
     while (lower < targets.length - 1 && track.scrollLeft >= targets[lower + 1]) lower++;
@@ -223,7 +209,6 @@ export function createGalleryController(
     inView = visible > 0 && box.right > 0 && box.left < innerWidth;
     if (!inView) {
       completeTravel();
-      captionAnimation?.cancel();
     }
   };
   function measure() {
@@ -415,7 +400,6 @@ export function createGalleryController(
     if (reduced.matches) {
       intent = 'pause';
       completeTravel();
-      captionAnimation?.cancel();
     }
     reconcile();
   });
@@ -423,7 +407,6 @@ export function createGalleryController(
     sample(performance.now());
     if (document.hidden) {
       completeTravel();
-      captionAnimation?.cancel();
       release();
     }
     updateView();
@@ -462,7 +445,6 @@ export function createGalleryController(
     disposed = true;
     abort.abort();
     cancelAnimationFrame(frame);
-    captionAnimation?.cancel();
     resizeObserver?.disconnect();
     viewObserver?.disconnect();
     if (drag?.active && track.hasPointerCapture(drag.pointer))
