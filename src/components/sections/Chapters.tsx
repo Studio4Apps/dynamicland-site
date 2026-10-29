@@ -4,7 +4,7 @@ import { AppStoreBadge } from '@/components/DownloadButton';
 import { ProBadge } from '@/components/ProBadge';
 import { Disclosure } from '@/components/interactive/Disclosure';
 import { MediaFrame } from '@/components/media/MediaFrame';
-import { Arrow, Check } from '@/components/Icon';
+import { Arrow } from '@/components/Icon';
 import { media } from '@/content/media';
 import { faqs, product } from '@/content/product';
 import { Glyph, type GlyphName } from './Glyph';
@@ -137,7 +137,7 @@ export function MusicStory() {
           {musicNotes.map((note) => (
             <div key={note.title}>
               <span
-                className={styles.noteIcon}
+                className={styles.appIcon}
                 style={{ '--tint-top': note.tint[0], '--tint-bottom': note.tint[1] } as CSSProperties}
                 data-draw
               >
@@ -353,6 +353,87 @@ function SettingsScene() {
   );
 }
 
+// What Pro adds, from the app's own paywall.
+const proFeatures: {
+  glyph: GlyphName;
+  tint: [string, string];
+  title: string;
+  text: string;
+}[] = [
+  {
+    glyph: 'widgets',
+    tint: ['#a78bfa', '#7c3aed'],
+    title: 'The full Home',
+    text: 'Every widget, on a grid up to 12 × 8. Timers, notes, weather, and more.',
+  },
+  {
+    glyph: 'spark',
+    tint: ['#f472b6', '#c026d3'],
+    title: 'Apple Intelligence',
+    text: 'An on-device assistant, a click away at the top of your screen. In beta.',
+  },
+  {
+    glyph: 'apps',
+    tint: ['#38bdf8', '#2563eb'],
+    title: 'Launchpad',
+    text: 'Your widgets, apps, search, and files, together in one place.',
+  },
+  {
+    glyph: 'bubbles',
+    tint: ['#fb923c', '#ea580c'],
+    title: 'All of MiniLand',
+    text: 'Battery, headphones, timers, transfers, AI activity, and alerts beside the notch.',
+  },
+  {
+    glyph: 'lyrics',
+    tint: ['#ff6b8b', '#f2295b'],
+    title: 'Live Lyrics',
+    text: 'Synced lyrics with effects, volume control, and hi-res, animated Apple Music covers.',
+  },
+  {
+    glyph: 'clipboard',
+    tint: ['#facc15', '#eab308'],
+    title: 'A deeper clipboard',
+    text: 'Keep up to 50 clips, and search every one of them.',
+  },
+  {
+    glyph: 'tray',
+    tint: ['#2dd4bf', '#0d9488'],
+    title: 'File Tray, unlimited',
+    text: 'As many collections as you like, and convert files to another format.',
+  },
+  {
+    glyph: 'send',
+    tint: ['#60a5fa', '#4f46e5'],
+    title: 'LocalSend',
+    text: 'Send and receive files with devices nearby, straight from the notch.',
+  },
+  {
+    glyph: 'calendar',
+    tint: ['#f87171', '#dc2626'],
+    title: 'Google & Outlook',
+    text: 'Connect your calendars and keep them in sync, next to the rest of your day.',
+  },
+  {
+    glyph: 'pill',
+    tint: ['#c084fc', '#9333ea'],
+    title: 'Every style',
+    text: 'The floating Dynamic Pill, with Liquid Glass and Prism themes.',
+  },
+  {
+    glyph: 'displays',
+    tint: ['#4ade80', '#16a34a'],
+    title: 'Every display',
+    text: 'A notch on every screen you connect, not just the first.',
+  },
+  {
+    glyph: 'command',
+    tint: ['#94a3b8', '#475569'],
+    title: 'Global shortcuts',
+    text: 'A hotkey for every surface, from Home and Music to the Assistant.',
+  },
+];
+
 export function Plans() {
   return (
     <section id="pricing" className={styles.plans} aria-labelledby="pricing-title">
@@ -364,44 +445,16 @@ export function Plans() {
               <br />
               <span className="sweep">Go further</span> with Pro.
             </h2>
-            <p>Make room for DynamicLand today. Add Pro when you’re ready for more.</p>
-            <div className={styles.planColumns}>
-              <div>
-                <h3>Free</h3>
-                <ul>
-                  {[
-                    'Music controls at a glance',
-                    'Clipboard history & File Tray',
-                    'A notch that feels like yours',
-                  ].map((item) => (
-                    <li key={item}>
-                      <Check />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3>
-                  <ProBadge />
-                </h3>
-                <ul>
-                  {[
-                    'Full Home widgets & MiniLand',
-                    'Synced lyrics & clipboard search',
-                    'More tools, styles & displays',
-                  ].map((item) => (
-                    <li key={item}>
-                      <Check />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <p>
+              The notch, your music, clipboard, and files are yours for free. Pro unlocks
+              everything else: every widget, every surface, every display.
+            </p>
             <div className={styles.planActions}>
               <AppStoreBadge />
             </div>
+            <p className={styles.planPromise}>
+              <ProBadge /> Every new Pro feature is included at no extra cost.
+            </p>
           </div>
           <div className={styles.planArt} data-header-tone="dark">
             <Image
@@ -415,6 +468,24 @@ export function Plans() {
             </span>
           </div>
         </article>
+        <h3 className={styles.proHeading} data-reveal>
+          What Pro adds
+        </h3>
+        <ul className={styles.proGrid} data-reveal-group="60">
+          {proFeatures.map((item) => (
+            <li key={item.title}>
+              <span
+                className={styles.appIcon}
+                style={{ '--tint-top': item.tint[0], '--tint-bottom': item.tint[1] } as CSSProperties}
+                data-draw
+              >
+                <Glyph name={item.glyph} size={24} />
+              </span>
+              <h4>{item.title}</h4>
+              <p>{item.text}</p>
+            </li>
+          ))}
+        </ul>
         <p className={styles.planNote}>
           Pro features require a subscription. See the app or App Store for current pricing.
         </p>

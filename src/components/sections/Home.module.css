@@ -265,8 +265,8 @@
   gap: 2rem;
   margin-top: 3rem;
 }
-/* Each glyph sits in its own rounded tile, like an app on the Dock. */
-.noteIcon {
+/* A glyph in its own rounded tile, like an app on the Dock. */
+.appIcon {
   display: grid;
   place-items: center;
   width: 2.75rem;
@@ -274,12 +274,10 @@
   margin-bottom: 1rem;
   border-radius: 0.75rem;
   background: linear-gradient(180deg, var(--tint-top), var(--tint-bottom));
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    0 6px 16px -6px var(--tint-bottom);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 28%);
   color: #fff;
 }
-.noteIcon svg {
+.appIcon svg {
   stroke-width: 2;
 }
 .musicNotes p {
@@ -1124,48 +1122,24 @@
   margin-top: 1rem;
   max-width: 26rem;
 }
-.planColumns {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem;
-  margin: 2.25rem 0;
-  padding-top: 1.75rem;
-  border-top: 1px solid var(--line);
-}
-.planColumns h3 {
-  display: flex;
-  align-items: center;
-  height: 1.75rem;
-  margin-bottom: 0.9rem;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.planColumns h3 img {
-  font-size: 0.875rem;
-}
-.planColumns ul {
-  display: grid;
-  gap: 0.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.planColumns li {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-  line-height: 1.4;
-}
-.planColumns li svg {
-  flex: none;
-  color: var(--violet);
-}
 .planActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 1.5rem;
+  margin-top: 2.25rem;
+}
+.planPromise {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.planPromise img {
+  width: auto;
+  height: 1.375rem;
 }
 .planArt {
   position: relative;
@@ -1176,8 +1150,43 @@
 .planArt img {
   object-fit: cover;
 }
+.proHeading {
+  margin: clamp(3.5rem, 7vw, 5.5rem) 0 2rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.proGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Each feature sits on its own soft card. */
+.proGrid li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--surface);
+}
+.proGrid h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.proGrid p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
 .planNote {
-  margin-top: 1.25rem;
+  margin-top: 3.5rem;
   color: var(--muted);
   font-size: 0.8125rem;
   text-align: center;
@@ -1346,7 +1355,8 @@
   .capabilityGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .musicNotes {
+  .musicNotes,
+  .proGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .planCard {
@@ -1408,8 +1418,23 @@
   .tile {
     aspect-ratio: 1.05;
   }
-  .planColumns {
+  /* On phones each feature reads as a row: its icon beside its words. */
+  .proGrid {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .proGrid li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+  .proGrid li > * {
+    grid-column: 2;
+  }
+  .proGrid .appIcon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin-bottom: 0;
   }
   .step {
     display: flex;
