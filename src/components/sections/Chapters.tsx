@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { CSSProperties } from 'react';
 import { AppStoreBadge } from '@/components/DownloadButton';
 import { ProBadge } from '@/components/ProBadge';
 import { Disclosure } from '@/components/interactive/Disclosure';
@@ -85,24 +86,29 @@ export function Capabilities() {
   );
 }
 
-const musicNotes: { glyph: GlyphName; title: string; text: string }[] = [
+// Each note wears its own app-icon colour, top to bottom of its tile.
+const musicNotes: { glyph: GlyphName; tint: [string, string]; title: string; text: string }[] = [
   {
     glyph: 'wave',
+    tint: ['#ff6b8b', '#f2295b'],
     title: 'Keep the controls close.',
     text: 'See what’s playing and control your music without switching away.',
   },
   {
     glyph: 'playlist',
+    tint: ['#ffb54d', '#ff7a1f'],
     title: 'Find your next favorite.',
     text: 'Browse Apple Music playlists, charts, For You, and Replay.',
   },
   {
     glyph: 'lyrics',
+    tint: ['#5cb4ff', '#2563eb'],
     title: 'Follow every line.',
     text: 'Read synced lyrics as the song plays. Select a line to jump to it.',
   },
   {
     glyph: 'output',
+    tint: ['#4ade80', '#16a34a'],
     title: 'Switch the output.',
     text: 'Move the sound to your speakers or headphones from the notch.',
   },
@@ -130,7 +136,11 @@ export function MusicStory() {
         <div className={styles.musicNotes} data-reveal-group="110">
           {musicNotes.map((note) => (
             <div key={note.title}>
-              <span data-draw>
+              <span
+                className={styles.noteIcon}
+                style={{ '--tint-top': note.tint[0], '--tint-bottom': note.tint[1] } as CSSProperties}
+                data-draw
+              >
                 <Glyph name={note.glyph} size={24} />
               </span>
               <p>
@@ -147,22 +157,6 @@ export function MusicStory() {
   );
 }
 
-const homeFigures: { glyph: GlyphName; value: number; unit: string; text: string }[] = [
-  {
-    glyph: 'widgets',
-    value: 11,
-    unit: 'widgets',
-    text: 'to choose from, Calendar to Color Picker.',
-  },
-  { glyph: 'hover', value: 1, unit: 'hover', text: 'to open your Home, then back to work.' },
-  {
-    glyph: 'window',
-    value: 0,
-    unit: 'new windows',
-    text: 'Everything stays at the top of your screen.',
-  },
-];
-
 export function HomeSpotlight() {
   return (
     <section id="home" className={styles.spotlight} aria-labelledby="home-title">
@@ -175,27 +169,14 @@ export function HomeSpotlight() {
               <br />A small space. A lot more you.
             </>
           }
-        >
-          Your next meeting. The weather outside. The song on repeat. Bring the widgets you reach
-          for into one personal space, then add, resize, and arrange them around your day.
-        </SplitHeading>
+        />
         <div className={styles.unfold} data-scroll data-scroll-start="1" data-scroll-end="0.3">
           <MediaFrame id="home" configuration={{ ...media.home, ratio: '16 / 8.5' }} />
         </div>
-        <dl className={styles.figures} data-reveal-group="120">
-          {homeFigures.map((item) => (
-            <div key={item.unit}>
-              <dt>
-                <span data-draw>
-                  <Glyph name={item.glyph} size={22} />
-                </span>
-                <span data-count={item.value}>{item.value}</span>
-                <small>{item.unit}</small>
-              </dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
+        <p className={styles.spotlightText} data-reveal="120">
+          Your next meeting. The weather outside. The song on repeat. Bring the widgets you reach
+          for into one personal space, then add, resize, and arrange them around your day.
+        </p>
       </div>
     </section>
   );
